@@ -2,18 +2,32 @@ import React, { useState } from "react";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { RiDashboardFill } from "react-icons/ri";
 import { RiAlignItemLeftLine } from "react-icons/ri";
+import { RiAlignItemLeftFill } from "react-icons/ri";
 
-function Sidebard() {
+function Sidebard({ isActivePage, setActivePage, isActive }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
   const toggleSideBar = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   const menuItem = [
-    { icon: LuLayoutDashboard, label: "Dashboard" },
-    { icon: RiAlignItemLeftLine, label: "Asset" },
+    {
+      id: "dashboard",
+      icon: LuLayoutDashboard,
+      active_icon: RiDashboardFill,
+      label: "Dashboard",
+    },
+    {
+      id: "asset",
+      icon: RiAlignItemLeftLine,
+      active_icon: RiAlignItemLeftFill,
+      label: "Asset",
+    },
   ];
+
   return (
     <div
       className={`bg-white text-midnight shadow-md h-screen p-2 transition-all duration-300 eass-in-out ${
@@ -21,7 +35,7 @@ function Sidebard() {
       }`}
     >
       <div
-        className={`flex justify-between items-center font-poppins font-bold text-2xl ${
+        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 ${
           isCollapsed ? "hidden" : "block"
         }`}
       >
@@ -30,27 +44,37 @@ function Sidebard() {
       </div>
 
       <div
-        className={`flex justify-center items-center  ${
+        className={`flex justify-center items-center pt-1 ${
           isCollapsed ? "block" : "hidden"
         }`}
       >
         <TbLayoutSidebarLeftExpand onClick={toggleSideBar} size={24} />
       </div>
 
-      <div className={`flex flex-col gap-3 p-5`}>
-        {menuItem.map((item, index) => {
-          const Icon = item.icon;
+      <div
+        className={`flex flex-col  gap-3 p-5 ${
+          isCollapsed ? "justify-center items-center" : " "
+        }`}
+      >
+        {menuItem.map((item) => {
+          const isActive = isActivePage === item.id;
+          const Icon = isActive ? item.active_icon : item.icon;
+
           return (
-            <a className="flex justify-start items-center gap-2">
-              <Icon size={16} className="flex-shrink-0" />
+            <button
+              className="flex justify-start items-center gap-2 cursor-pointer"
+              onClick={() => setActivePage(item.id)}
+              key={item.id}
+            >
+              <Icon size={20} className="flex-shrink-0" />
               <span
-                className={`transition-opacity duration-300 font-dm-sans text-small font-light ${
+                className={`transition-opacity duration-300 font-dm-sans text-small font-medium ${
                   isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
                 }`}
               >
                 {item.label}
               </span>
-            </a>
+            </button>
           );
         })}
       </div>
