@@ -21,9 +21,9 @@ function App() {
     <div className="flex flex-row h-full">
       <Sidebard setActivePage={setActivePage} isActivePage={isActivePage} />
 
-      <section className="w-full">
+      <section className="w-full p-4 flex flex-col gap-5">
         <NavBar isActivePage={isActivePage} />
-        <div className="p-10 "> {renderPageContent()}</div>
+        <div className=""> {renderPageContent()}</div>
         {/* <Footer /> */}
       </section>
     </div>
