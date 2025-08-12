@@ -8,11 +8,14 @@ function AssetPage() {
   return (
     <div className="flex flex-col gap-4 font-poppins">
       <div className="flex flex-row justify-between items-center bg-white shadow-sm p-4 rounded-xl">
-        <p>
+        <p className="flex flex-row justify-center items-center gap-1">
           {dashboardchartdata[0].name}:
-          <span className="font-semibold"> {dashboardchartdata[0].value}</span>
+          <span className="font-semibold text-2xl font-open-sans">
+            {" "}
+            {dashboardchartdata[0].value}
+          </span>
         </p>
-        <Button title={"Add asset"} icon={<FaPlus />} />
+        <Button title={"Add asset"} icon={<FaPlus />} variant="primary" />
       </div>
       <div>
         <AssetTable />

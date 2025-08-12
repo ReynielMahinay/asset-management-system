@@ -5,6 +5,7 @@ import NavBar from "./components/layout/NavBar";
 import Footer from "./components/layout/Footer";
 import Dashboard from "./features/dashboard/Dashboard";
 import AssetPage from "./features/asset/AssetPage";
+import AddAsset from "./features/asset/AddAsset";
 
 function App() {
   const [isActivePage, setActivePage] = useState("dashboard");
@@ -15,6 +16,8 @@ function App() {
         return <Dashboard />;
       case "asset":
         return <AssetPage />;
+      case "new_asset":
+        return <AddAsset />;
     }
   };
   return (

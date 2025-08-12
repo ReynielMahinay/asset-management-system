@@ -6,6 +6,8 @@ import { TbLayoutSidebarLeftExpandFilled } from "react-icons/tb";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { RiDashboardFill } from "react-icons/ri";
 import { RiAlignItemLeftLine } from "react-icons/ri";
+import { FaRegSquarePlus } from "react-icons/fa6";
+import { FaSquarePlus } from "react-icons/fa6";
 
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
@@ -29,16 +31,22 @@ function Sidebard({ isActivePage, setActivePage, isActive }) {
       active_icon: RiAlignItemLeftFill,
       label: "Asset",
     },
+    {
+      id: "new_asset",
+      icon: FaRegSquarePlus,
+      active_icon: FaSquarePlus,
+      label: "Add asset",
+    },
   ];
 
   return (
     <div
-      className={`bg-white text-midnight shadow-md h-screen p-4 transition-all duration-300 eass-in-out ${
-        isCollapsed ? "w-16" : "w-64"
+      className={`bg-white text-midnight shadow-md h-screen flex flex-col transition-all duration-300 eass-in-out ${
+        isCollapsed ? "w-16 gap-5 " : "w-64 gap-5"
       }`}
     >
       <div
-        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 ${
+        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 p-3 ${
           isCollapsed ? "hidden" : "block"
         }`}
       >
@@ -56,7 +64,7 @@ function Sidebard({ isActivePage, setActivePage, isActive }) {
       </div>
 
       <div
-        className={`flex justify-center items-center pt-1  ${
+        className={`flex justify-center items-center p-4 ${
           isCollapsed ? "block" : "hidden"
         }`}
       >
@@ -70,8 +78,8 @@ function Sidebard({ isActivePage, setActivePage, isActive }) {
       </div>
 
       <div
-        className={`flex flex-col  gap-3 p-5 ${
-          isCollapsed ? "justify-center items-center" : " "
+        className={`flex flex-col   gap-1 ${
+          isCollapsed ? "justify- items-center" : " "
         }`}
       >
         {menuItem.map((item) => {
@@ -80,18 +88,20 @@ function Sidebard({ isActivePage, setActivePage, isActive }) {
 
           return (
             <button
-              className="flex justify-start items-center gap-2 cursor-pointer"
+              className={`flex  items-center gap-2 cursor-pointer  p-4 ${
+                isActive ? "bg-[#e0edfa9f]" : ""
+              } `}
               onClick={() => setActivePage(item.id)}
               key={item.id}
             >
               <Icon size={20} className="flex-shrink-0" />
-              <span
-                className={`transition-opacity duration-300 font-dm-sans text-small font-medium ${
-                  isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
-                }`}
-              >
-                {item.label}
-              </span>
+              {!isCollapsed && (
+                <span
+                  className={`transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap`}
+                >
+                  {item.label}
+                </span>
+              )}
             </button>
           );
         })}
