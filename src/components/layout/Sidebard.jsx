@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { TbLayoutSidebarLeftCollapseFilled } from "react-icons/tb";
 import { TbLayoutSidebarLeftExpand } from "react-icons/tb";
+import { TbLayoutSidebarLeftExpandFilled } from "react-icons/tb";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { RiDashboardFill } from "react-icons/ri";
 import { RiAlignItemLeftLine } from "react-icons/ri";
+
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
 function Sidebard({ isActivePage, setActivePage, isActive }) {
@@ -30,8 +33,8 @@ function Sidebard({ isActivePage, setActivePage, isActive }) {
 
   return (
     <div
-      className={`bg-white text-midnight shadow-md h-screen p-2 transition-all duration-300 eass-in-out ${
-        isCollapsed ? "w-16" : "w-48"
+      className={`bg-white text-midnight shadow-md h-screen p-4 transition-all duration-300 eass-in-out ${
+        isCollapsed ? "w-16" : "w-64"
       }`}
     >
       <div
@@ -40,15 +43,30 @@ function Sidebard({ isActivePage, setActivePage, isActive }) {
         }`}
       >
         <h1>AssetFLow</h1>
-        <TbLayoutSidebarLeftCollapse onClick={toggleSideBar} size={24} />
+        <button onClick={toggleSideBar} className="cursor-pointer group">
+          <TbLayoutSidebarLeftCollapse
+            size={24}
+            className="group-hover:hidden"
+          />
+          <TbLayoutSidebarLeftCollapseFilled
+            size={24}
+            className="hidden group-hover:block"
+          />
+        </button>
       </div>
 
       <div
-        className={`flex justify-center items-center pt-1 ${
+        className={`flex justify-center items-center pt-1  ${
           isCollapsed ? "block" : "hidden"
         }`}
       >
-        <TbLayoutSidebarLeftExpand onClick={toggleSideBar} size={24} />
+        <button onClick={toggleSideBar} className="cursor-pointer group ">
+          <TbLayoutSidebarLeftExpand size={24} className="group-hover:hidden" />
+          <TbLayoutSidebarLeftExpandFilled
+            size={24}
+            className="hidden group-hover:block"
+          />
+        </button>
       </div>
 
       <div

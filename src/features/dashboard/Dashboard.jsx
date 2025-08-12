@@ -5,7 +5,7 @@ import { dashboardData } from "../../model/SampleData";
 
 function Dashboard() {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-4 gap-4 ">
       {dashboardData.map((item, index) => (
         <Card
           key={index}
@@ -15,7 +15,7 @@ function Dashboard() {
         />
       ))}
 
-      <div className="bg-white col-span-4 shadow-md rounded-xl h-90 p-4">
+      <div className="bg-white col-span-4 shadow-md rounded-xl h-90 p-4 overflow-hidden">
         <Chart />
       </div>
     </div>

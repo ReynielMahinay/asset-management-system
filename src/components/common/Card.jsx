@@ -3,7 +3,7 @@ import { MdOutlineInventory2 } from "react-icons/md";
 
 function Card({ title, Icon, number }) {
   return (
-    <div className="bg-white rounded-xl p-4 shadow-md flex justify-between font-open-sans">
+    <div className="bg-white rounded-xl p-4 shadow-md flex justify-between font-open-sans text-midnight">
       <div className="flex flex-col gap-3">
         <p className="text-sm">{title}</p>
         <p className="text-2xl font-semibold">{number}</p>

@@ -21,9 +21,15 @@ function App() {
     <div className="flex flex-row h-full">
       <Sidebard setActivePage={setActivePage} isActivePage={isActivePage} />
 
-      <section className="w-full p-4 flex flex-col gap-5">
+      <section className="w-full flex flex-col">
         <NavBar isActivePage={isActivePage} />
-        <div className=""> {renderPageContent()}</div>
+        <div
+          className={`transition-all duration-700 ease-out p-4 ${
+            isActivePage ? "opacity-100 translate-0" : "opacity-0 translate-y-5"
+          }`}
+        >
+          {renderPageContent()}
+        </div>
         {/* <Footer /> */}
       </section>
     </div>
