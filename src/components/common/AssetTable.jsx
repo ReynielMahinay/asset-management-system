@@ -26,7 +26,7 @@ function AssetTable() {
   }, []);
 
   return (
-    <div className="h-full overflow-y-auto rounded-xl shadow-md">
+    <div className="h-full overflow-y-auto rounded-md shadow-md flex-1">
       <table className="w-full border-collapse bg-white">
         <thead className="bg-[#d6e9fc] sticky top-0 z-10">
           <tr className="text-sm text-gray-500">

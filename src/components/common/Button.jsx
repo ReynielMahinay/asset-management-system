@@ -1,19 +1,34 @@
 import React from "react";
+import { Button as MuiButton } from "@mui/material";
 
 function Button({ title, icon, variant }) {
-  const variants = {
-    primary:
-      "text-midnight bg-[#d6e9fc] hover:bg-midnight hover:text-[#d6e9fc]",
-    secondary: "text-blue-500",
-    danger: "text-red-500",
+  const getVariantClasses = () => {
+    const variants = {
+      primary:
+        "hover:!bg-[#d6e9fc] hover:!text-[#1a1a2e] !bg-[#1a1a2e] !text-[#d6e9fc]",
+      secondary: "!text-blue-500 !bg-transparent hover:!bg-blue-50",
+      danger: "!text-red-500 !bg-transparent hover:!bg-red-50",
+    };
+    return variants[variant] || variants.primary;
   };
+
   return (
-    <div
-      className={`flex flex-row justify-center items-center gap-1  ${variants[variant]} px-4 py-2  text-sm rounded-lg cursor-pointer  text-[.8rem]`}
+    <MuiButton
+      variant="contained"
+      startIcon={icon}
+      className={`
+        !text-[0.7rem] 
+        !px-4 !py-2 
+        !rounded-lg 
+        !normal-case 
+        !min-w-0 
+        !gap-1
+        !shadow-sm
+        ${getVariantClasses()}
+      `}
     >
-      {icon}
       {title}
-    </div>
+    </MuiButton>
   );
 }
 
