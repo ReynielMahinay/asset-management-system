@@ -15,7 +15,7 @@ function AssetForm() {
           <SelectComponent options={brandOptions} label="Type" />
           <SelectComponent options={statusOptions} label="Status" />
         </div>
-        <Button title="Submit" />
+        <Button title="Submit" className="" />
       </form>
     </div>
   );

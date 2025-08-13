@@ -69,7 +69,7 @@ function AssetTable() {
                     <VscKebabVertical size={16} />
                   </button>
                   {isOpen === asset.id && (
-                    <div className="absolute right-1 top-0 z-50 w-30 h-20 p-3 rounded shadow-lg bg-white text-midnight">
+                    <div className="absolute right-1 top-0 z-50 flex flex-row gap-3 p-2 justify-center items-center rounded-md shadow-lg bg-midnight text-midnight">
                       <Button
                         title="Edit"
                         variant="secondary"

@@ -8,7 +8,11 @@ import { typeOptions } from "../../data/options";
 import { brandOptions } from "../../data/options";
 import SelectComponent from "../../components/common/SelectComponent";
 import DatePickerComponent from "../../components/common/DatePickerComponent";
+import ModalComponent from "../../components/common/ModalComponent";
 function AssetPage() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <div className="flex flex-col gap-4 font-poppins flex-1">
       <div className="flex flex-col  bg-white shadow-sm  rounded-md">
@@ -20,10 +24,12 @@ function AssetPage() {
               {dashboardchartdata[0].value}
             </span>
           </p>
+
           <Button
             title={"Add asset"}
             icon={<FaPlus size={12} />}
             variant="primary"
+            onClick={handleOpen}
           />
         </div>
         <div className="p-4 flex flex-col gap-3">
@@ -51,6 +57,7 @@ function AssetPage() {
       <div>
         <AssetTable />
       </div>
+      <ModalComponent open={open} handleClose={handleClose} />
     </div>
   );
 }

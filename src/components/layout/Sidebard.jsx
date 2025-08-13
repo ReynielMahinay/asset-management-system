@@ -6,8 +6,10 @@ import { TbLayoutSidebarLeftExpandFilled } from "react-icons/tb";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { RiDashboardFill } from "react-icons/ri";
 import { RiAlignItemLeftLine } from "react-icons/ri";
-import { FaRegSquarePlus } from "react-icons/fa6";
-import { FaSquarePlus } from "react-icons/fa6";
+import { FaRegUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import { MdOutlineAssignmentInd } from "react-icons/md";
+import { MdAssignmentInd } from "react-icons/md";
 
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
@@ -32,10 +34,16 @@ function Sidebard({ isActivePage, setActivePage, isActive }) {
       label: "Asset",
     },
     {
-      id: "new_asset",
-      icon: FaRegSquarePlus,
-      active_icon: FaSquarePlus,
-      label: "Add asset",
+      id: "manage_user",
+      icon: FaRegUser,
+      active_icon: FaUser,
+      label: "Manage user",
+    },
+    {
+      id: "assignment",
+      icon: MdOutlineAssignmentInd,
+      active_icon: MdAssignmentInd,
+      label: "Assignment",
     },
   ];
 

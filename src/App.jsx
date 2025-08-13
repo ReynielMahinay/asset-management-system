@@ -5,8 +5,8 @@ import NavBar from "./components/layout/NavBar";
 import Footer from "./components/layout/Footer";
 import Dashboard from "./features/dashboard/Dashboard";
 import AssetPage from "./features/asset/AssetPage";
-import AddAsset from "./features/asset/AddAsset";
-
+import ManageUser from "./features/manage_user/ManageUser";
+import Assignment from "./features/assignment/Assignment";
 function App() {
   const [isActivePage, setActivePage] = useState("dashboard");
 
@@ -16,8 +16,10 @@ function App() {
         return <Dashboard />;
       case "asset":
         return <AssetPage />;
-      case "new_asset":
-        return <AddAsset />;
+      case "manage_user":
+        return <ManageUser />;
+      case "assignment":
+        return <Assignment />;
     }
   };
   return (
