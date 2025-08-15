@@ -8,6 +8,8 @@ function Button({ title, icon, variant, onClick }) {
         "hover:!bg-[#d6e9fc] hover:!text-[#1a1a2e] !bg-[#1a1a2e] !text-[#d6e9fc]",
       secondary: "!text-blue-500 !bg-transparent hover:!bg-blue-50",
       danger: "!text-red-500 !bg-transparent hover:!bg-red-50",
+      danger_primary:
+        "hover:!bg-[#d6e9fc] hover:!text-red-500 !bg-[#1a1a2e] !text-[#d6e9fc]",
     };
     return variants[variant] || variants.primary;
   };

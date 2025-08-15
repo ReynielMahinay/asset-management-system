@@ -13,7 +13,7 @@ import { MdAssignmentInd } from "react-icons/md";
 
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
-function Sidebard({ isActivePage, setActivePage, isActive }) {
+function Sidebard({ isActivePage, setActivePage }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSideBar = () => {

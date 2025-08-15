@@ -23,7 +23,7 @@ function App() {
     }
   };
   return (
-    <div className="flex flex-row min-h-screen overflow-hidden">
+    <div className="flex flex-row min-h-screen">
       <Sidebard setActivePage={setActivePage} isActivePage={isActivePage} />
 
       <section className="w-full flex flex-col">
