@@ -4,6 +4,8 @@ import { VscKebabVertical } from "react-icons/vsc";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
 import Button from "../common/Button";
+import { DataGrid, renderActionsCell } from "@mui/x-data-grid";
+import Paper from "@mui/material/Paper";
 
 function AssetTable() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,70 +27,86 @@ function AssetTable() {
     };
   }, []);
 
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID",
+      width: 70,
+
+      valueGetter: (value, assetData) => `${assetData.id || ""}`,
+    },
+    {
+      field: "name",
+      headerName: "Name",
+      width: 130,
+      flex: 1,
+      valueGetter: (value, assetData) => `${assetData.name || ""}`,
+    },
+    {
+      field: "type",
+      headerName: "Type",
+      width: 130,
+      flex: 1,
+      valueGetter: (value, assetData) => `${assetData.type || ""}`,
+    },
+    {
+      field: "brand",
+      headerName: "Brand",
+      flex: 1,
+      valueGetter: (value, assetData) => `${assetData.brand || ""}`,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 160,
+      valueGetter: (value, assetData) => `${assetData.status || ""} `,
+    },
+    {
+      field: "action",
+      headerName: "Action",
+      flex: 1,
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 160,
+      renderCell: (params) => (
+        <div>
+          <button>
+            <VscKebabVertical />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  const paginationModel = { page: 0, pageSize: 5 };
   return (
-    <div className="h-full overflow-y-auto rounded-md shadow-md flex-1">
-      <table className="w-full border-collapse bg-white">
-        <thead className="bg-[#d6e9fc] sticky top-0 z-10">
-          <tr className="text-sm text-gray-500">
-            <th className="font-dm-sans px-4 py-2 text-start">Name</th>
-            <th className="px-4 py-2 text-start">Type</th>
-            <th className="px-4 py-2 text-start">Brand</th>
-            <th className="px-4 py-2 text-start">Status</th>
-            <th className="px-4 py-2 text-start">Time Created</th>
-            <th className="px-4 py-2 text-center">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {assetData.map((asset, index) => (
-            <tr
-              key={index}
-              className="border-b border-[#aaaeb3b0] text-[.8rem] font-open-sans"
-            >
-              <td className="px-4 py-2">{asset.name}</td>
-              <td className="px-4 py-2">{asset.type}</td>
-              <td className="px-4 py-2">{asset.brand}</td>
-              <td
-                className={`px-4 py-2 ${
-                  asset.status === "Assigned"
-                    ? "text-green-500"
-                    : "text-red-500"
-                }`}
-              >
-                {asset.status}
-              </td>
-              <td className="px-4 py-2">{asset.timeCreated}</td>
-              <td className="px-4 py-2 flex justify-center items-center ">
-                <div
-                  className="relative"
-                  ref={isOpen === asset.id ? menuRef : null}
-                >
-                  <button
-                    className="cursor-pointer text-center"
-                    onClick={() => handleClick(asset.id)}
-                  >
-                    <VscKebabVertical size={16} />
-                  </button>
-                  {isOpen === asset.id && (
-                    <div className="absolute right-1 top-0 z-50 flex flex-row gap-3 p-2 justify-center items-center rounded-md shadow-lg bg-midnight text-midnight">
-                      <Button
-                        title="Edit"
-                        variant="secondary"
-                        icon={<FaEdit />}
-                      />
-                      <Button
-                        title="Delete"
-                        variant="danger"
-                        icon={<RiDeleteBinLine />}
-                      />
-                    </div>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Paper sx={{ height: "100%", width: "100%", overflow: "hidden" }}>
+      <DataGrid
+        rows={assetData}
+        columns={columns}
+        disableColumnResize={true}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{
+          border: 0,
+          "& .MuiDataGrid-cell": {
+            whiteSpace: "normal !important",
+            wordBreak: "break-word",
+            lineHeight: "1.3",
+            padding: "8px",
+            display: "flex",
+            alignItems: "center",
+          },
+          "& .MuiDataGrid-row": {
+            alignItems: "flex-start",
+          },
+        }}
+      />
+    </Paper>
   );
 }
 

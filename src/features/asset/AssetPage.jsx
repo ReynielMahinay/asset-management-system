@@ -14,7 +14,7 @@ function AssetPage() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   return (
-    <div className="flex flex-col gap-4 font-poppins flex-1">
+    <div className="flex flex-col gap-4 font-poppins flex-1 overflow-hidden">
       <div className="flex flex-col  bg-white shadow-sm  rounded-md">
         <div className="flex flex-row justify-between items-center border-b border-gray-200 p-4">
           <p className="flex flex-row justify-center font-light  text-sm items-center gap-1">
@@ -54,7 +54,7 @@ function AssetPage() {
           </div>
         </div>
       </div>
-      <div>
+      <div className="overflow-hidden">
         <AssetTable />
       </div>
       <ModalComponent open={open} handleClose={handleClose} />
