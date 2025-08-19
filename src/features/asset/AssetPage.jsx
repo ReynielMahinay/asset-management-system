@@ -1,5 +1,4 @@
 import React from "react";
-import AssetTable from "../../components/common/AssetTable";
 import { dashboardchartdata } from "../../model/SampleData";
 import Button from "../../components/common/Button";
 import { FaPlus } from "react-icons/fa6";
@@ -9,6 +8,8 @@ import { brandOptions } from "../../data/options";
 import SelectComponent from "../../components/common/SelectComponent";
 import DatePickerComponent from "../../components/common/DatePickerComponent";
 import ModalComponent from "../../components/common/ModalComponent";
+import ManageAssetTable from "./components/ManageAssetTable";
+
 function AssetPage() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -61,7 +62,7 @@ function AssetPage() {
         </div>
       </div>
       <div className="flex">
-        <AssetTable />
+        <ManageAssetTable />
       </div>
       <ModalComponent open={open} handleClose={handleClose} />
     </div>
