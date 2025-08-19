@@ -61,6 +61,12 @@ const headCells = [
   { id: "type", numeric: false, disablePadding: false, label: "Type" },
   { id: "brand", numeric: false, disablePadding: false, label: "Brand" },
   {
+    id: "serial_number",
+    numeric: false,
+    disablePadding: false,
+    label: "Serial Number",
+  },
+  {
     id: "status",
     numeric: false,
     disablePadding: false,
@@ -384,6 +390,7 @@ export default function ManageAssetTable() {
                     </TableCell>
                     <TableCell align="left">{asset.type}</TableCell>
                     <TableCell align="left">{asset.brand}</TableCell>
+                    <TableCell align="left">{asset.serialNumber}</TableCell>
                     <TableCell align="left">{asset.status}</TableCell>
                     <TableCell align="left">{asset.timeCreated}</TableCell>
                     <TableCell align="right">
@@ -399,7 +406,7 @@ export default function ManageAssetTable() {
               })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={7} />
+                  <TableCell colSpan={8} />
                 </TableRow>
               )}
             </TableBody>
