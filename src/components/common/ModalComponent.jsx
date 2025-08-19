@@ -6,6 +6,7 @@ import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AssetForm from "./AssetForm";
+import { IoClose } from "react-icons/io5";
 
 const style = {
   position: "absolute",
@@ -38,7 +39,20 @@ function ModalComponent({ handleClose, open }) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <AssetForm />
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-row justify-between items-center">
+                <p className="font-poppins text-midnight text-2xl font-bold">
+                  Add Asset
+                </p>
+                <button
+                  onClick={handleClose}
+                  className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
+                >
+                  <IoClose size={24} />
+                </button>
+              </div>
+              <AssetForm handleClose={handleClose} />
+            </div>
           </Box>
         </Fade>
       </Modal>

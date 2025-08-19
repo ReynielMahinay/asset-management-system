@@ -3,7 +3,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-function SelectComponent({ value, options, label }) {
+function SelectComponent({ value, options, label, margin }) {
   const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
@@ -11,7 +11,7 @@ function SelectComponent({ value, options, label }) {
   };
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+    <FormControl sx={{ m: margin, minWidth: 120 }} size="small">
       <InputLabel
         id="drop-down"
         sx={{

@@ -46,12 +46,14 @@ function AssetPage() {
               options={typeOptions}
               selected="type"
               label="Type"
+              margin={1}
             />
 
             <SelectComponent
               options={brandOptions}
               selected="brand"
               label="Brand"
+              margin={1}
             />
           </div>
           <div className="w-full bg-[#e0edfa9f] p-2 rounded-md">

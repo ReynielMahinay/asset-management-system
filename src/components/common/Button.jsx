@@ -6,7 +6,7 @@ function Button({ title, icon, variant, onClick }) {
     const variants = {
       primary:
         "hover:!bg-[#d6e9fc] hover:!text-[#1a1a2e] !bg-[#1a1a2e] !text-[#d6e9fc]",
-      secondary: "!text-blue-500 !bg-transparent hover:!bg-blue-50",
+      secondary: "!text-midnight !bg-transparent hover:!bg-blue-50",
       danger: "!text-red-500 !bg-transparent hover:!bg-red-50",
       danger_primary:
         "hover:!bg-[#d6e9fc] hover:!text-red-500 !bg-[#1a1a2e] !text-[#d6e9fc]",
@@ -20,7 +20,7 @@ function Button({ title, icon, variant, onClick }) {
       variant="contained"
       startIcon={icon}
       className={`
-        !text-[0.7rem] 
+        !text-[.8rem] 
         !px-4 !py-2 
         !rounded-lg 
         !normal-case 

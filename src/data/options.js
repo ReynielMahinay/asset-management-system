@@ -26,3 +26,16 @@ export const statusOptions = [
   {id: 1, value: 'assigned', label: "Assigned"},
   {id: 2, value: 'unassigned', label: "Unassigned"}
 ]
+
+export const departmentOptions = [
+  { id: 1, value: "it", label: "IT" },
+  { id: 2, value: "finance", label: "Finance" },
+  { id: 3, value: "hr", label: "HR" },
+  { id: 4, value: "marketing", label: "Marketing" },
+  { id: 5, value: "operations", label: "Operations" },
+  { id: 7, value: "sales", label: "Sales" },
+  { id: 8, value: "engineering", label: "Engineering" },
+  { id: 10, value: "support", label: "Support" },
+  { id: 13, value: "", label: "None" }
+];
+

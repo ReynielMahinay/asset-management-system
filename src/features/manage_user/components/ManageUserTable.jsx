@@ -18,27 +18,22 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import { visuallyHidden } from "@mui/utils";
-
-function createData(id, name, calories, fat, carbs, protein) {
-  return { id, name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData(1, "Cupcake", 305, 3.7, 67, 4.3),
-  createData(2, "Donut", 452, 25.0, 51, 4.9),
-  createData(3, "Eclair", 262, 16.0, 24, 6.0),
-  createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
-  createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
-  createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
-  createData(9, "KitKat", 518, 26.0, 65, 7.0),
-  createData(10, "Lollipop", 392, 0.2, 98, 0.0),
-  createData(11, "Marshmallow", 318, 0, 81, 2.0),
-  createData(12, "Nougat", 360, 19.0, 9, 37.0),
-  createData(13, "Oreo", 437, 18.0, 63, 4.0),
-];
+import { userData } from "../../../model/SampleData";
+import { VscKebabVertical } from "react-icons/vsc";
+// You might want to add these icons
+// import EditIcon from '@mui/icons-material/Edit';
+// import DeleteIcon from '@mui/icons-material/Delete';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1;
@@ -57,12 +52,34 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Dessert (100g serving)",
+    label: "Full Name",
   },
-  { id: "calories", numeric: true, disablePadding: false, label: "Calories" },
-  { id: "fat", numeric: true, disablePadding: false, label: "Fat (g)" },
-  { id: "carbs", numeric: true, disablePadding: false, label: "Carbs (g)" },
-  { id: "protein", numeric: true, disablePadding: false, label: "Protein (g)" },
+  { id: "email", numeric: false, disablePadding: false, label: "Email" },
+  {
+    id: "department",
+    numeric: false,
+    disablePadding: false,
+    label: "Department",
+  },
+  { id: "role", numeric: false, disablePadding: false, label: "Role" },
+  {
+    id: "status",
+    numeric: false,
+    disablePadding: false,
+    label: "Status",
+  },
+  {
+    id: "time_created",
+    numeric: false,
+    disablePadding: false,
+    label: "Time created",
+  },
+  {
+    id: "action",
+    numeric: false,
+    disablePadding: false,
+    label: "Action",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -154,17 +171,8 @@ function EnhancedTableToolbar({ numSelected }) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Users
         </Typography>
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>Delete</IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>Filter</IconButton>
-        </Tooltip>
       )}
     </Toolbar>
   );
@@ -174,13 +182,83 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function ManangerUserTable() {
+// Edit Dialog Component
+// function EditAssetDialog({ open, onClose, asset, onSave }) {
+//   const [editedAsset, setEditedAsset] = React.useState(asset || {});
+
+//   React.useEffect(() => {
+//     setEditedAsset(asset || {});
+//   }, [asset]);
+
+//   const handleInputChange = (field, value) => {
+//     setEditedAsset((prev) => ({
+//       ...prev,
+//       [field]: value,
+//     }));
+//   };
+
+//   const handleSave = () => {
+//     onSave(editedAsset);
+//     onClose();
+//   };
+
+//   if (!asset) return null;
+
+//   return (
+//     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+//       <DialogTitle>Edit Asset</DialogTitle>
+//       <DialogContent>
+//         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+//           <TextField
+//             label="Name"
+//             value={editedAsset.name || ""}
+//             onChange={(e) => handleInputChange("name", e.target.value)}
+//             fullWidth
+//           />
+//           <TextField
+//             label="Type"
+//             value={editedAsset.type || ""}
+//             onChange={(e) => handleInputChange("type", e.target.value)}
+//             fullWidth
+//           />
+//           <TextField
+//             label="Brand"
+//             value={editedAsset.brand || ""}
+//             onChange={(e) => handleInputChange("brand", e.target.value)}
+//             fullWidth
+//           />
+//           <TextField
+//             label="Status"
+//             value={editedAsset.status || ""}
+//             onChange={(e) => handleInputChange("status", e.target.value)}
+//             fullWidth
+//           />
+//         </Box>
+//       </DialogContent>
+//       <DialogActions>
+//         <Button onClick={onClose}>Cancel</Button>
+//         <Button onClick={handleSave} variant="contained">
+//           Save
+//         </Button>
+//       </DialogActions>
+//     </Dialog>
+//   );
+// }
+
+export default function ManageUserTable() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  // Action menu state
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedAsset, setSelectedAsset] = React.useState(null);
+
+  // Edit dialog state
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+  const [assetToEdit, setAssetToEdit] = React.useState(null);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -190,7 +268,7 @@ export default function ManangerUserTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      setSelected(rows.map((n) => n.id));
+      setSelected(userData.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -214,17 +292,48 @@ export default function ManangerUserTable() {
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+  // Action menu handlers
+  const handleActionClick = (event, asset) => {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setSelectedAsset(asset);
+  };
+
+  const handleActionClose = () => {
+    setAnchorEl(null);
+    setSelectedAsset(null);
+  };
+
+  const handleEditClick = () => {
+    setAssetToEdit(selectedAsset);
+    setEditDialogOpen(true);
+    handleActionClose();
+  };
+
+  const handleDeleteClick = () => {
+    // Implement delete logic here
+    console.log("Delete asset:", selectedAsset);
+    handleActionClose();
+  };
+
+  const handleSaveAsset = (editedAsset) => {
+    // Implement save logic here
+    console.log("Save asset:", editedAsset);
+    // You would typically update your data source here
+  };
+
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userData.length) : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      [...rows]
+      [...userData]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [order, orderBy, page, rowsPerPage]
@@ -242,21 +351,21 @@ export default function ManangerUserTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={userData.length}
             />
             <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = selected.includes(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+              {visibleRows.map((asset) => {
+                const isItemSelected = selected.includes(asset.id);
+                const labelId = `enhanced-table-checkbox-${asset.id}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => handleClick(event, asset.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.id}
+                    key={asset.id}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
@@ -273,18 +382,27 @@ export default function ManangerUserTable() {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {asset.fullName}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="left">{asset.email}</TableCell>
+                    <TableCell align="left">{asset.department}</TableCell>
+                    <TableCell align="left">{asset.role}</TableCell>
+                    <TableCell align="left">{asset.status}</TableCell>
+                    <TableCell align="left">{asset.timeCreated}</TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        onClick={(event) => handleActionClick(event, asset)}
+                        size="small"
+                      >
+                        <VscKebabVertical />
+                      </IconButton>
+                    </TableCell>
                   </TableRow>
                 );
               })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={7} />
                 </TableRow>
               )}
             </TableBody>
@@ -293,13 +411,51 @@ export default function ManangerUserTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={userData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+
+      {/* Action Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleActionClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={handleEditClick}>
+          <ListItemIcon>
+            {/* <EditIcon fontSize="small" /> */}
+            ✏️
+          </ListItemIcon>
+          <ListItemText>Edit</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleDeleteClick}>
+          <ListItemIcon>
+            {/* <DeleteIcon fontSize="small" /> */}
+            🗑️
+          </ListItemIcon>
+          <ListItemText>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
+
+      {/* Edit Dialog */}
+      {/* <EditAssetDialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        asset={assetToEdit}
+        onSave={handleSaveAsset}
+      /> */}
     </Box>
   );
 }
