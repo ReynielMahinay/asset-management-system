@@ -13,7 +13,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 500,
   bgcolor: "background.paper",
   border: "1px solid #000",
   borderRadius: "2%",
@@ -39,7 +39,7 @@ function ModalComponent({ handleClose, open }) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-row justify-between items-center">
                 <p className="font-poppins text-midnight text-2xl font-bold">
                   Add Asset

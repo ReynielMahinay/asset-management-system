@@ -2,17 +2,14 @@ import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-function InputFieldComponent({ label }) {
+function InputFieldComponent({ label, className = "" }) {
   return (
-    <Box
-      sx={{ "& > :not(style)": { width: "100%" } }}
-      noValidate
-      autoComplete="off"
-    >
+    <Box noValidate autoComplete="off" className={className}>
       <TextField
         id="outlined-basic"
         label={label}
         variant="outlined"
+        fullWidth
         sx={{
           // Font size customization
           "& .MuiInputBase-input": {

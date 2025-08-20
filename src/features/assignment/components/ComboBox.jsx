@@ -16,7 +16,7 @@ export default function ComboBox({
       value={value}
       onChange={(e, newValue) => onChange(newValue)}
       getOptionLabel={getOptionLabel || ((option) => option?.label || "")}
-      sx={{ width: "100%" }}
+      sx={{ width: "1" }}
       renderInput={(params) => <TextField {...params} label={label} />}
     />
   );
