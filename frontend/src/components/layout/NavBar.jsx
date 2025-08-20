@@ -4,7 +4,7 @@ import { IoIosNotifications } from "react-icons/io";
 
 const NavBar = ({ isActivePage }) => {
   return (
-    <div className="bg-[#eef1f4] px-6 py-4 flex flex-row justify-between items-center text-midnight">
+    <div className="bg-[#eef1f4] px-4 py-2 flex flex-row justify-between items-center text-midnight">
       <div>
         <h1 className="capitalize font-open-sans font-semibold text-[.8rem] ">
           {isActivePage}
