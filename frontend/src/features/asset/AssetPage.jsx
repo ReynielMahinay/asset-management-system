@@ -14,6 +14,7 @@ function AssetPage() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
   return (
     <div className="flex flex-col gap-4 font-poppins">
       <div className="flex flex-col  bg-white shadow-sm  rounded-md">
