@@ -1,7 +1,7 @@
 import React from "react";
 import { Button as MuiButton } from "@mui/material";
 
-function Button({ title, icon, variant, onClick }) {
+function Button({ title, icon, variant, onClick, type = "button" }) {
   const getVariantClasses = () => {
     const variants = {
       primary:
@@ -16,6 +16,7 @@ function Button({ title, icon, variant, onClick }) {
 
   return (
     <MuiButton
+      type={type}
       onClick={onClick}
       variant="contained"
       startIcon={icon}

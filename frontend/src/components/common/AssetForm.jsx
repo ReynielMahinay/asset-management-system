@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import InputFieldComponent from "./InputFieldComponent";
 import SelectComponent from "./SelectComponent";
 import { brandOptions, statusOptions } from "../../data/options";
@@ -21,7 +21,7 @@ function AssetForm({ handleClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log("submit click");
     try {
       const res = await fetch("http://localhost:5000/api/assets", {
         method: "POST",
@@ -45,13 +45,13 @@ function AssetForm({ handleClose }) {
 
   return (
     <div className="bg-white rounded-md w-full">
-      <form action={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* <InputFieldComponent label="Tag" className="flex-1" /> */}
         <InputFieldComponent
           label="Name"
           className="flex-1"
           value={formData.name}
-          onChange={(e) => handleChanges("name", e.target.value)}
+          onChange={(e) => handleChange("name", e.target.value)}
         />
 
         <div className="flex flex-row gap-4 w-full">

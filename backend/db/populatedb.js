@@ -4,8 +4,8 @@ const { Client } = require('pg')
 const SQL = `
 CREATE TABLE IF NOT EXISTS assets (
     asset_id SERIAL PRIMARY KEY,
-    asset_tag VARCHAR(50) UNIQUE NOT NULL,
     asset_name VARCHAR(200) NOT NULL,
+    asset_type VARCHAR(50) NOT NULL,
     asset_brand VARCHAR(50) NOT NULL,
     asset_status VARCHAR(20) CHECK (asset_status IN ('assigned', 'unassigned', 'in-repair')) DEFAULT 'unassigned',
     assigned_to INT,

@@ -29,15 +29,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { visuallyHidden } from "@mui/utils";
-import { assetData } from "../../../model/SampleData";
 import { VscKebabVertical } from "react-icons/vsc";
-// You might want to add these icons
-// import EditIcon from '@mui/icons-material/Edit';
-// import DeleteIcon from '@mui/icons-material/Delete';
-
-function createData(id, name, calories, fat, carbs, protein) {
-  return { id, name, calories, fat, carbs, protein };
-}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1;
@@ -250,11 +242,36 @@ EnhancedTableToolbar.propTypes = {
 // }
 
 export default function ManageAssetTable() {
+  const [assetData, setAssetData] = React.useState([]);
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const fetchAssets = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/assets");
+      const data = await res.json();
+      console.log("Fetched assets:", data); // 🔎 check what arrives
+      setAssetData(data);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchAssets();
+  }, []);
+
+  const addAsset = async (newAsset) => {
+    await fetch("http://localhost:5000/api/assets", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newAsset),
+    });
+    fetchAssets(); // refresh after adding
+  };
 
   // Action menu state
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -340,7 +357,7 @@ export default function ManageAssetTable() {
       [...assetData]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
+    [assetData, order, orderBy, page, rowsPerPage]
   );
 
   return (
@@ -359,6 +376,7 @@ export default function ManageAssetTable() {
             />
             <TableBody>
               {visibleRows.map((asset) => {
+                console.log("Rendering row for:", asset.id);
                 const isItemSelected = selected.includes(asset.id);
                 const labelId = `enhanced-table-checkbox-${asset.id}`;
 
@@ -390,7 +408,7 @@ export default function ManageAssetTable() {
                     </TableCell>
                     <TableCell align="left">{asset.type}</TableCell>
                     <TableCell align="left">{asset.brand}</TableCell>
-                    <TableCell align="left">{asset.serialNumber}</TableCell>
+                    {/* <TableCell align="left">{asset.serialNumber}</TableCell> */}
                     <TableCell align="left">{asset.status}</TableCell>
                     <TableCell align="left">{asset.timeCreated}</TableCell>
                     <TableCell align="right">

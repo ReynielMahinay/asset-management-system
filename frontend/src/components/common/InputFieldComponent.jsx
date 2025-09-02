@@ -2,12 +2,14 @@ import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-function InputFieldComponent({ label, className = "" }) {
+function InputFieldComponent({ label, className = "", value, onChange }) {
   return (
     <Box noValidate autoComplete="off" className={className}>
       <TextField
         id="outlined-basic"
         label={label}
+        onChange={onChange}
+        value={value}
         variant="outlined"
         fullWidth
         sx={{
