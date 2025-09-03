@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { assetData } from "../../model/SampleData";
+import { assetData } from "../../../model/SampleData";
 import { VscKebabVertical } from "react-icons/vsc";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
-import Button from "../common/Button";
+import Button from "../../../components/common/Button";
 import { DataGrid, renderActionsCell } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 

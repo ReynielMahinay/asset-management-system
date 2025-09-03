@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import InputFieldComponent from "./InputFieldComponent";
-import SelectComponent from "./SelectComponent";
-import { brandOptions, statusOptions } from "../../data/options";
+import InputFieldComponent from "../../../components/common/InputFieldComponent";
+import SelectComponent from "../../../components/common/SelectComponent";
+import { brandOptions, statusOptions } from "../../../data/options";
 import Divider from "@mui/material/Divider";
-import Button from "./Button";
+import Button from "../../../components/common/Button";
 
 function AssetForm({ handleClose }) {
   const [formData, setFormData] = useState({
@@ -78,6 +78,10 @@ function AssetForm({ handleClose }) {
               ex. Lenovo, Dell
             </p>
           </span>
+        </div>
+
+        <div>
+          <InputFieldComponent label="Tag" className="flex-1" />
         </div>
         <div className="flex flex-row gap-2">
           {/* <SelectComponent options={brandOptions} label="Type" /> */}

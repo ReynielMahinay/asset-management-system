@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import AssetForm from "./AssetForm";
+import AssetForm from "../../features/asset/components/AssetForm";
 import { IoClose } from "react-icons/io5";
 
 const style = {
