@@ -241,8 +241,8 @@ EnhancedTableToolbar.propTypes = {
 //   );
 // }
 
-export default function ManageAssetTable() {
-  const [assetData, setAssetData] = React.useState([]);
+export default function ManageAssetTable({ setAssetTotal }) {
+  const [assetData, setAssetData] = React.useState({ total: 0, data: [] });
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
@@ -255,6 +255,10 @@ export default function ManageAssetTable() {
       const data = await res.json();
       console.log("Fetched assets:", data); // 🔎 check what arrives
       setAssetData(data);
+
+      if (setAssetTotal) {
+        setAssetTotal(Number(data.total));
+      }
     } catch (err) {
       console.error("Fetch error:", err);
     }
@@ -289,7 +293,7 @@ export default function ManageAssetTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      setSelected(assetData.map((n) => n.id));
+      setSelected(assetData.data.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -350,14 +354,16 @@ export default function ManageAssetTable() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - assetData.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - assetData.data.length)
+      : 0;
 
   const visibleRows = React.useMemo(
     () =>
-      [...assetData]
+      [...assetData.data]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [assetData, order, orderBy, page, rowsPerPage]
+    [assetData.data, order, orderBy, page, rowsPerPage]
   );
 
   return (
@@ -372,7 +378,7 @@ export default function ManageAssetTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={assetData.length}
+              rowCount={assetData.data.length}
             />
             <TableBody>
               {visibleRows.map((asset) => {
@@ -433,7 +439,7 @@ export default function ManageAssetTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={assetData.length}
+          count={assetData.data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

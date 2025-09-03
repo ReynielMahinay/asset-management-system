@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Sidebard from "./components/layout/Sidebard";
 import NavBar from "./components/layout/NavBar";
@@ -9,19 +9,26 @@ import ManageUser from "./features/manage_user/ManageUser";
 import Assignment from "./features/assignment/Assignment";
 function App() {
   const [isActivePage, setActivePage] = useState("dashboard");
+  const [assetTotal, setAssetTotal] = useState(0);
 
   const renderPageContent = () => {
     switch (isActivePage) {
       case "dashboard":
-        return <Dashboard />;
+        return <Dashboard assetTotal={assetTotal} />;
       case "asset":
-        return <AssetPage />;
+        return (
+          <AssetPage setAssetTotal={setAssetTotal} assetTotal={assetTotal} />
+        );
       case "manage_user":
         return <ManageUser />;
       case "assignment":
         return <Assignment />;
     }
   };
+
+  React.useEffect(() => {
+    console.log("assetTotal updated:", assetTotal);
+  }, [assetTotal]);
   return (
     <div className="flex flex-row min-h-screen">
       <Sidebard setActivePage={setActivePage} isActivePage={isActivePage} />

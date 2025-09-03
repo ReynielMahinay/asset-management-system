@@ -5,21 +5,25 @@ export const dashboardData = [
        title: 'Total Asset',
         number: 1040,
         icon: MdOutlineInventory2,
+        key: "assets"
     },
     {
         title: 'Recently Added',
         number: 40,
-        icon: MdOutlineInventory2
+        icon: MdOutlineInventory2,
+        key: "recently"
     },
     {
         title: 'Assigned Asset',
         number: 940,
         icon: MdOutlineInventory2,
+        key: "assigned"
     },
     {
         title: 'Unassigned Asset',
         number: 300,
-        icon: MdOutlineInventory2
+        icon: MdOutlineInventory2,
+        key: "unassigned"
     }
 ]
 

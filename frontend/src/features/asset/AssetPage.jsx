@@ -10,7 +10,7 @@ import DatePickerComponent from "../../components/common/DatePickerComponent";
 import ModalComponent from "../../components/common/ModalComponent";
 import ManageAssetTable from "./components/ManageAssetTable";
 
-function AssetPage() {
+function AssetPage({ setAssetTotal, assetTotal }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -22,8 +22,7 @@ function AssetPage() {
           <p className="flex flex-row justify-center font-light  text-sm items-center gap-1">
             {dashboardchartdata[0].name}s:
             <span className="font-semibold text-2xl font-open-sans">
-              {" "}
-              {dashboardchartdata[0].value}
+              {assetTotal}
             </span>
           </p>
           <div className="flex flex-row gap-2">
@@ -65,7 +64,7 @@ function AssetPage() {
         </div>
       </div>
       <div className="flex">
-        <ManageAssetTable />
+        <ManageAssetTable setAssetTotal={setAssetTotal} />
       </div>
       <ModalComponent open={open} handleClose={handleClose} />
     </div>

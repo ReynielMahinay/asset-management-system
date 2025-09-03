@@ -8,6 +8,9 @@ async function getAsset() {
   const { rows } = await pool.query(query);
   console.timeEnd("db_query");
 
+  const {rows: countRows} = await pool.query("SELECT COUNT(*) AS total FROM assets");
+  const total = parseInt(countRows[0].total, 10);
+
   console.time("map_format");
   const mapped = rows.map(asset => ({
     id: asset.asset_id,
@@ -21,7 +24,7 @@ async function getAsset() {
   }));
   console.timeEnd("map_format");
 
-  return mapped;
+  return {total, data: mapped};
 }
 
 
@@ -30,5 +33,6 @@ async function insertAsset(name, type, brand){
         [name, type, brand]);
     return result.rows[0];
 }
+
 
 module.exports = {insertAsset, getAsset}
