@@ -28,8 +28,44 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
 import { visuallyHidden } from "@mui/utils";
 import { VscKebabVertical } from "react-icons/vsc";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+// API functions
+const fetchAssets = async () => {
+  const response = await fetch("http://localhost:5000/api/assets");
+  if (!response.ok) {
+    throw new Error("Failed to fetch assets");
+  }
+  return response.json();
+};
+
+const updateAsset = async (asset) => {
+  const response = await fetch(`http://localhost:5000/api/assets/${asset.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(asset),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update asset");
+  }
+  return response.json();
+};
+
+const deleteAsset = async (assetId) => {
+  const response = await fetch(`http://localhost:5000/api/assets/${assetId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to delete asset");
+  }
+  return response.json();
+};
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1;
@@ -44,38 +80,18 @@ function getComparator(order, orderBy) {
 }
 
 const headCells = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "Name",
-  },
+  { id: "name", numeric: false, disablePadding: true, label: "Name" },
   { id: "type", numeric: false, disablePadding: false, label: "Type" },
   { id: "brand", numeric: false, disablePadding: false, label: "Brand" },
-  {
-    id: "serial_number",
-    numeric: false,
-    disablePadding: false,
-    label: "Tag",
-  },
-  {
-    id: "status",
-    numeric: false,
-    disablePadding: false,
-    label: "Status",
-  },
+  { id: "serial_number", numeric: false, disablePadding: false, label: "Tag" },
+  { id: "status", numeric: false, disablePadding: false, label: "Status" },
   {
     id: "time_created",
     numeric: false,
     disablePadding: false,
     label: "Time created",
   },
-  {
-    id: "action",
-    numeric: false,
-    disablePadding: false,
-    label: "Action",
-  },
+  { id: "action", numeric: false, disablePadding: false, label: "Action" },
 ];
 
 function EnhancedTableHead(props) {
@@ -99,7 +115,7 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
+            inputProps={{ "aria-label": "select all assets" }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -137,7 +153,7 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar({ numSelected }) {
+function EnhancedTableToolbar({ numSelected, isRefreshing }) {
   return (
     <Toolbar
       sx={[
@@ -161,14 +177,12 @@ function EnhancedTableToolbar({ numSelected }) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Assets
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", flex: "1 1 100%" }}>
+          <Typography variant="h6" id="tableTitle" component="div">
+            Assets
+          </Typography>
+          {isRefreshing && <CircularProgress size={20} sx={{ ml: 2 }} />}
+        </Box>
       )}
     </Toolbar>
   );
@@ -176,106 +190,125 @@ function EnhancedTableToolbar({ numSelected }) {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  isRefreshing: PropTypes.bool,
 };
 
 // Edit Dialog Component
-// function EditAssetDialog({ open, onClose, asset, onSave }) {
-//   const [editedAsset, setEditedAsset] = React.useState(asset || {});
+function EditAssetDialog({ open, onClose, asset, onSave }) {
+  const [editedAsset, setEditedAsset] = React.useState(asset || {});
 
-//   React.useEffect(() => {
-//     setEditedAsset(asset || {});
-//   }, [asset]);
+  React.useEffect(() => {
+    setEditedAsset(asset || {});
+  }, [asset]);
 
-//   const handleInputChange = (field, value) => {
-//     setEditedAsset((prev) => ({
-//       ...prev,
-//       [field]: value,
-//     }));
-//   };
+  const handleInputChange = (field, value) => {
+    setEditedAsset((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
-//   const handleSave = () => {
-//     onSave(editedAsset);
-//     onClose();
-//   };
+  const handleSave = () => {
+    onSave(editedAsset);
+    onClose();
+  };
 
-//   if (!asset) return null;
+  if (!asset) return null;
 
-//   return (
-//     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-//       <DialogTitle>Edit Asset</DialogTitle>
-//       <DialogContent>
-//         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-//           <TextField
-//             label="Name"
-//             value={editedAsset.name || ""}
-//             onChange={(e) => handleInputChange("name", e.target.value)}
-//             fullWidth
-//           />
-//           <TextField
-//             label="Type"
-//             value={editedAsset.type || ""}
-//             onChange={(e) => handleInputChange("type", e.target.value)}
-//             fullWidth
-//           />
-//           <TextField
-//             label="Brand"
-//             value={editedAsset.brand || ""}
-//             onChange={(e) => handleInputChange("brand", e.target.value)}
-//             fullWidth
-//           />
-//           <TextField
-//             label="Status"
-//             value={editedAsset.status || ""}
-//             onChange={(e) => handleInputChange("status", e.target.value)}
-//             fullWidth
-//           />
-//         </Box>
-//       </DialogContent>
-//       <DialogActions>
-//         <Button onClick={onClose}>Cancel</Button>
-//         <Button onClick={handleSave} variant="contained">
-//           Save
-//         </Button>
-//       </DialogActions>
-//     </Dialog>
-//   );
-// }
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle>Edit Asset</DialogTitle>
+      <DialogContent>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+          <TextField
+            label="Name"
+            value={editedAsset.name || ""}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Type"
+            value={editedAsset.type || ""}
+            onChange={(e) => handleInputChange("type", e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Brand"
+            value={editedAsset.brand || ""}
+            onChange={(e) => handleInputChange("brand", e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Status"
+            value={editedAsset.status || ""}
+            onChange={(e) => handleInputChange("status", e.target.value)}
+            fullWidth
+          />
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleSave} variant="contained">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 export default function ManageAssetTable({ setAssetTotal }) {
-  const [assetData, setAssetData] = React.useState({ total: 0, data: [] });
+  const queryClient = useQueryClient();
+
+  // TanStack Query for fetching assets
+  const {
+    data: assetData = { total: 0, data: [] },
+    isLoading,
+    isError,
+    error,
+    isRefetching,
+  } = useQuery({
+    queryKey: ["assets"],
+    queryFn: fetchAssets,
+    staleTime: 5 * 60 * 1000, // Data considered fresh for 5 minutes
+    refetchInterval: 30 * 1000, // Auto-refetch every 30 seconds
+    refetchOnWindowFocus: true, // Refetch when window gains focus
+    refetchOnMount: true, // Refetch when component mounts
+    onSuccess: (data) => {
+      if (setAssetTotal) {
+        setAssetTotal(Number(data.total));
+      }
+    },
+  });
+
+  // Mutation for updating assets
+  const updateAssetMutation = useMutation({
+    mutationFn: updateAsset,
+    onSuccess: () => {
+      // Invalidate and refetch assets query
+      queryClient.invalidateQueries(["assets"]);
+    },
+    onError: (error) => {
+      console.error("Update failed:", error);
+    },
+  });
+
+  // Mutation for deleting assets
+  const deleteAssetMutation = useMutation({
+    mutationFn: deleteAsset,
+    onSuccess: () => {
+      // Invalidate and refetch assets query
+      queryClient.invalidateQueries(["assets"]);
+    },
+    onError: (error) => {
+      console.error("Delete failed:", error);
+    },
+  });
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const fetchAssets = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/assets");
-      const data = await res.json();
-      console.log("Fetched assets:", data); // 🔎 check what arrives
-      setAssetData(data);
-
-      if (setAssetTotal) {
-        setAssetTotal(Number(data.total));
-      }
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchAssets();
-  }, []);
-
-  const addAsset = async (newAsset) => {
-    await fetch("http://localhost:5000/api/assets", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newAsset),
-    });
-    fetchAssets(); // refresh after adding
-  };
 
   // Action menu state
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -284,6 +317,13 @@ export default function ManageAssetTable({ setAssetTotal }) {
   // Edit dialog state
   const [editDialogOpen, setEditDialogOpen] = React.useState(false);
   const [assetToEdit, setAssetToEdit] = React.useState(null);
+
+  // Update asset total when data changes
+  React.useEffect(() => {
+    if (setAssetTotal && assetData?.total !== undefined) {
+      setAssetTotal(Number(assetData.total));
+    }
+  }, [assetData?.total, setAssetTotal]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -342,15 +382,19 @@ export default function ManageAssetTable({ setAssetTotal }) {
   };
 
   const handleDeleteClick = () => {
-    // Implement delete logic here
-    console.log("Delete asset:", selectedAsset);
+    if (selectedAsset) {
+      deleteAssetMutation.mutate(selectedAsset.id);
+    }
     handleActionClose();
   };
 
   const handleSaveAsset = (editedAsset) => {
-    // Implement save logic here
-    console.log("Save asset:", editedAsset);
-    // You would typically update your data source here
+    updateAssetMutation.mutate(editedAsset);
+  };
+
+  // Manual refetch function
+  const handleRefresh = () => {
+    queryClient.invalidateQueries(["assets"]);
   };
 
   const emptyRows =
@@ -366,10 +410,40 @@ export default function ManageAssetTable({ setAssetTotal }) {
     [assetData.data, order, orderBy, page, rowsPerPage]
   );
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <Box sx={{ p: 2 }}>
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={handleRefresh}>
+              Retry
+            </Button>
+          }
+        >
+          Error loading assets: {error?.message || "Unknown error"}
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          isRefreshing={isRefetching}
+        />
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -382,7 +456,6 @@ export default function ManageAssetTable({ setAssetTotal }) {
             />
             <TableBody>
               {visibleRows.map((asset) => {
-                console.log("Rendering row for:", asset.id);
                 const isItemSelected = selected.includes(asset.id);
                 const labelId = `enhanced-table-checkbox-${asset.id}`;
 
@@ -421,6 +494,10 @@ export default function ManageAssetTable({ setAssetTotal }) {
                       <IconButton
                         onClick={(event) => handleActionClick(event, asset)}
                         size="small"
+                        disabled={
+                          updateAssetMutation.isLoading ||
+                          deleteAssetMutation.isLoading
+                        }
                       >
                         <VscKebabVertical />
                       </IconButton>
@@ -461,29 +538,31 @@ export default function ManageAssetTable({ setAssetTotal }) {
           horizontal: "right",
         }}
       >
-        <MenuItem onClick={handleEditClick}>
-          <ListItemIcon>
-            {/* <EditIcon fontSize="small" /> */}
-            ✏️
-          </ListItemIcon>
+        <MenuItem
+          onClick={handleEditClick}
+          disabled={updateAssetMutation.isLoading}
+        >
+          <ListItemIcon>✏️</ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleDeleteClick}>
-          <ListItemIcon>
-            {/* <DeleteIcon fontSize="small" /> */}
-            🗑️
-          </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
+        <MenuItem
+          onClick={handleDeleteClick}
+          disabled={deleteAssetMutation.isLoading}
+        >
+          <ListItemIcon>🗑️</ListItemIcon>
+          <ListItemText>
+            {deleteAssetMutation.isLoading ? "Deleting..." : "Delete"}
+          </ListItemText>
         </MenuItem>
       </Menu>
 
       {/* Edit Dialog */}
-      {/* <EditAssetDialog
+      <EditAssetDialog
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
         asset={assetToEdit}
         onSave={handleSaveAsset}
-      /> */}
+      />
     </Box>
   );
 }
