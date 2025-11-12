@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { assetData } from "../../../model/SampleData";
+// import { assetData } from "../../../model/SampleData";
 import { VscKebabVertical } from "react-icons/vsc";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";

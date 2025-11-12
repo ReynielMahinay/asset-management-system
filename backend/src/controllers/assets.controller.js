@@ -25,6 +25,25 @@ async function assetGet(req, res){
 }
 
 
+async function assetDelete(req, res){
+    try{
+        const {id} = req.params;
+
+        console.log("Deleting asset with ID", id);
+
+        const deleted = await db.deleteAsset(id);
+
+        if(deleted){
+            res.json({message: "Asset deleted successfuly"})
+        }else{
+            res.status(404).json({error: "Asset not found"})
+        }
+    } catch(error){
+        console.error("Error deleting asset: ", error)
+        res.status(500).json({error: "Database error"})
+    }
+}
+
 module.exports = {
-    assetCreatePost, assetGet
+    assetCreatePost, assetGet, assetDelete
 }
