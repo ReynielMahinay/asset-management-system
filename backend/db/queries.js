@@ -34,5 +34,10 @@ async function insertAsset(name, type, brand){
     return result.rows[0];
 }
 
+async function deleteAsset(id){
+  const result = await pool.query('DELETE FROM assets WHERE asset_id = $1 RETURNING *', [id])
+  return result.rowCount > 0;
+}
 
-module.exports = {insertAsset, getAsset}
+
+module.exports = {insertAsset, getAsset, deleteAsset}
