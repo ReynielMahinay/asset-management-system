@@ -29,8 +29,6 @@ const queryClient = new QueryClient({
 });
 
 function AppContent() {
-  const [isActivePage, setActivePage] = useState("dashboard");
-
   return (
     <div className="flex flex-row min-h-screen">
       <Sidebard />

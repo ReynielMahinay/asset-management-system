@@ -13,9 +13,9 @@ import { MdAssignmentInd } from "react-icons/md";
 
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-function Sidebard({ isActivePage, setActivePage }) {
+function Sidebard() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSideBar = () => {
@@ -97,9 +97,6 @@ function Sidebard({ isActivePage, setActivePage }) {
         }`}
       >
         {menuItem.map((item) => {
-          const isActive = location.pathname === item.path;
-          const Icon = isActive ? item.active_icon : item.icon;
-
           return (
             <NavLink
               to={item.path}
@@ -110,12 +107,20 @@ function Sidebard({ isActivePage, setActivePage }) {
                 }`
               }
             >
-              <Icon size={20} className="flex-shrink-0" />
-              {!isCollapsed && (
-                <span className="transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap">
-                  {item.label}
-                </span>
-              )}
+              {({ isActive }) => {
+                const Icon = isActive ? item.active_icon : item.icon;
+
+                return (
+                  <>
+                    <Icon size={20} className="flex-shrink-0" />
+                    {!isCollapsed && (
+                      <span className="transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap">
+                        {item.label}
+                      </span>
+                    )}
+                  </>
+                );
+              }}
             </NavLink>
           );
         })}
