@@ -13,6 +13,8 @@ import { MdAssignmentInd } from "react-icons/md";
 
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
+import { NavLink, useLocation } from "react-router-dom";
+
 function Sidebard({ isActivePage, setActivePage }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -23,24 +25,28 @@ function Sidebard({ isActivePage, setActivePage }) {
   const menuItem = [
     {
       id: "dashboard",
+      path: "/dashboard",
       icon: LuLayoutDashboard,
       active_icon: RiDashboardFill,
       label: "Dashboard",
     },
     {
       id: "asset",
+      path: "/asset",
       icon: RiAlignItemLeftLine,
       active_icon: RiAlignItemLeftFill,
       label: "Asset",
     },
     {
       id: "manage_user",
+      path: "/manage-user",
       icon: FaRegUser,
       active_icon: FaUser,
       label: "Manage user",
     },
     {
       id: "assignment",
+      path: "/assignment",
       icon: MdOutlineAssignmentInd,
       active_icon: MdAssignmentInd,
       label: "Assignment",
@@ -91,26 +97,26 @@ function Sidebard({ isActivePage, setActivePage }) {
         }`}
       >
         {menuItem.map((item) => {
-          const isActive = isActivePage === item.id;
+          const isActive = location.pathname === item.path;
           const Icon = isActive ? item.active_icon : item.icon;
 
           return (
-            <button
-              className={`flex  items-center gap-2 cursor-pointer  p-4 ${
-                isActive ? "bg-[#e0edfa9f]" : ""
-              } `}
-              onClick={() => setActivePage(item.id)}
+            <NavLink
+              to={item.path}
               key={item.id}
+              className={({ isActive }) =>
+                `flex items-center gap-2 cursor-pointer p-4 ${
+                  isActive ? "bg-[#e0edfa9f]" : ""
+                }`
+              }
             >
               <Icon size={20} className="flex-shrink-0" />
               {!isCollapsed && (
-                <span
-                  className={`transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap`}
-                >
+                <span className="transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap">
                   {item.label}
                 </span>
               )}
-            </button>
+            </NavLink>
           );
         })}
       </div>
