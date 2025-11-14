@@ -9,6 +9,7 @@ import ManageUser from "./features/manage_user/ManageUser";
 import Assignment from "./features/assignment/Assignment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TbRuler } from "react-icons/tb";
+import AppRouter from "./Router/AppRouter";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,42 +30,16 @@ const queryClient = new QueryClient({
 
 function AppContent() {
   const [isActivePage, setActivePage] = useState("dashboard");
-  const [assetTotal, setAssetTotal] = useState(0);
 
-  const renderPageContent = () => {
-    switch (isActivePage) {
-      case "dashboard":
-        return <Dashboard assetTotal={assetTotal} />;
-      case "asset":
-        return (
-          <AssetPage setAssetTotal={setAssetTotal} assetTotal={assetTotal} />
-        );
-      case "manage_user":
-        return <ManageUser />;
-      case "assignment":
-        return <Assignment />;
-      default:
-        return <Dashboard assetTotal={assetTotal} />;
-    }
-  };
-
-  React.useEffect(() => {
-    console.log("assetTotal updated:", assetTotal);
-  }, [assetTotal]);
   return (
     <div className="flex flex-row min-h-screen">
-      <Sidebard setActivePage={setActivePage} isActivePage={isActivePage} />
+      <Sidebard />
 
       <section className="w-full flex flex-col">
-        <NavBar isActivePage={isActivePage} />
-        <div
-          className={`transition-all duration-700 ease-out p-4 ${
-            isActivePage ? "opacity-100 translate-0" : "opacity-0 translate-y-5"
-          }`}
-        >
-          {renderPageContent()}
+        <NavBar />
+        <div className="transition-all duration-700 ease-out p-4">
+          <AppRouter />
         </div>
-        {/* <Footer /> */}
       </section>
     </div>
   );
