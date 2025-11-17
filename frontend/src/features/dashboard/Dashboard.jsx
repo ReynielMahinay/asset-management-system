@@ -22,10 +22,14 @@ function Dashboard() {
         />
       ))}
 
-      <div className="flex flex-col gap-10 bg-white col-span-full shadow-md rounded-md h-[100%] p-4 overflow-hidden py-10">
-        <BarChartAssets />
-        <div className="flex flex-1 flex-row justify-center items-center ">
+      <div className="flex flex-col gap-5 bg-white col-span-full shadow-md rounded-md h-[100%] p-4 overflow-hidden py-5">
+        <div className="border-gray-300 border-2 rounded-lg p-5">
+          <BarChartAssets />
+        </div>
+
+        <div className="flex flex-1 flex-row justify-center items-center gap-5">
           <PieChartAssets />
+
           <AreaChartAssets />
         </div>
       </div>

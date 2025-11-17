@@ -9,8 +9,10 @@ import ManageUser from "./features/manage_user/ManageUser";
 import Assignment from "./features/assignment/Assignment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TbRuler } from "react-icons/tb";
-import AppRouter from "./Router/AppRouter";
-
+import Breadcrumbs from "./components/common/Breadcrumbs";
+import { Outlet } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./Router/AppRouter";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -28,25 +30,10 @@ const queryClient = new QueryClient({
   },
 });
 
-function AppContent() {
-  return (
-    <div className="flex flex-row min-h-screen">
-      <Sidebard />
-
-      <section className="w-full flex flex-col">
-        <NavBar />
-        <div className="transition-all duration-700 ease-out p-4">
-          <AppRouter />
-        </div>
-      </section>
-    </div>
-  );
-}
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContent />
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }

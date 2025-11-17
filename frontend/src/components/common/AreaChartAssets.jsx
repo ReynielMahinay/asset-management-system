@@ -57,7 +57,10 @@ const data = [
 // #endregion
 const AreaChartAssets = () => {
   return (
-    <div style={{ width: "100%", height: "350px" }}>
+    <div
+      style={{ width: "100%", height: "350px" }}
+      className="border-gray-300 border-2 rounded-lg p-5"
+    >
       <ResponsiveContainer>
         <AreaChart
           data={data}
