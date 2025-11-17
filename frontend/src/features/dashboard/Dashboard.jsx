@@ -3,6 +3,8 @@ import Card from "../../components/common/Card";
 import { dashboardData } from "../../model/SampleData";
 import BarChartAssets from "../../components/common/BarChartAssets";
 import { useAssets } from "../../hooks/useAssets";
+import PieChartAssets from "../../components/common/PieChartAssets";
+import AreaChartAssets from "../../components/common/AreaChartAssets";
 
 function Dashboard() {
   const { data, isLoading, error } = useAssets();
@@ -20,9 +22,12 @@ function Dashboard() {
         />
       ))}
 
-      <div className="bg-white col-span-full shadow-md rounded-md h-[100%] p-4 overflow-hidden">
-        <p>Test</p>
-        {/* <BarChartAssets /> */}
+      <div className="flex flex-col gap-10 bg-white col-span-full shadow-md rounded-md h-[100%] p-4 overflow-hidden py-10">
+        <BarChartAssets />
+        <div className="flex flex-1 flex-row justify-center items-center ">
+          <PieChartAssets />
+          <AreaChartAssets />
+        </div>
       </div>
     </div>
   );
