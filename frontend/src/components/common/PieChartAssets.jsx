@@ -90,7 +90,10 @@ const renderActiveShape = (props) => {
 
 export default function PieChartAssets() {
   return (
-    <div style={{ width: "100%", height: 350 }}>
+    <div
+      style={{ width: "100%", height: 350 }}
+      className="border-gray-300 border-2 p-5 rounded-lg"
+    >
       <ResponsiveContainer>
         <PieChart
           margin={{

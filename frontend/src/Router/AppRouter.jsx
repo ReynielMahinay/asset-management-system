@@ -1,28 +1,35 @@
-import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { createBrowserRouter } from "react-router-dom";
+import Layout from "../components/layout/Layout";
 import Dashboard from "../features/dashboard/Dashboard";
 import AssetPage from "../features/asset/AssetPage";
 import Assignment from "../features/assignment/Assignment";
 import ManageUser from "../features/manage_user/ManageUser";
 
-function AppRouter() {
-  const [assetTotal, setAssetTotal] = useState(0);
-  return (
-    <Routes>
-      <Route
-        path="/dashboard"
-        element={<Dashboard assetTotal={assetTotal} />}
-      />
-      <Route
-        path="/asset"
-        element={
-          <AssetPage assetTotal={assetTotal} setAssetTotal={setAssetTotal} />
-        }
-      />
-      <Route path="/assignment" element={<Assignment />} />
-      <Route path="/manage-user" element={<ManageUser />} />
-    </Routes>
-  );
-}
-
-export default AppRouter;
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+        handle: { breadcrumb: "Dashboard" },
+      },
+      {
+        path: "asset",
+        element: <AssetPage />,
+        handle: { breadcrumb: "Asset" },
+      },
+      {
+        path: "assignment",
+        element: <Assignment />,
+        handle: { breadcrumb: "Assignment" },
+      },
+      {
+        path: "manage-user",
+        element: <ManageUser />,
+        handle: { breadcrumb: "Manage User" },
+      },
+    ],
+  },
+]);

@@ -1,13 +1,14 @@
 import React from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
+import Breadcrumbs from "../common/Breadcrumbs";
 
 const NavBar = ({ isActivePage }) => {
   return (
     <div className="bg-[#eef1f4] px-4 py-2 flex flex-row justify-between items-center text-midnight">
       <div>
         <h1 className="capitalize font-open-sans font-semibold text-[.8rem] ">
-          {isActivePage}
+          <Breadcrumbs />
         </h1>
       </div>
       <div className="flex flex-row gap-2 justify-center items-center">
