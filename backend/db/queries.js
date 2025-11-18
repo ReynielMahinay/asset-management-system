@@ -26,26 +26,38 @@ async function getAsset({ page = 1, pageSize = 5, sort = "asset_id", order = "AS
   const { rows: countRows } = await pool.query("SELECT COUNT(*) AS total FROM assets");
   const total = parseInt(countRows[0].total, 10);
 
+  const {rows: statusCount } = await pool.query(`SELECT COUNT(*) FILTER (WHERE asset_status = 'Assigned') AS assigned_count, 
+    COUNT(*) FILTER (WHERE asset_status <> 'Assigned') AS not_assigned_count FROM assets`);
+
+  const {assigned_count, not_assigned_count} = statusCount[0];
+
   // Map
   const data = rows.map(asset => ({
     id: asset.asset_id,
     name: asset.asset_name,
     type: asset.asset_type,
     brand: asset.asset_brand,
+    tag: asset.asset_tag,
     status: asset.asset_status,
     assignedTo: asset.assigned_to,
     timeCreated: asset.created_at,
     timeUpdated: asset.updated_at,
   }));
 
-  return { total, page, pageSize, data };
+  return { total, page, pageSize, data, assignedCount: Number(assigned_count), notAssignedCount: Number(not_assigned_count) };
 }
 
-async function insertAsset(name, type, brand){
-   const result =  await pool.query("INSERT INTO assets (asset_name, asset_type, asset_brand) VALUES ($1, $2, $3) RETURNING *", 
-        [name, type, brand]);
-    return result.rows[0];
+async function insertAsset(name, type, brand, tag, status, assigned_to = null){
+   const result =  await pool.query(
+     `INSERT INTO assets 
+       (asset_name, asset_type, asset_brand, asset_tag, asset_status, assigned_to)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *`, 
+     [name, type, brand, tag, status, assigned_to]
+   );
+   return result.rows[0];
 }
+
 
 async function deleteAsset(id){
   const result = await pool.query('DELETE FROM assets WHERE asset_id = $1 RETURNING *', [id])

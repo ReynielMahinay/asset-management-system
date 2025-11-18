@@ -5,9 +5,9 @@ import { TbBackground } from "react-icons/tb";
 
 function Card({ title, Icon, number, text_color }) {
   return (
-    <div className="bg-white rounded-md p-4 shadow-sm hover:shadow-lg flex justify-between font-open-sans text-midnight flex-wrap flex-1 transition-transform duration-150 ease-in-out hover:scale-105">
+    <div className="bg-white rounded-md p-4 shadow-sm hover:shadow-lg flex justify-between font-poppins text-midnight flex-wrap flex-1 transition-transform duration-150 ease-in-out hover:scale-105">
       <div className="flex flex-col gap-3">
-        <p className="text-[.8rem] font-semibold">{title}</p>
+        <p className="text-[.8rem] font-medium">{title}</p>
         <p className="text-[1.8rem] font-bold">{number}</p>
       </div>
       <div className="flex flex-col justify-end items-center gap-2">

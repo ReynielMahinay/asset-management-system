@@ -2,10 +2,10 @@ const db = require('../../db/queries')
 
 async function assetCreatePost(req, res){
     try{
-        const {name, type, brand} = req.body
+        const {name, type, brand, tag, status, assigned_to = null } = req.body
     console.log("Received data:", req.body);
 
-        const newAsset = await db.insertAsset(name, type, brand);
+        const newAsset = await db.insertAsset(name, type, brand, tag, status, assigned_to);
         console.log("Inserted asset:", newAsset);
         res.json(newAsset);
     }catch (error){

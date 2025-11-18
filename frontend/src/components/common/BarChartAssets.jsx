@@ -14,11 +14,14 @@ import { useAssets } from "../../hooks/useAssets";
 const BarChartAssets = () => {
   const { data, isLoading, error } = useAssets();
   const totalAssets = data?.total || 0;
+  const assignedAsset = data?.assignedCount || 0;
+  const notAssignedAsset = data?.notAssignedCount || 0;
+
   const assetData = [
     { name: "Total Asset", assets: totalAssets },
     { name: "Recently Added", assets: 3 },
-    { name: "Assigned Asset", assets: 4 },
-    { name: "Unassigned Asset", assets: 5 },
+    { name: "Assigned Asset", assets: assignedAsset },
+    { name: "Unassigned Asset", assets: notAssignedAsset },
   ];
 
   return (

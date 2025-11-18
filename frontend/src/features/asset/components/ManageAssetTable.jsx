@@ -25,6 +25,7 @@ const columnMap = {
   type: "asset_type",
   brand: "asset_brand",
   serialNumber: "serial_number",
+  tag: "asset_tag",
   status: "asset_status",
   timeCreated: "created_at",
 };
@@ -211,7 +212,7 @@ export default function ManageAssetTable({ setAssetTotal }) {
                   <TableCell>{asset.name}</TableCell>
                   <TableCell>{asset.type}</TableCell>
                   <TableCell>{asset.brand}</TableCell>
-                  <TableCell>{asset.serialNumber}</TableCell>
+                  <TableCell>{asset.tag}</TableCell>
                   <TableCell>{asset.status}</TableCell>
                   <TableCell>{asset.timeCreated}</TableCell>
                 </TableRow>
