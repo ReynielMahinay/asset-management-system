@@ -22,13 +22,12 @@ function Dashboard() {
         />
       ))}
 
-      {/* Updated chart container - removed h-[100%] and overflow-hidden, added min-h-[400px] */}
-      <div className="flex flex-col gap-5 bg-white col-span-full shadow-md rounded-md min-h-[400px] p-4 py-5">
-        <div className="border-gray-300 border-2 rounded-lg p-5 ">
+      <div className="flex flex-col gap-5 bg-white col-span-full shadow-md rounded-md h-full w-full p-4 overflow-hidden py-5">
+        <div className="border-gray-300 border-2 rounded-lg p-5 h-full w-full">
           <BarChartAssets />
         </div>
 
-        <div className="flex flex-1 flex-row justify-center items-center gap-5">
+        <div className="flex flex-1 flex-row justify-center items-center gap-5 h-full w-full">
           <PieChartAssets />
           <AreaChartAssets />
         </div>

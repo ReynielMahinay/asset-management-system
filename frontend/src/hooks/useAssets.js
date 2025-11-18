@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchAssets } from "../api/assets";
 
-export function useAssets() {
+export function useAssets({ page = 1, pageSize = 5, sort = "asset_id", order = "asc" } = {}) {
   return useQuery({
-    queryKey: ["assets"],//Unique key to identify this query in the cache
-    queryFn: fetchAssets,//the Actual fecth function from the database
-    staleTime: 5 * 60 * 1000,//the refetch refresh
-    refetchOnWindowFocus: false,
+    queryKey: ["assets", page, pageSize, sort, order],
+    queryFn: () => fetchAssets({ page, pageSize, sort, order }),
   });
 }
+

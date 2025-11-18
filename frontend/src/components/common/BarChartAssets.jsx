@@ -22,13 +22,8 @@ const BarChartAssets = () => {
   ];
 
   return (
-    <div style={{ width: "100%", height: "100%", minHeight: "350px" }}>
-      <ResponsiveContainer
-        width="100%"
-        height="100%"
-        minWidth={300}
-        minHeight={350}
-      >
+    <div style={{ width: "100%", height: "350px" }}>
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={assetData}
           margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
@@ -38,11 +33,7 @@ const BarChartAssets = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar
-            dataKey="assets"
-            fill="#3B82F6"
-            activeBar={<Rectangle fill="#293034" />}
-          />
+          <Bar dataKey="assets" fill="#3B82F6" />
         </BarChart>
       </ResponsiveContainer>
     </div>

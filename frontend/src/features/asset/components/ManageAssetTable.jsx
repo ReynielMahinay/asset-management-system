@@ -20,6 +20,15 @@ import { visuallyHidden } from "@mui/utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAssets } from "../../../api/assets";
 
+const columnMap = {
+  name: "asset_name",
+  type: "asset_type",
+  brand: "asset_brand",
+  serialNumber: "serial_number",
+  status: "asset_status",
+  timeCreated: "created_at",
+};
+
 // Table Head Cells
 const headCells = [
   { id: "name", label: "Name" },
@@ -128,9 +137,9 @@ export default function ManageAssetTable({ setAssetTotal }) {
     queryKey: ["assets", page, rowsPerPage, orderBy, order],
     queryFn: () =>
       fetchAssets({
-        page: page + 1, // API pages are usually 1-indexed
+        page: page + 1,
         pageSize: rowsPerPage,
-        sort: orderBy,
+        sort: columnMap[orderBy] || "asset_id",
         order,
       }),
     keepPreviousData: true,
@@ -138,8 +147,10 @@ export default function ManageAssetTable({ setAssetTotal }) {
   });
 
   const handleRequestSort = (_, property) => {
+    setOrder((prev) =>
+      orderBy === property && prev === "asc" ? "desc" : "asc"
+    );
     setOrderBy(property);
-    setOrder(orderBy === property && order === "asc" ? "desc" : "asc");
   };
 
   const handleSelectAllClick = (e) =>
@@ -184,7 +195,7 @@ export default function ManageAssetTable({ setAssetTotal }) {
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
               numSelected={selected.length}
-              rowCount={data.total} // Use total here!
+              rowCount={data.data.length} // Use total here!
               onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
