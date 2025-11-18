@@ -7,11 +7,17 @@ CREATE TABLE IF NOT EXISTS assets (
     asset_name VARCHAR(200) NOT NULL,
     asset_type VARCHAR(50) NOT NULL,
     asset_brand VARCHAR(50) NOT NULL,
+    asset_tag VARCHAR(50) NOT NULL,
     asset_status VARCHAR(20) CHECK (asset_status IN ('assigned', 'unassigned', 'in-repair')) DEFAULT 'unassigned',
     assigned_to INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+`
+
+const ALTER_SQL = `
+    ALTER TABLE assets
+    ADD COLUMN IF NOT EXISTS asset_tag VARCHAR(100) NOT NULL;
 `
 
 async function main(){

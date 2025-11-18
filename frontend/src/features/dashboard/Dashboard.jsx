@@ -9,6 +9,8 @@ import AreaChartAssets from "../../components/common/AreaChartAssets";
 function Dashboard() {
   const { data, isLoading, error } = useAssets();
   const assetTotal = data?.total || 0;
+  const assignedAsset = data?.assignedCount || 0;
+  const notAssignedAsset = data?.notAssignedCount || 0;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -16,7 +18,15 @@ function Dashboard() {
         <Card
           key={index}
           title={item.title}
-          number={item.key === "assets" ? assetTotal : item.number}
+          number={
+            item.key === "assets"
+              ? assetTotal
+              : item.key == "assigned"
+              ? assignedAsset
+              : item.key == "unassigned"
+              ? notAssignedAsset
+              : item.number
+          }
           Icon={item.icon}
           text_color={item.text_color}
         />

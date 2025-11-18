@@ -64,7 +64,7 @@ function Sidebard() {
           isCollapsed ? "hidden" : "block"
         }`}
       >
-        <h1>Assefy</h1>
+        <h1>Assetfy</h1>
         <button onClick={toggleSideBar} className="cursor-pointer group">
           <TbLayoutSidebarLeftCollapse
             size={24}
