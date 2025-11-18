@@ -14,14 +14,28 @@ async function assetCreatePost(req, res){
     }
 }
 
-async function assetGet(req, res){
-    try{
-        const assets = await db.getAsset()
-        res.json(assets)
-    }catch(err){
-        console.error(err)
-        res.status(500).json({error: "Database error"})
-    }
+async function assetGet(req, res) {
+  try {
+    const {
+      page = 1,
+      pageSize = 5,
+      sort = "asset_id",
+      order = "asc",
+    } = req.query;
+
+    const assets = await db.getAsset({
+      page: Number(page),
+      pageSize: Number(pageSize),
+      sort,
+      order: order.toUpperCase(),
+    });
+
+    res.json(assets);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
 }
 
 
