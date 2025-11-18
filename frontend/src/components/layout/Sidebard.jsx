@@ -55,7 +55,7 @@ function Sidebard() {
 
   return (
     <div
-      className={`bg-white text-midnight shadow-md min-h-screen flex flex-col transition-all duration-300 eass-in-out ${
+      className={`bg-white text-midnight shadow-md min-h-screen flex flex-col transition-all duration-300 eass-in-out overflow-hidden overflow-y-auto ${
         isCollapsed ? "w-16 gap-5 " : "w-64 gap-5"
       }`}
     >

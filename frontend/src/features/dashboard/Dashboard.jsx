@@ -8,8 +8,8 @@ import AreaChartAssets from "../../components/common/AreaChartAssets";
 
 function Dashboard() {
   const { data, isLoading, error } = useAssets();
-
   const assetTotal = data?.total || 0;
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {dashboardData.map((item, index) => (
@@ -29,7 +29,6 @@ function Dashboard() {
 
         <div className="flex flex-1 flex-row justify-center items-center gap-5 h-full w-full">
           <PieChartAssets />
-
           <AreaChartAssets />
         </div>
       </div>

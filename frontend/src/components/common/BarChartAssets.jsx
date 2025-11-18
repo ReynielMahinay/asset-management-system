@@ -9,14 +9,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
 import { useAssets } from "../../hooks/useAssets";
 
 const BarChartAssets = () => {
   const { data, isLoading, error } = useAssets();
-
   const totalAssets = data?.total || 0;
-
   const assetData = [
     { name: "Total Asset", assets: totalAssets },
     { name: "Recently Added", assets: 3 },

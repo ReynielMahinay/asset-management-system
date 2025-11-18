@@ -1,36 +1,36 @@
-import { MdOutlineInventory2 } from "react-icons/md";
-import { BiAddToQueue } from "react-icons/bi";
+import { LuPackagePlus } from "react-icons/lu";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { FiPackage } from "react-icons/fi";
+import { FaRegCircleXmark } from "react-icons/fa6";
 
-import { MdAssignmentTurnedIn } from "react-icons/md";
-import { MdAssignmentLate } from "react-icons/md";
 
 
 export const dashboardData = [
     {
        title: 'Total Asset',
         number: 1040,
-        icon: MdOutlineInventory2,
+        icon: FiPackage,
         key: "assets",
         text_color: "#3B82F6"
     },
     {
         title: 'Recently Added',
         number: 40,
-        icon: BiAddToQueue ,
+        icon: LuPackagePlus ,
         key: "recently",
         text_color: "#22C55E"
     },
     {
         title: 'Assigned Asset',
         number: 940,
-        icon: MdAssignmentTurnedIn ,
+        icon: FaRegCheckCircle ,
         key: "assigned",
         text_color: "#6366F1"
     },
     {
         title: 'Unassigned Asset',
         number: 300,
-        icon: MdAssignmentLate,
+        icon: FaRegCircleXmark,
         key: "unassigned",
         text_color: "#F59E0B"
     }
