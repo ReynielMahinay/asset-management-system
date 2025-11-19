@@ -36,7 +36,13 @@ const BarChartAssets = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="assets" fill="#3B82F6" />
+          <Bar
+            dataKey="assets"
+            fill="#3B82F6"
+            activeBar={
+              <Rectangle fill="var(--color-midnight)" stroke="white" />
+            }
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
