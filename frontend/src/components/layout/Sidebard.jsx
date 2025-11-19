@@ -10,6 +10,7 @@ import { FaRegUser } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { MdOutlineAssignmentInd } from "react-icons/md";
 import { MdAssignmentInd } from "react-icons/md";
+import { IoMdSettings } from "react-icons/io";
 
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
@@ -56,11 +57,11 @@ function Sidebard() {
   return (
     <div
       className={`bg-white text-midnight shadow-md min-h-screen flex flex-col transition-all duration-300 eass-in-out overflow-hidden overflow-y-auto ${
-        isCollapsed ? "w-16 gap-5 " : "w-64 gap-5"
+        isCollapsed ? "w-16 gap-1 " : "w-64 gap-1"
       }`}
     >
       <div
-        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 p-3 ${
+        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 px-3 py-3 ${
           isCollapsed ? "hidden" : "block"
         }`}
       >
@@ -78,7 +79,7 @@ function Sidebard() {
       </div>
 
       <div
-        className={`flex justify-center items-center p-4 ${
+        className={`flex justify-center items-center  px-3 py-4 ${
           isCollapsed ? "block" : "hidden"
         }`}
       >
@@ -90,40 +91,55 @@ function Sidebard() {
           />
         </button>
       </div>
+      <div className="border-b border-gray-300 w-full" />
 
-      <div
-        className={`flex flex-col   gap-1 ${
-          isCollapsed ? "justify- items-center" : " "
-        }`}
-      >
-        {menuItem.map((item) => {
-          return (
-            <NavLink
-              to={item.path}
-              key={item.id}
-              className={({ isActive }) =>
-                `flex items-center gap-2 cursor-pointer p-4 ${
-                  isActive ? "bg-[#e0edfa9f]" : ""
-                }`
-              }
-            >
-              {({ isActive }) => {
-                const Icon = isActive ? item.active_icon : item.icon;
+      <div className="flex flex-col justify-between h-full">
+        <div
+          className={`flex flex-col  gap-1 py-2 ${
+            isCollapsed ? "justify-center items-center" : "  "
+          }`}
+        >
+          {menuItem.map((item) => {
+            return (
+              <NavLink
+                to={item.path}
+                key={item.id}
+                className={({ isActive }) =>
+                  `flex items-center gap-2 cursor-pointer p-3 ${
+                    isActive ? "bg-midnight mx-2 rounded-md text-white" : "mx-2"
+                  }`
+                }
+              >
+                {({ isActive }) => {
+                  const Icon = isActive ? item.active_icon : item.icon;
 
-                return (
-                  <>
-                    <Icon size={20} className="flex-shrink-0" />
-                    {!isCollapsed && (
-                      <span className="transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap">
-                        {item.label}
-                      </span>
-                    )}
-                  </>
-                );
-              }}
-            </NavLink>
-          );
-        })}
+                  return (
+                    <>
+                      <Icon size={20} className="flex-shrink-0" />
+                      {!isCollapsed && (
+                        <span className="transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap">
+                          {item.label}
+                        </span>
+                      )}
+                    </>
+                  );
+                }}
+              </NavLink>
+            );
+          })}
+        </div>
+
+        <div className="font-dm-sans whitespace-nowrap">
+          <div className="border-b border-gray-300 w-full" />
+          <div className="flex flex-row gap-2 p-4">
+            <IoMdSettings size={25} />
+            {!isCollapsed && (
+              <p className="font-semibold transition-opacity duration-300 text-small">
+                Settings
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,6 @@
 import { PieChart, Pie, Sector, Tooltip, ResponsiveContainer } from "recharts";
-
-const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
-];
+import { useAssets } from "../../hooks/useAssets";
+import { use } from "react";
 
 const renderActiveShape = (props) => {
   const {
@@ -72,7 +67,7 @@ const renderActiveShape = (props) => {
       <circle cx={ex} cy={ey} r={2} fill={fill} />
 
       <text x={ex + (cos >= 0 ? 12 : -12)} y={ey} textAnchor={textAnchor}>
-        PV {value}
+        Asset {value}
       </text>
 
       <text
@@ -89,6 +84,15 @@ const renderActiveShape = (props) => {
 };
 
 export default function PieChartAssets() {
+  const { data, isLoading, error } = useAssets();
+
+  const assignedAsset = data?.assignedCount || 0;
+  const notAssignedAsset = data?.notAssignedCount || 0;
+
+  const assetData = [
+    { name: "Assigned", value: assignedAsset },
+    { name: "Not Assigned", value: notAssignedAsset },
+  ];
   return (
     <div
       style={{ width: "100%", height: 350 }}
@@ -105,12 +109,12 @@ export default function PieChartAssets() {
         >
           <Pie
             activeShape={renderActiveShape}
-            data={data}
+            data={assetData}
             cx="50%"
             cy="50%"
             innerRadius="60%"
             outerRadius="80%"
-            fill="#8884d8"
+            fill="#3B82F6"
             dataKey="value"
             isAnimationActive={true}
           />
