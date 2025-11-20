@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputFieldComponent from "../../../components/common/InputFieldComponent";
 import SelectComponent from "../../../components/common/SelectComponent";
 import { statusOptions } from "../../../data/options";
 import Divider from "@mui/material/Divider";
 import Button from "../../../components/common/Button";
-import { useQueryClient } from "@tanstack/react-query";
+import { useCreateAsset, useUpdateAsset } from "../../../hooks/useAssets";
 
-function AssetForm({ handleClose }) {
-  const queryClient = useQueryClient();
+function AssetForm({ handleClose, mode = "add", asset = null }) {
+  const createMutation = useCreateAsset();
+  const updateMutation = useUpdateAsset();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,87 +19,85 @@ function AssetForm({ handleClose }) {
     assigned_to: null,
   });
 
+  useEffect(() => {
+    if (mode === "edit" && asset) {
+      setFormData({
+        name: asset.name || "",
+        type: asset.type || "",
+        brand: asset.brand || "",
+        tag: asset.tag || "",
+        status: (asset.status || "unassigned").toLowerCase(),
+        assigned_to: asset.assignedTo || null,
+      });
+    }
+  }, [mode, asset]);
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submit click", formData);
 
     try {
-      const res = await fetch("http://localhost:5000/api/assets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        console.log("Asset saved:", data);
-
-        // Refresh asset table
-        queryClient.invalidateQueries(["assets"]);
-        handleClose();
+      if (mode === "add") {
+        await createMutation.mutateAsync(formData);
       } else {
-        console.error("Failed to save asset");
+        await updateMutation.mutateAsync({ id: asset.id, data: formData });
       }
+      handleClose();
     } catch (error) {
       console.error("Error submitting asset:", error);
     }
   };
 
   return (
-    <div className="bg-white rounded-md w-full ">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Name */}
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <InputFieldComponent
+        label="Name"
+        value={formData.name}
+        onChange={(e) => handleChange("name", e.target.value)}
+      />
+
+      <div className="flex flex-row gap-4 w-full">
         <InputFieldComponent
-          label="Name"
-          value={formData.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-          required
+          label="Type"
+          value={formData.type}
+          onChange={(e) => handleChange("type", e.target.value)}
+          className="flex-1"
         />
-
-        {/* Type & Brand */}
-        <div className="flex flex-row gap-4 w-full">
-          <InputFieldComponent
-            label="Type"
-            value={formData.type}
-            onChange={(e) => handleChange("type", e.target.value)}
-            className="flex-1"
-          />
-          <InputFieldComponent
-            label="Brand"
-            value={formData.brand}
-            onChange={(e) => handleChange("brand", e.target.value)}
-            className="flex-1"
-          />
-        </div>
-
-        {/* Tag */}
         <InputFieldComponent
-          label="Tag / Serial Number"
-          value={formData.tag}
-          onChange={(e) => handleChange("tag", e.target.value)}
+          label="Brand"
+          value={formData.brand}
+          onChange={(e) => handleChange("brand", e.target.value)}
+          className="flex-1"
         />
+      </div>
 
-        {/* Status */}
-        <SelectComponent
-          options={statusOptions}
-          label="Status"
-          value={formData.status}
-          onChange={(value) => handleChange("status", value)}
+      <InputFieldComponent
+        label="Tag / Serial Number"
+        value={formData.tag}
+        onChange={(e) => handleChange("tag", e.target.value)}
+      />
+
+      <SelectComponent
+        label="Status"
+        options={statusOptions}
+        value={formData.status || "unassigned"}
+        onChange={(val) => handleChange("status", val)}
+      />
+
+      <Divider />
+
+      <div className="flex flex-row gap-2 justify-end items-center">
+        <Button title="Cancel" variant="danger" onClick={handleClose} />
+        <Button
+          title={mode === "add" ? "Submit" : "Save changes"}
+          variant="modal_primary"
+          type="submit"
         />
-
-        <Divider />
-
-        {/* Buttons */}
-        <div className="flex flex-row gap-2 justify-end items-center">
-          <Button title="Cancel" variant="danger" onClick={handleClose} />
-          <Button title="Submit" variant="modal_primary" type="submit" />
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 }
 

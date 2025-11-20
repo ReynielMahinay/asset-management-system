@@ -36,3 +36,32 @@ export async function deleteAsset(id){
   }
   return res.json()
 }
+
+
+export async function createAsset(formData) {
+  const res = await fetch(`http://localhost:5000/api/assets`, {
+    method: "POST",
+    headers: {"Content-Type" : "application/json"},
+    body: JSON.stringify(formData),
+  })
+
+  if(!res.ok) {
+    throw new Error("Failed to create asset")
+  }
+
+  return res.json()
+}
+
+export async function updateAsset(id, formData){
+  const res = await fetch(`http://localhost:5000/api/assets/${id}`, {
+    method: "PUT",
+    headers: {"Content-Type" : "application/json"},
+    body: JSON.stringify(formData)
+  })
+
+  if(!res.ok){
+    throw new Error("Failed to update asset")
+  }
+
+  return res.json()
+}

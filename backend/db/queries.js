@@ -64,5 +64,22 @@ async function deleteAsset(id){
   return result.rowCount > 0;
 }
 
+async function updateAsset(id, name, type, brand, tag, status, assigned_to = null) {
+  const result = await pool.query(
+    `UPDATE assets 
+     SET asset_name=$1,
+         asset_type=$2,
+         asset_brand=$3,
+         asset_tag=$4,
+         asset_status=$5,
+         assigned_to=$6,
+         updated_at=NOW()
+     WHERE asset_id=$7
+     RETURNING *`,
+    [name, type, brand, tag, status, assigned_to, id]
+  );
 
-module.exports = {insertAsset, getAsset, deleteAsset}
+  return result.rows[0]; // undefined if asset not found
+}
+
+module.exports = {insertAsset, getAsset, deleteAsset, updateAsset}

@@ -1,12 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { dashboardchartdata } from "../../model/SampleData";
 import Button from "../../components/common/Button";
 import { FaPlus } from "react-icons/fa6";
-import Dropdown from "../../components/common/Dropdown";
-import { typeOptions } from "../../data/options";
-import { brandOptions } from "../../data/options";
-import SelectComponent from "../../components/common/SelectComponent";
-import DatePickerComponent from "../../components/common/DatePickerComponent";
 import ModalComponent from "../../components/common/ModalComponent";
 import ManageAssetTable from "./components/ManageAssetTable";
 import { useAssets } from "../../hooks/useAssets";
@@ -14,7 +9,19 @@ import SearchInput from "../../components/common/SearchInput";
 
 function AssetPage() {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const [modalMode, setModalMode] = useState("add");
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const handleAddOpen = () => {
+    setModalMode("add");
+    setSelectedAsset(null);
+    setOpen(true);
+  };
+
+  const handleEditOpen = (asset) => {
+    setModalMode("edit");
+    setSelectedAsset(asset);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
   const { data: assetData, isLoading } = useAssets();
 
@@ -33,7 +40,7 @@ function AssetPage() {
               title={"Add asset"}
               icon={<FaPlus size={12} />}
               variant="primary"
-              onClick={handleOpen}
+              onClick={handleAddOpen}
             />
             <Button
               title={"Delete asset"}
@@ -70,9 +77,14 @@ function AssetPage() {
         </div> */}
       </div>
       <div className="flex">
-        <ManageAssetTable />
+        <ManageAssetTable onEdit={handleEditOpen} />
       </div>
-      <ModalComponent open={open} handleClose={handleClose} />
+      <ModalComponent
+        open={open}
+        handleClose={handleClose}
+        mode={modalMode}
+        asset={selectedAsset}
+      />
     </div>
   );
 }

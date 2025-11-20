@@ -122,7 +122,7 @@ function EnhancedTableToolbar({ numSelected, isRefreshing }) {
 }
 
 // Main Table Component
-export default function ManageAssetTable({ setAssetTotal }) {
+export default function ManageAssetTable({ setAssetTotal, onEdit }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
@@ -219,8 +219,9 @@ export default function ManageAssetTable({ setAssetTotal }) {
                   <TableCell>{asset.timeCreated}</TableCell>
                   <TableCell>
                     <KebabMenu
-                      onEdit={() => console.log("Edit:", asset.id)}
+                      onEdit={onEdit}
                       assetId={asset.id}
+                      asset={asset}
                     />
                   </TableCell>
                 </TableRow>

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
-import { fetchAssets, deleteAsset } from "../api/assets";
+import { fetchAssets, deleteAsset, updateAsset, createAsset } from "../api/assets";
 
 export function useAssets({ page = 1, pageSize = 5, sort = "asset_id", order = "asc" } = {}) {
   return useQuery({
@@ -8,6 +8,27 @@ export function useAssets({ page = 1, pageSize = 5, sort = "asset_id", order = "
   });
 }
 
+//Hook for create asset
+export function useCreateAsset(){
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: createAsset,
+    onSuccess: () => queryClient.invalidateQueries(["assets"])
+  })
+}
+
+//Hook for updating asset
+export function useUpdateAsset(){
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({id, data}) => updateAsset(id, data),
+    onSuccess: () => queryClient.invalidateQueries(["assets"])
+  })
+}
+
+//Hook for deleting asset
 export function useDeleteAsset(){
   const queryClient = useQueryClient()
 
@@ -19,3 +40,4 @@ export function useDeleteAsset(){
     }
   })
 }
+

@@ -58,6 +58,28 @@ async function assetDelete(req, res){
     }
 }
 
+async function assetUpdate(req, res){
+
+  try{
+    const {id} = req.params;
+    const {name, type, brand, tag, status, assigned_to = null} = req.body;
+
+    console.log("Updating asset", id, req.body)
+
+    const updated = await db.updateAsset(id, name, type, brand, tag, status, assigned_to)
+
+    if(!updated){
+      return res.status(404).json({error: "Asset not found"})
+    }
+
+    res.json(updated)
+  } catch(error){
+    console.error("Error updating asset:", error);
+    res.status(500).json({error: "Database error"})
+  }
+  
+}
+
 module.exports = {
-    assetCreatePost, assetGet, assetDelete
+    assetCreatePost, assetGet, assetDelete, assetUpdate
 }
