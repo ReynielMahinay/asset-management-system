@@ -9,17 +9,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { useAssets } from "../../hooks/useAssets";
 
-const BarChartAssets = () => {
-  const { data, isLoading, error } = useAssets();
-  const totalAssets = data?.total || 0;
-  const assignedAsset = data?.assignedCount || 0;
-  const notAssignedAsset = data?.notAssignedCount || 0;
-
+const BarChartAssets = ({
+  recentlyAdded,
+  notAssignedAsset,
+  assignedAsset,
+  assetTotal,
+}) => {
   const assetData = [
-    { name: "Total Asset", assets: totalAssets },
-    { name: "Recently Added", assets: 3 },
+    { name: "Total Asset", assets: assetTotal },
+    { name: "Recently Added", assets: recentlyAdded },
     { name: "Assigned Asset", assets: assignedAsset },
     { name: "Unassigned Asset", assets: notAssignedAsset },
   ];

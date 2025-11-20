@@ -26,6 +26,10 @@ async function getAsset({ page = 1, pageSize = 5, sort = "asset_id", order = "AS
   const { rows: countRows } = await pool.query("SELECT COUNT(*) AS total FROM assets");
   const total = parseInt(countRows[0].total, 10);
 
+  const {rows: recentlyCountRows} = await pool.query("SELECT COUNT(*) AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '7 days'");
+
+  const recentlyAddedCount = parseInt(recentlyCountRows[0].recently_added_count, 10)
+
   const {rows: statusCount } = await pool.query(`SELECT COUNT(*) FILTER (WHERE asset_status = 'Assigned') AS assigned_count, 
     COUNT(*) FILTER (WHERE asset_status <> 'Assigned') AS not_assigned_count FROM assets`);
 
@@ -40,11 +44,12 @@ async function getAsset({ page = 1, pageSize = 5, sort = "asset_id", order = "AS
     tag: asset.asset_tag,
     status: asset.asset_status,
     assignedTo: asset.assigned_to,
-    timeCreated: asset.created_at,
-    timeUpdated: asset.updated_at,
+    timeCreated: formatDate(asset.created_at),
+    timeUpdated: formatDate(asset.updated_at),
   }));
 
-  return { total, page, pageSize, data, assignedCount: Number(assigned_count), notAssignedCount: Number(not_assigned_count) };
+
+  return { total, page, pageSize, data, recentlyAddedCount, assignedCount: Number(assigned_count), notAssignedCount: Number(not_assigned_count) };
 }
 
 async function insertAsset(name, type, brand, tag, status, assigned_to = null){
