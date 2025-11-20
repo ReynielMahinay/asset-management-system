@@ -8,6 +8,7 @@ import AreaChartAssets from "../../components/common/AreaChartAssets";
 
 function Dashboard() {
   const { data, isLoading, error } = useAssets();
+  const recentlyAdded = data?.recentlyAddedCount || 0;
   const assetTotal = data?.total || 0;
   const assignedAsset = data?.assignedCount || 0;
   const notAssignedAsset = data?.notAssignedCount || 0;
@@ -25,6 +26,8 @@ function Dashboard() {
               ? assignedAsset
               : item.key == "unassigned"
               ? notAssignedAsset
+              : item.key == "recently"
+              ? recentlyAdded
               : item.number
           }
           Icon={item.icon}
@@ -34,7 +37,12 @@ function Dashboard() {
 
       <div className="flex flex-col gap-5 bg-white col-span-full shadow-md rounded-md h-full w-full p-4 overflow-hidden py-5">
         <div className="border-gray-300 border-2 rounded-lg p-5 h-full w-full">
-          <BarChartAssets />
+          <BarChartAssets
+            recentlyAdded={recentlyAdded}
+            assetTotal={assetTotal}
+            assignedAsset={assignedAsset}
+            notAssignedAsset={notAssignedAsset}
+          />
         </div>
 
         <div className="flex flex-1 flex-row justify-center items-center gap-5 h-full w-full">

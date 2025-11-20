@@ -29,6 +29,7 @@ const columnMap = {
   tag: "asset_tag",
   status: "asset_status",
   timeCreated: "created_at",
+  timeUpdated: "updated_at",
 };
 
 // Table Head Cells
@@ -39,6 +40,7 @@ const headCells = [
   { id: "serialNumber", label: "Tag" },
   { id: "status", label: "Status" },
   { id: "timeCreated", label: "Time Created" },
+  { id: "timeUpdated", label: "Time Updated" },
   { id: "action", label: "Action" },
 ];
 
@@ -217,6 +219,7 @@ export default function ManageAssetTable({ setAssetTotal, onEdit }) {
                   <TableCell>{asset.tag}</TableCell>
                   <TableCell>{asset.status}</TableCell>
                   <TableCell>{asset.timeCreated}</TableCell>
+                  <TableCell>{asset.timeUpdated}</TableCell>
                   <TableCell>
                     <KebabMenu
                       onEdit={onEdit}
