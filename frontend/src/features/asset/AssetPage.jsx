@@ -10,6 +10,7 @@ import DatePickerComponent from "../../components/common/DatePickerComponent";
 import ModalComponent from "../../components/common/ModalComponent";
 import ManageAssetTable from "./components/ManageAssetTable";
 import { useAssets } from "../../hooks/useAssets";
+import SearchInput from "../../components/common/SearchInput";
 
 function AssetPage() {
   const [open, setOpen] = React.useState(false);
@@ -37,11 +38,14 @@ function AssetPage() {
             <Button
               title={"Delete asset"}
               icon={<FaPlus size={12} />}
-              variant="danger_primary"
+              variant="primary"
             />
           </div>
         </div>
-        <div className="p-4 flex flex-col gap-3">
+        <div className="p-4">
+          <SearchInput />
+        </div>
+        {/* <div className="p-4 flex flex-col gap-3">
           <div className="flex flex-row gap-2">
             <DatePickerComponent />
             <SelectComponent
@@ -63,7 +67,7 @@ function AssetPage() {
               Filters Applied:
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="flex">
         <ManageAssetTable />

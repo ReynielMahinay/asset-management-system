@@ -19,6 +19,7 @@ import {
 import { visuallyHidden } from "@mui/utils";
 import { useQuery } from "@tanstack/react-query";
 import { fetchAssets } from "../../../api/assets";
+import KebabMenu from "../../../components/common/KebabMenu";
 
 const columnMap = {
   name: "asset_name",
@@ -38,6 +39,7 @@ const headCells = [
   { id: "serialNumber", label: "Tag" },
   { id: "status", label: "Status" },
   { id: "timeCreated", label: "Time Created" },
+  { id: "action", label: "Action" },
 ];
 
 // Table Head Component
@@ -215,6 +217,12 @@ export default function ManageAssetTable({ setAssetTotal }) {
                   <TableCell>{asset.tag}</TableCell>
                   <TableCell>{asset.status}</TableCell>
                   <TableCell>{asset.timeCreated}</TableCell>
+                  <TableCell>
+                    <KebabMenu
+                      onEdit={() => console.log("Edit:", asset.id)}
+                      assetId={asset.id}
+                    />
+                  </TableCell>
                 </TableRow>
               ))}
               {emptyRows > 0 && (

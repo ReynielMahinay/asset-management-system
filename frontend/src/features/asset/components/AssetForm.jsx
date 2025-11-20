@@ -49,13 +49,14 @@ function AssetForm({ handleClose }) {
   };
 
   return (
-    <div className="bg-white rounded-md w-full p-4">
+    <div className="bg-white rounded-md w-full ">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Name */}
         <InputFieldComponent
           label="Name"
           value={formData.name}
           onChange={(e) => handleChange("name", e.target.value)}
+          required
         />
 
         {/* Type & Brand */}
@@ -76,7 +77,7 @@ function AssetForm({ handleClose }) {
 
         {/* Tag */}
         <InputFieldComponent
-          label="Tag"
+          label="Tag / Serial Number"
           value={formData.tag}
           onChange={(e) => handleChange("tag", e.target.value)}
         />
@@ -94,7 +95,7 @@ function AssetForm({ handleClose }) {
         {/* Buttons */}
         <div className="flex flex-row gap-2 justify-end items-center">
           <Button title="Cancel" variant="danger" onClick={handleClose} />
-          <Button title="Submit" type="submit" />
+          <Button title="Submit" variant="modal_primary" type="submit" />
         </div>
       </form>
     </div>

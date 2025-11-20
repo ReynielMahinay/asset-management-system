@@ -15,10 +15,9 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 500,
   bgcolor: "background.paper",
-  border: "1px solid #000",
   borderRadius: "2%",
   boxShadow: 24,
-  p: 4,
+  p: 2,
 };
 
 function ModalComponent({ handleClose, open }) {
@@ -39,16 +38,23 @@ function ModalComponent({ handleClose, open }) {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <div className="flex flex-col gap-4 w-full">
-              <div className="flex flex-row justify-between items-center">
-                <p className="font-poppins text-midnight text-2xl font-bold">
-                  Add Asset
-                </p>
+            <div className="flex flex-col gap-10 w-full">
+              <div className="flex flex-row justify-between items-start">
+                <div className="flex flex-col gap-2">
+                  <p className="font-poppins text-black text-[1.2rem] font-bold">
+                    Add new Asset
+                  </p>
+                  <p className="font-poppins text-gray-1000 text-[0.7rem] font-light">
+                    Add a new asset to your inventory. All fields marked with *
+                    are required.
+                  </p>
+                </div>
+
                 <button
                   onClick={handleClose}
-                  className="cursor-pointer hover:bg-gray-200 rounded-full p-1"
+                  className="cursor-pointer hover:bg-gray-200 rounded-full p-1 "
                 >
-                  <IoClose size={24} />
+                  <IoClose size={17} />
                 </button>
               </div>
               <AssetForm handleClose={handleClose} />
