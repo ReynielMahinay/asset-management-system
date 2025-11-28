@@ -26,12 +26,12 @@ async function getAsset({ page = 1, pageSize = 5, sort = "asset_id", order = "AS
   const { rows: countRows } = await pool.query("SELECT COUNT(*) AS total FROM assets");
   const total = parseInt(countRows[0].total, 10);
 
-  const {rows: recentlyCountRows} = await pool.query("SELECT COUNT(*) AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '7 days'");
+  const {rows: recentlyCountRows} = await pool.query("SELECT COUNT(*)::int AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '30 days'");
 
   const recentlyAddedCount = parseInt(recentlyCountRows[0].recently_added_count, 10)
 
-  const {rows: statusCount } = await pool.query(`SELECT COUNT(*) FILTER (WHERE asset_status = 'Assigned') AS assigned_count, 
-    COUNT(*) FILTER (WHERE asset_status <> 'Assigned') AS not_assigned_count FROM assets`);
+  const {rows: statusCount } = await pool.query(`SELECT COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assigned_count, 
+    COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count FROM assets`);
 
   const {assigned_count, not_assigned_count} = statusCount[0];
 

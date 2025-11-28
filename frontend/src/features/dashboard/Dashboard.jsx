@@ -12,7 +12,7 @@ function Dashboard() {
   const assetTotal = data?.total || 0;
   const assignedAsset = data?.assignedCount || 0;
   const notAssignedAsset = data?.notAssignedCount || 0;
-
+  console.log(recentlyAdded);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {dashboardData.map((item, index) => (
