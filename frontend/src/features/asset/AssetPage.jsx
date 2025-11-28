@@ -52,29 +52,6 @@ function AssetPage() {
         <div className="p-4">
           <SearchInput />
         </div>
-        {/* <div className="p-4 flex flex-col gap-3">
-          <div className="flex flex-row gap-2">
-            <DatePickerComponent />
-            <SelectComponent
-              options={typeOptions}
-              selected="type"
-              label="Type"
-              margin={1}
-            />
-
-            <SelectComponent
-              options={brandOptions}
-              selected="brand"
-              label="Brand"
-              margin={1}
-            />
-          </div>
-          <div className="w-full bg-[#e0edfa9f] p-2 rounded-md">
-            <p className="text-xs text-gray-400 font-open-sans">
-              Filters Applied:
-            </p>
-          </div>
-        </div> */}
       </div>
       <div className="flex">
         <ManageAssetTable onEdit={handleEditOpen} />
