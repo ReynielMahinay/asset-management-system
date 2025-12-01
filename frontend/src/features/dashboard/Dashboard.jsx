@@ -31,7 +31,7 @@ function Dashboard() {
               : item.number
           }
           Icon={item.icon}
-          text_color={item.text_color}
+          subtitle={item.subtitle}
         />
       ))}
 

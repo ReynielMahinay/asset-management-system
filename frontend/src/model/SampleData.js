@@ -11,28 +11,28 @@ export const dashboardData = [
         number: 1040,
         icon: FiPackage,
         key: "assets",
-        text_color: "#3B82F6"
+        subtitle: "total items in system"
     },
     {
         title: 'Recently Added',
         number: 40,
         icon: LuPackagePlus ,
         key: "recently",
-        text_color: "#22C55E"
+        subtitle: "in the last 30 days"
     },
     {
-        title: 'Assigned Asset',
+        title: 'Assigned',
         number: 940,
         icon: FaRegCheckCircle ,
         key: "assigned",
-        text_color: "#6366F1"
+        subtitle: "Active asset"
     },
     {
-        title: 'Unassigned Asset',
+        title: 'Unassigned',
         number: 300,
         icon: FaRegCircleXmark,
         key: "unassigned",
-        text_color: "#F59E0B"
+        subtitle: "Awaiting asset"
     }
 ]
 
