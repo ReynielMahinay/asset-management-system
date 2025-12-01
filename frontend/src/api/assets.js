@@ -5,6 +5,7 @@ export async function fetchAssets({
   pageSize = 5,
   sort = "asset_id",
   order = "asc",
+  keyword =""
 } = {}) {
   const params = new URLSearchParams({
     page: String(page),
@@ -13,7 +14,14 @@ export async function fetchAssets({
     order,
   });
 
-  const res = await fetch(`http://localhost:5000/api/assets?${params.toString()}`);
+  if(keyword) params.append("keyword", keyword)
+
+
+  const url = keyword 
+    ? `http://localhost:5000/api/assets/search?keyword=${encodeURIComponent(keyword)}`
+    : `http://localhost:5000/api/assets?${params.toString()}`
+
+  const res = await fetch(url);
 
   if (!res.ok) {
     throw new Error("Failed to fetch assets");

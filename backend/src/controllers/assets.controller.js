@@ -21,22 +21,34 @@ async function assetGet(req, res) {
       pageSize = 5,
       sort = "asset_id",
       order = "asc",
+      keyword = "",
     } = req.query;
 
-    const assets = await db.getAsset({
-      page: Number(page),
-      pageSize: Number(pageSize),
-      sort,
-      order: order.toUpperCase(),
+    let assets;
+
+    if (keyword) {
+      // Use the searchAsset query if a keyword is provided
+      assets = await db.searchAsset(keyword);
+    } else {
+      // Regular paginated fetch
+      assets = await db.getAsset({
+        page: Number(page),
+        pageSize: Number(pageSize),
+        sort,
+        order: order.toUpperCase(),
+      });
+    }
+
+    res.json({
+      total: assets.length,
+      data: assets,
     });
-
-    res.json(assets);
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
   }
 }
+
 
 
 async function assetDelete(req, res){
@@ -80,6 +92,29 @@ async function assetUpdate(req, res){
   
 }
 
+async function assetSearch(req, res){
+  try{  
+    const {keyword} = req.query 
+    console.log("Search find:,", keyword);
+
+    const search = await db.searchAsset(keyword)
+
+    if(search.length === 0) {
+      return res.status(404).json({error: "Asset not found"})
+    }
+
+    res.json({
+      total: search.length,
+      items: search
+    })
+
+
+} catch(error){
+ console.error("Error searching asset:", error)
+ res.status(500).json({error: "Error searching"})
+}
+}
+
 module.exports = {
-    assetCreatePost, assetGet, assetDelete, assetUpdate
+    assetCreatePost, assetGet, assetDelete, assetUpdate, assetSearch
 }

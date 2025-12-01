@@ -26,10 +26,23 @@ async function getAsset({ page = 1, pageSize = 5, sort = "asset_id", order = "AS
   const { rows: countRows } = await pool.query("SELECT COUNT(*) AS total FROM assets");
   const total = parseInt(countRows[0].total, 10);
 
+  //Count recently added rows
   const {rows: recentlyCountRows} = await pool.query("SELECT COUNT(*)::int AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '30 days'");
 
   const recentlyAddedCount = parseInt(recentlyCountRows[0].recently_added_count, 10)
 
+  const { rows: addedPerMonth } = await pool.query(`
+    SELECT 
+      DATE_TRUNC('month', created_at) AS month,
+      COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assignedPerMonth,
+      COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS unassignedPerMonth
+    FROM assets
+    GROUP BY 1
+    ORDER BY 1;
+  `);
+
+
+  //Count by status
   const {rows: statusCount } = await pool.query(`SELECT COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assigned_count, 
     COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count FROM assets`);
 
@@ -49,7 +62,16 @@ async function getAsset({ page = 1, pageSize = 5, sort = "asset_id", order = "AS
   }));
 
 
-  return { total, page, pageSize, data, recentlyAddedCount, assignedCount: Number(assigned_count), notAssignedCount: Number(not_assigned_count) };
+  return { total, page, pageSize, data, recentlyAddedCount , assignedCount: Number(assigned_count), notAssignedCount: Number(not_assigned_count) };
+}
+
+async function searchAsset(keyword){
+  const result = await pool.query(
+    `SELECT * FROM assets WHERE asset_name ILIKE  '%' || $1 || '%' 
+    OR asset_tag ILIKE '%' || $1 || '%' LIMIT 50`, [keyword]
+  )
+
+  return result.rows;
 }
 
 async function insertAsset(name, type, brand, tag, status, assigned_to = null){
@@ -87,4 +109,4 @@ async function updateAsset(id, name, type, brand, tag, status, assigned_to = nul
   return result.rows[0]; // undefined if asset not found
 }
 
-module.exports = {insertAsset, getAsset, deleteAsset, updateAsset}
+module.exports = {insertAsset, getAsset, deleteAsset, updateAsset, searchAsset}
