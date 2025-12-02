@@ -1,126 +1,66 @@
-import { PieChart, Pie, Sector, Tooltip, ResponsiveContainer } from "recharts";
-import { useAssets } from "../../hooks/useAssets";
-import { use } from "react";
+import { Cell, Pie, PieChart, ResponsiveContainer, Legend } from "recharts";
 
-const renderActiveShape = (props) => {
-  const {
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    startAngle,
-    endAngle,
-    fill,
-    payload,
-    percent,
-    value,
-  } = props;
+const RADIAN = Math.PI / 180;
+const COLORS = ["var(--color-midnight)", "#3B82F6"];
 
-  const RADIAN = Math.PI / 180;
-  const sin = Math.sin(-RADIAN * midAngle);
-  const cos = Math.cos(-RADIAN * midAngle);
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+}) => {
+  if (cx == null || cy == null || innerRadius == null || outerRadius == null) {
+    return null;
+  }
 
-  const sx = cx + (outerRadius + 10) * cos;
-  const sy = cy + (outerRadius + 10) * sin;
-
-  const mx = cx + (outerRadius + 30) * cos;
-  const my = cy + (outerRadius + 30) * sin;
-
-  const ex = mx + (cos >= 0 ? 22 : -22);
-  const ey = my;
-
-  const textAnchor = cos >= 0 ? "start" : "end";
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-(midAngle || 0) * RADIAN);
+  const y = cy + radius * Math.sin(-(midAngle || 0) * RADIAN);
 
   return (
-    <g>
-      <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>
-        {payload.name}
-      </text>
-
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-
-      <path
-        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
-        stroke={fill}
-        fill="none"
-      />
-
-      <circle cx={ex} cy={ey} r={2} fill={fill} />
-
-      <text x={ex + (cos >= 0 ? 12 : -12)} y={ey} textAnchor={textAnchor}>
-        Asset {value}
-      </text>
-
-      <text
-        x={ex + (cos >= 0 ? 12 : -12)}
-        y={ey}
-        dy={18}
-        textAnchor={textAnchor}
-        fill="#999"
-      >
-        Rate {(percent * 100).toFixed(2)}%
-      </text>
-    </g>
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {`${((percent || 1) * 100).toFixed(0)}%`}
+    </text>
   );
 };
 
-export default function PieChartAssets() {
-  const { data, isLoading, error } = useAssets();
-
-  const assignedAsset = data?.assignedCount || 0;
-  const notAssignedAsset = data?.notAssignedCount || 0;
-
-  const assetData = [
-    { name: "Assigned", value: assignedAsset },
-    { name: "Not Assigned", value: notAssignedAsset },
+export default function PieChartAssets({
+  notAssignedAsset,
+  assignedAsset,
+  isAnimationActive = true,
+}) {
+  const data = [
+    { name: "Unassigned Asset", value: notAssignedAsset },
+    { name: "Assigned Asset", value: assignedAsset },
   ];
   return (
-    <div
-      style={{ width: "100%", height: 350 }}
-      className="border-gray-300 border-2 p-5 rounded-lg"
-    >
-      <ResponsiveContainer>
-        <PieChart
-          margin={{
-            top: 50,
-            right: 120,
-            bottom: 0,
-            left: 120,
-          }}
+    <ResponsiveContainer width="100%" height={350} debounce={300}>
+      <PieChart>
+        <Legend verticalAlign="bottom" height={36} />
+        <Pie
+          data={data}
+          labelLine={false}
+          label={renderCustomizedLabel}
+          fill="#8884d8"
+          dataKey="value"
+          isAnimationActive={isAnimationActive}
         >
-          <Pie
-            activeShape={renderActiveShape}
-            data={assetData}
-            cx="50%"
-            cy="50%"
-            innerRadius="60%"
-            outerRadius="80%"
-            fill="#3B82F6"
-            dataKey="value"
-            isAnimationActive={true}
-          />
-          <Tooltip content={() => null} />
-        </PieChart>
-      </ResponsiveContainer>
-    </div>
+          {data.map((entry, index) => (
+            <Cell
+              key={`cell-${entry.name}`}
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </Pie>
+      </PieChart>
+    </ResponsiveContainer>
   );
 }

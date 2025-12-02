@@ -56,16 +56,16 @@ function Sidebard() {
 
   return (
     <div
-      className={`bg-white text-midnight shadow-md min-h-screen flex flex-col transition-all duration-300 eass-in-out overflow-hidden overflow-y-auto ${
+      className={`bg-white text-midnight min-h-screen flex flex-col transition-all duration-300 eass-in-out overflow-hidden  border-r  border-gray-300 overflow-y-auto ${
         isCollapsed ? "w-16 gap-1 " : "w-64 gap-1"
       }`}
     >
       <div
-        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 px-3 py-3 ${
+        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 px-2 py-1.5 ${
           isCollapsed ? "hidden" : "block"
         }`}
       >
-        <h1>Assetfy</h1>
+        <h1 className="text-2xl">Assetfy</h1>
         <button onClick={toggleSideBar} className="cursor-pointer group">
           <TbLayoutSidebarLeftCollapse
             size={24}
@@ -79,7 +79,7 @@ function Sidebard() {
       </div>
 
       <div
-        className={`flex justify-center items-center  px-3 py-4 ${
+        className={`flex justify-center items-center  px-3 py-[10px] ${
           isCollapsed ? "block" : "hidden"
         }`}
       >
@@ -91,7 +91,7 @@ function Sidebard() {
           />
         </button>
       </div>
-      <div className="border-b border-gray-300 w-full" />
+      {/* <div className="border-b border-gray-300 w-full" /> */}
 
       <div className="flex flex-col justify-between h-full">
         <div
@@ -130,7 +130,7 @@ function Sidebard() {
         </div>
 
         <div className="font-dm-sans whitespace-nowrap">
-          <div className="border-b border-gray-300 w-full" />
+          <div className="" />
           <div className="flex flex-row gap-2 p-4">
             <IoMdSettings size={25} />
             {!isCollapsed && (

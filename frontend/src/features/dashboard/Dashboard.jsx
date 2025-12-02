@@ -12,7 +12,7 @@ function Dashboard() {
   const assetTotal = data?.total || 0;
   const assignedAsset = data?.assignedCount || 0;
   const notAssignedAsset = data?.notAssignedCount || 0;
-  console.log(recentlyAdded);
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {dashboardData.map((item, index) => (
@@ -22,11 +22,11 @@ function Dashboard() {
           number={
             item.key === "assets"
               ? assetTotal
-              : item.key == "assigned"
+              : item.key === "assigned"
               ? assignedAsset
-              : item.key == "unassigned"
+              : item.key === "unassigned"
               ? notAssignedAsset
-              : item.key == "recently"
+              : item.key === "recently"
               ? recentlyAdded
               : item.number
           }
@@ -35,8 +35,9 @@ function Dashboard() {
         />
       ))}
 
-      <div className="flex flex-col gap-5 bg-white col-span-full shadow-md rounded-md h-full w-full p-4 overflow-hidden py-5">
-        <div className="border-gray-300 border-2 rounded-lg p-5 h-full w-full">
+      <div className="flex flex-col gap-5 bg-white col-span-full shadow-md rounded-md w-full p-4 py-5">
+        {/* Bar Chart Container - Fixed height */}
+        <div className="border-gray-300 border-2 rounded-lg p-5 w-full h-[400px]">
           <BarChartAssets
             recentlyAdded={recentlyAdded}
             assetTotal={assetTotal}
@@ -45,9 +46,17 @@ function Dashboard() {
           />
         </div>
 
-        <div className="flex flex-1 flex-row justify-center items-center gap-5 h-full w-full">
-          <PieChartAssets />
-          <AreaChartAssets />
+        {/* Pie and Area Charts Container - Fixed height, equal width for both charts */}
+        <div className="flex flex-row justify-center items-center gap-5 w-full h-[400px]">
+          <div className="w-1/2 h-full">
+            <PieChartAssets
+              assignedAsset={assignedAsset}
+              notAssignedAsset={notAssignedAsset}
+            />
+          </div>
+          <div className="w-1/2 h-full">
+            <AreaChartAssets />
+          </div>
         </div>
       </div>
     </div>

@@ -5,16 +5,15 @@ import { Outlet } from "react-router-dom";
 
 function Layout() {
   return (
-    <div className="flex flex-row h-screen">
+    <div className="flex flex-row h-screen overflow-hidden">
       <Sidebard />
-      <section className="w-full flex flex-col">
+      <section className="w-full flex flex-col h-full">
         <NavBar />
-        <div className="transition-all duration-700 ease-out p-4 w-full h-full overflow-y-auto">
+        <div className="flex-1 p-4 w-full overflow-y-auto transition-all duration-700 ease-out">
           <Outlet />
         </div>
       </section>
     </div>
   );
 }
-
 export default Layout;
