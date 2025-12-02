@@ -24,8 +24,8 @@ const BarChartAssets = ({
   ];
 
   return (
-    <div style={{ width: "100%", height: "350px" }}>
-      <ResponsiveContainer width="100%" height="100%">
+    <div style={{ width: "100%", height: "100%" }}>
+      <ResponsiveContainer width="100%" height={350} debounce={300}>
         <BarChart
           data={assetData}
           margin={{ top: 5, right: 20, left: 0, bottom: 5 }}

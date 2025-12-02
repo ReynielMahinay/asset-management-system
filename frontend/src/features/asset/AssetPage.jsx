@@ -41,7 +41,7 @@ function AssetPage() {
   return (
     <div className="flex flex-col gap-4 font-poppins text-midnight ">
       <div className="flex flex-col  bg-white shadow-sm  rounded-md">
-        <div className="flex flex-row justify-between items-center border-b border-gray-200 p-4">
+        <div className="flex flex-row justify-between items-center border-b border-gray-300 p-4">
           <p className="flex flex-row justify-center font-light  text-sm items-center gap-3">
             {dashboardchartdata[0].name}s:
             <span className="font-bold text-[1.8rem] ">
