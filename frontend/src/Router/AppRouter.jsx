@@ -4,8 +4,13 @@ import Dashboard from "../features/dashboard/Dashboard";
 import AssetPage from "../features/asset/AssetPage";
 import Assignment from "../features/assignment/Assignment";
 import ManageUser from "../features/manage_user/ManageUser";
+import Login from "../features/login/Login";
 
 export const router = createBrowserRouter([
+  {
+    path: "/sign_in",
+    element: <Login />,
+  },
   {
     path: "/",
     element: <Layout />,
