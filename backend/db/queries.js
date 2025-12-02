@@ -71,7 +71,17 @@ async function searchAsset(keyword){
     OR asset_tag ILIKE '%' || $1 || '%' LIMIT 50`, [keyword]
   )
 
-  return result.rows;
+   return result.rows.map(asset => ({
+    id: asset.asset_id,
+    asset_name: asset.asset_name,
+    asset_type: asset.asset_type,
+    asset_brand: asset.asset_brand,
+    asset_tag: asset.asset_tag,
+    asset_status: asset.asset_status,
+    assigned_to: asset.assigned_to,
+    created_at: asset.created_at,
+    updated_at: asset.updated_at,
+  }));
 }
 
 async function insertAsset(name, type, brand, tag, status, assigned_to = null){

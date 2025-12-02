@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import { fetchAssets, deleteAsset, updateAsset, createAsset } from "../api/assets";
+import { use } from "react";
 
-export function useAssets({ page = 1, pageSize = 5, sort = "asset_id", order = "asc" } = {}) {
+export function useAssets({ page = 1, pageSize = 5, sort = "asset_id", order = "asc", keyword = ""} = {}) {
   return useQuery({
-    queryKey: ["assets", page, pageSize, sort, order],
-    queryFn: () => fetchAssets({ page, pageSize, sort, order }),
+    queryKey: ["assets", page, pageSize, sort, order, keyword],
+    queryFn: () => fetchAssets({ page, pageSize, sort, order, keyword }),
+    keepPreviousData: true,
   });
 }
+
 
 //Hook for create asset
 export function useCreateAsset(){
