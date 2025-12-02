@@ -21,15 +21,33 @@ async function assetGet(req, res) {
       pageSize = 5,
       sort = "asset_id",
       order = "asc",
+      keyword = ""
     } = req.query;
 
-    const assets = await db.getAsset({
+    let assets;
+
+    if(keyword) {
+      const rows = await db.searchAsset(keyword);
+
+      const start = (page - 1) * pageSize;
+      const paginationRows = rows.slice(start, start + pageSize)
+
+      assets = {
+        total: rows.length,
+        page: Number(page),
+        pageSize: Number(pageSize),
+        data: paginationRows
+      }
+    }else {
+
+      assets = await db.getAsset({
       page: Number(page),
       pageSize: Number(pageSize),
       sort,
       order: order.toUpperCase(),
     });
 
+    }
     res.json(assets);
 
   } catch (err) {

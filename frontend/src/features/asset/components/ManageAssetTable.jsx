@@ -124,7 +124,11 @@ function EnhancedTableToolbar({ numSelected, isRefreshing }) {
 }
 
 // Main Table Component
-export default function ManageAssetTable({ setAssetTotal, onEdit }) {
+export default function ManageAssetTable({
+  setAssetTotal,
+  onEdit,
+  keyword = "",
+}) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
@@ -139,17 +143,37 @@ export default function ManageAssetTable({ setAssetTotal, onEdit }) {
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["assets", page, rowsPerPage, orderBy, order],
+    queryKey: ["assets", page, rowsPerPage, orderBy, order, keyword],
     queryFn: () =>
       fetchAssets({
         page: page + 1,
         pageSize: rowsPerPage,
         sort: columnMap[orderBy] || "asset_id",
         order,
+        keyword,
       }),
     keepPreviousData: true,
-    onSuccess: (data) => setAssetTotal?.(Number(data.total)),
+    onSuccess: (data) => {
+      console.log("Fecthed assets", data);
+      setAssetTotal?.(Number(data.total));
+    },
   });
+
+  const rows = React.useMemo(() => {
+    if (!data?.data) return [];
+    return data.data.map((asset) => ({
+      id: asset.id,
+      name: asset.asset_name || asset.name,
+      type: asset.asset_type || asset.type,
+      brand: asset.asset_brand || asset.brand,
+      tag: asset.asset_tag || asset.tag,
+      status: asset.asset_status || asset.status,
+      timeCreated: asset.created_at || asset.timeCreated,
+      timeUpdated: asset.updated_at || asset.timeUpdated,
+    }));
+  }, [data]);
+  // const rows = data?.data || [];
+  const totalRows = data?.total || 0;
 
   const handleRequestSort = (_, property) => {
     setOrder((prev) =>
@@ -159,7 +183,7 @@ export default function ManageAssetTable({ setAssetTotal, onEdit }) {
   };
 
   const handleSelectAllClick = (e) =>
-    setSelected(e.target.checked ? data.data.map((n) => n.id) : []);
+    setSelected(e.target.checked ? rows.map((n) => n.id) : []);
 
   const handleClick = (_, id) => {
     setSelected((prev) =>
@@ -184,7 +208,7 @@ export default function ManageAssetTable({ setAssetTotal, onEdit }) {
       <Alert severity="error">{error?.message || "Error loading assets"}</Alert>
     );
 
-  const emptyRows = Math.max(0, rowsPerPage - data.data.length);
+  const emptyRows = Math.max(0, rowsPerPage - rows.length);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -200,11 +224,11 @@ export default function ManageAssetTable({ setAssetTotal, onEdit }) {
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
               numSelected={selected.length}
-              rowCount={data.data.length} // Use total here!
+              rowCount={rows.length || 0} // Use total here!
               onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
-              {data.data.map((asset) => (
+              {rows.map((asset) => (
                 <TableRow
                   key={asset.id}
                   hover
@@ -240,7 +264,7 @@ export default function ManageAssetTable({ setAssetTotal, onEdit }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={data.total} // total rows
+          count={totalRows} // total rows
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

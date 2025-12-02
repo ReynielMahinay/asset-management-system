@@ -11,6 +11,19 @@ function AssetPage() {
   const [open, setOpen] = React.useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [page, setPage] = useState(1);
+  const { data: assetData, isLoading } = useAssets({
+    page,
+    pageSize: 5,
+    keyword: searchKeyword,
+  });
+
+  const handleSearch = (keyword) => {
+    setSearchKeyword(keyword);
+    setPage(1);
+  };
+
   const handleAddOpen = () => {
     setModalMode("add");
     setSelectedAsset(null);
@@ -22,8 +35,8 @@ function AssetPage() {
     setSelectedAsset(asset);
     setOpen(true);
   };
+
   const handleClose = () => setOpen(false);
-  const { data: assetData, isLoading } = useAssets();
 
   return (
     <div className="flex flex-col gap-4 font-poppins text-midnight ">
@@ -50,11 +63,15 @@ function AssetPage() {
           </div>
         </div>
         <div className="p-4">
-          <SearchInput />
+          <SearchInput onSearch={handleSearch} />
         </div>
       </div>
       <div className="flex">
-        <ManageAssetTable onEdit={handleEditOpen} />
+        <ManageAssetTable
+          onEdit={handleEditOpen}
+          keyword={searchKeyword}
+          setAssetTotal={(total) => console.log("Total assets:", total)}
+        />
       </div>
       <ModalComponent
         open={open}
