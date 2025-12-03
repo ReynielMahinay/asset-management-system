@@ -4,7 +4,8 @@ import { Button as MuiButton } from "@mui/material";
 function Button({ title, icon, variant, onClick, type = "button" }) {
   const getVariantClasses = () => {
     const variants = {
-      primary: "hover:!bg-[#1a1a2e] hover:!text-white !bg-midnight !text-white",
+      primary:
+        "hover:!bg-[#1a1a2e] hover:!text-white !bg-midnight !text-white ",
       secondary: "!text-midnight !bg-transparent hover:!bg-blue-50",
       modal_primary:
         "hover:!bg-[#1a1a2e] hover:!text-white !bg-[#155dfc] !text-white",
@@ -24,12 +25,14 @@ function Button({ title, icon, variant, onClick, type = "button" }) {
       startIcon={icon}
       className={`
         !font-poppins
-        !text-[.7rem] 
+        !text-[.8rem] 
         !px-4 !py-2 
+        !h-11
         !rounded-md
         !min-w-0 
         !shadow-sm
         !capitalize
+        ${variant === "primary" ? " " : ""}
          ${variant === "login_options" ? "w-full" : ""}
         ${getVariantClasses()}
       `}
