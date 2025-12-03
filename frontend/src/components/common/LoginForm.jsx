@@ -1,31 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "./Button";
+import { MdOutlineMail } from "react-icons/md";
+import { FiLock } from "react-icons/fi";
+import { FiEye } from "react-icons/fi";
+import { FiEyeOff } from "react-icons/fi";
+
 function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <div className="flex flex-col gap-5 rounded-xl bg-white border border-gray-200  w-[24%] p-8 shadow-lg">
+    <div className="flex flex-col gap-7 rounded-xl bg-white border border-gray-200  w-[410px] p-8 shadow-lg ">
       {/* Welcome header */}
       <div className="flex flex-col gap-2  font-poppins">
-        <p className="font-bold text-[1.2rem] capitalize">welcome back</p>
-        <p className="font-poppins text-[0.65rem] text-gray-600 ">
+        <p className="font-bold text-[1.4rem] capitalize">welcome back</p>
+        <p className="text-[0.7rem] text-gray-600 ">
           Sign in to your account to continue
         </p>
       </div>
 
       <div className="w-full">
         <form action="" className="flex flex-col gap-4 ">
-          <div className="flex flex-col gap-2 w-full">
-            <p className="font-dm-sans text-[0.7rem]">Email Address</p>
-            <input
-              type="text"
-              className="rounded-md border border-gray-300 bg-gray-50 w-full p-1"
-            />
+          {/* Email addresss input field */}
+          <div className="flex flex-col space-y-1 w-full">
+            <label
+              htmlFor="email"
+              className="block font-poppins text-[0.7rem] text-gray-700 font-medium"
+            >
+              Email Address
+            </label>
+            <div className="relative">
+              <MdOutlineMail
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                size={18}
+              />
+              <input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                className="rounded-md border bg-gray-50 text-sm border-gray-300 text-gray-900 placeholder-gray-400  focus:ring-blue-600 focus:outline-none focus:ring-1 pl-9 h-10 w-full"
+              />
+            </div>
           </div>
-          <div className="w-full">
-            <p className="font-dm-sans text-[0.7rem]">Password</p>
-            <input
-              type="text"
-              className="rounded-md border border-gray-300 bg-gray-50 w-full p-1"
-            />
+
+          {/* password input field */}
+          <div className="flex flex-col space-y-1 w-full">
+            <label
+              htmlFor="password"
+              className="block font-poppins text-[0.7rem] text-gray-700 font-medium"
+            >
+              Password
+            </label>
+            <div className="relative">
+              <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="•••••••"
+                className="rounded-md border border-gray-300 bg-gray-50 w-full pl-9 h-10 text-sm text-gray-900 placeholder-gray-400
+                focus:ring-blue-600 focus:outline-none focus:ring-1 "
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-row justify-between items-center">
@@ -43,7 +84,7 @@ function LoginForm() {
               forgot password?
             </a>
           </div>
-          <Button title="Sing in" variant="modal_primary" />
+          <Button title="Sign in" variant="modal_primary" className="h-50" />
         </form>
 
         {/* Diveder for signup/singin options */}
