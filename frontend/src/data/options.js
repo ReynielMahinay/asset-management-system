@@ -27,6 +27,10 @@ export const statusOptions = [
   {id: 2, value: 'unassigned', label: "Unassigned"}
 ]
 
+export const roleOptions = [
+  {id: 1, value: 'techinical', label: "Technical" }
+]
+
 export const departmentOptions = [
   { id: 1, value: "it", label: "IT" },
   { id: 2, value: "finance", label: "Finance" },

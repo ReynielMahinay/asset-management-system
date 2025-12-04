@@ -1,11 +1,11 @@
-const db = require('../../db/queries')
+const dbAsset = require("../../db/queires/assetQueries")
 
 async function assetCreatePost(req, res){
     try{
         const {name, type, brand, tag, status, assigned_to = null } = req.body
     console.log("Received data:", req.body);
 
-        const newAsset = await db.insertAsset(name, type, brand, tag, status, assigned_to);
+        const newAsset = await dbAsset.insertAsset(name, type, brand, tag, status, assigned_to);
         console.log("Inserted asset:", newAsset);
         res.json(newAsset);
     }catch (error){
@@ -27,7 +27,7 @@ async function assetGet(req, res) {
     let assets;
 
     if(keyword) {
-      const rows = await db.searchAsset(keyword);
+      const rows = await dbAsset.searchAsset(keyword);
 
       const start = (page - 1) * pageSize;
       const paginationRows = rows.slice(start, start + pageSize)
@@ -40,7 +40,7 @@ async function assetGet(req, res) {
       }
     }else {
 
-      assets = await db.getAsset({
+      assets = await dbAsset.getAsset({
       page: Number(page),
       pageSize: Number(pageSize),
       sort,
@@ -63,7 +63,7 @@ async function assetDelete(req, res){
 
         console.log("Deleting asset with ID", id);
 
-        const deleted = await db.deleteAsset(id);
+        const deleted = await dbAsset.deleteAsset(id);
 
         if(deleted){
             res.json({message: "Asset deleted successfuly"})
@@ -84,7 +84,7 @@ async function assetUpdate(req, res){
 
     console.log("Updating asset", id, req.body)
 
-    const updated = await db.updateAsset(id, name, type, brand, tag, status, assigned_to)
+    const updated = await dbAsset.updateAsset(id, name, type, brand, tag, status, assigned_to)
 
     if(!updated){
       return res.status(404).json({error: "Asset not found"})

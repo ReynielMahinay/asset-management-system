@@ -7,9 +7,10 @@ import ModalComponent from "../../components/common/ModalComponent";
 import ManageAssetTable from "./components/ManageAssetTable";
 import { useAssets, useDeleteAsset } from "../../hooks/useAssets";
 import SearchInput from "../../components/common/SearchInput";
+import AssetForm from "./components/AssetForm";
 
 function AssetPage() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [onSelectedAsset, setOnselectedAsset] = useState([]);
@@ -103,6 +104,7 @@ function AssetPage() {
         handleClose={handleClose}
         mode={modalMode}
         asset={selectedAsset}
+        FormComponent={AssetForm}
       />
     </div>
   );

@@ -32,9 +32,6 @@ import { visuallyHidden } from "@mui/utils";
 import { userData } from "../../../model/SampleData";
 import { VscKebabVertical } from "react-icons/vsc";
 // You might want to add these icons
-// import EditIcon from '@mui/icons-material/Edit';
-// import DeleteIcon from '@mui/icons-material/Delete';
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1;
   if (b[orderBy] > a[orderBy]) return 1;

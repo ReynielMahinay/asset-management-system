@@ -15,9 +15,13 @@ CREATE TABLE IF NOT EXISTS assets (
 );
 `
 
-const ALTER_SQL = `
-    ALTER TABLE assets
-    ADD COLUMN IF NOT EXISTS asset_tag VARCHAR(100) NOT NULL;
+const userTALBE = `
+CREATE TABLE IF NOT EXISTS users (
+    user_id SERIAL PRIMARY KEY,
+    user_fullname VARCHAR(50) NOT NULL,
+    user_email VARCHAR(50) NOT NULL,
+    user_role VARCHAR(50)
+);
 `
 
 async function main(){
@@ -40,7 +44,7 @@ async function main(){
         await client.connect();
         console.log("Connected to database successfully")
         
-        await client.query(SQL)
+        await client.query(userTALBE)
         console.log('Table was created successfully')  // Fixed typo
         
         await client.end()

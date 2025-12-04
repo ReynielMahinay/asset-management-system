@@ -4,7 +4,6 @@ import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
 import Box from "@mui/material/Box";
 import { IoClose } from "react-icons/io5";
-import AssetForm from "../../features/asset/components/AssetForm";
 
 const style = {
   position: "absolute",
@@ -18,7 +17,17 @@ const style = {
   p: 2,
 };
 
-function ModalComponent({ handleClose, open, mode = "add", asset }) {
+function ModalComponent({
+  handleClose,
+  open,
+  mode = "add",
+  asset,
+  FormComponent,
+}) {
+  const config =
+    typeof FormComponent.modalConfig === "function"
+      ? FormComponent.modalConfig(mode)
+      : { title: "", description: "" };
   return (
     <Modal
       open={open}
@@ -33,12 +42,10 @@ function ModalComponent({ handleClose, open, mode = "add", asset }) {
             <div className="flex flex-row justify-between items-start">
               <div className="flex flex-col gap-2">
                 <p className="font-poppins text-black text-[1.2rem] font-bold">
-                  {mode === "add" ? "Add new Asset" : "Edit Asset"}
+                  {config.title}
                 </p>
                 <p className="font-poppins text-gray-1000 text-[0.7rem] font-light">
-                  {mode === "add"
-                    ? "Add a new asset to your inventory. All fields marked with * are required."
-                    : "Update the asset details below."}
+                  {config.description}
                 </p>
               </div>
               <button
@@ -49,7 +56,11 @@ function ModalComponent({ handleClose, open, mode = "add", asset }) {
               </button>
             </div>
 
-            <AssetForm handleClose={handleClose} mode={mode} asset={asset} />
+            <FormComponent
+              handleClose={handleClose}
+              mode={mode}
+              asset={asset}
+            />
           </div>
         </Box>
       </Fade>
