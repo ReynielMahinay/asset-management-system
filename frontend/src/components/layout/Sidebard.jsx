@@ -106,7 +106,7 @@ function Sidebard() {
                 key={item.id}
                 className={({ isActive }) =>
                   `flex items-center gap-2 cursor-pointer p-3 ${
-                    isActive ? "bg-midnight mx-2 rounded-md text-white" : "mx-2"
+                    isActive ? "bg-midnight mx-2 rounded-xl text-white" : "mx-2"
                   }`
                 }
               >

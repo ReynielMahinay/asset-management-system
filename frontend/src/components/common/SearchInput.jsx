@@ -24,6 +24,15 @@ function SearchInput({ onSearch }) {
       handleClear();
     }
   };
+  const handleClearText = (e) => {
+    const value = e.target.value; // get the input value
+    setKeyword(value);
+
+    // If input is empty after deletion, reset search
+    if (value.trim() === "") {
+      onSearch("");
+    }
+  };
 
   return (
     <div className="flex flex-row justify-center items-center gap-3">
@@ -35,7 +44,7 @@ function SearchInput({ onSearch }) {
         <input
           type="text"
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={handleClearText}
           onKeyDown={handleKeydown}
           placeholder="Search asset by ID or Name"
           className="w-full p-2 border border-gray-300 rounded-lg borderbg-gray-100 bg-gray-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none font-poppins text-sm font-light pl-10"
