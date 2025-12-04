@@ -32,7 +32,6 @@ const columnMap = {
   timeUpdated: "updated_at",
 };
 
-// Table Head Cells
 const headCells = [
   { id: "name", label: "Name" },
   { id: "type", label: "Type" },
@@ -49,7 +48,7 @@ function EnhancedTableHead({
   order,
   orderBy,
   onRequestSort,
-  numSelected,
+  onSelectedAsset,
   rowCount,
   onSelectAllClick,
 }) {
@@ -62,8 +61,10 @@ function EnhancedTableHead({
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
+            checked={onSelectedAsset.length === rowCount && rowCount > 0}
+            indeterminate={
+              onSelectedAsset.length > 0 && onSelectedAsset.length < rowCount
+            }
             onChange={onSelectAllClick}
           />
         </TableCell>
@@ -128,14 +129,15 @@ export default function ManageAssetTable({
   setAssetTotal,
   onEdit,
   keyword = "",
+  onSelectedAsset,
+  onSelectedChange,
 }) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
-  const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  // Fetch assets (server-side)
+  // Fetch assets
   const {
     data = { total: 0, data: [] },
     isLoading,
@@ -153,10 +155,7 @@ export default function ManageAssetTable({
         keyword,
       }),
     keepPreviousData: true,
-    onSuccess: (data) => {
-      console.log("Fecthed assets", data);
-      setAssetTotal?.(Number(data.total));
-    },
+    onSuccess: (data) => setAssetTotal?.(Number(data.total)),
   });
 
   const rows = React.useMemo(() => {
@@ -172,7 +171,7 @@ export default function ManageAssetTable({
       timeUpdated: asset.updated_at || asset.timeUpdated,
     }));
   }, [data]);
-  // const rows = data?.data || [];
+
   const totalRows = data?.total || 0;
 
   const handleRequestSort = (_, property) => {
@@ -182,13 +181,16 @@ export default function ManageAssetTable({
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (e) =>
-    setSelected(e.target.checked ? rows.map((n) => n.id) : []);
+  const handleSelectAllClick = (e) => {
+    const newSelected = e.target.checked ? rows.map((row) => row.id) : [];
+    onSelectedChange?.(newSelected);
+  };
 
   const handleClick = (_, id) => {
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    const newSelected = onSelectedAsset.includes(id)
+      ? onSelectedAsset.filter((x) => x !== id)
+      : [...onSelectedAsset, id];
+    onSelectedChange?.(newSelected);
   };
 
   const handleChangePage = (_, newPage) => setPage(newPage);
@@ -203,6 +205,7 @@ export default function ManageAssetTable({
         <CircularProgress />
       </Box>
     );
+
   if (isError)
     return (
       <Alert severity="error">{error?.message || "Error loading assets"}</Alert>
@@ -212,9 +215,9 @@ export default function ManageAssetTable({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper sx={{ width: "100%", mb: 2, borderRadius: 2 }}>
         <EnhancedTableToolbar
-          numSelected={selected.length}
+          numSelected={onSelectedAsset.length}
           isRefreshing={isFetching}
         />
         <TableContainer>
@@ -222,9 +225,9 @@ export default function ManageAssetTable({
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
+              onSelectedAsset={onSelectedAsset}
+              rowCount={rows.length}
               onRequestSort={handleRequestSort}
-              numSelected={selected.length}
-              rowCount={rows.length || 0} // Use total here!
               onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
@@ -235,7 +238,7 @@ export default function ManageAssetTable({
                   onClick={(e) => handleClick(e, asset.id)}
                 >
                   <TableCell padding="checkbox">
-                    <Checkbox checked={selected.includes(asset.id)} />
+                    <Checkbox checked={onSelectedAsset.includes(asset.id)} />
                   </TableCell>
                   <TableCell>{asset.name}</TableCell>
                   <TableCell>{asset.type}</TableCell>
@@ -255,7 +258,7 @@ export default function ManageAssetTable({
               ))}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={7} />
+                  <TableCell colSpan={8} />
                 </TableRow>
               )}
             </TableBody>
@@ -264,7 +267,7 @@ export default function ManageAssetTable({
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={totalRows} // total rows
+          count={totalRows}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
