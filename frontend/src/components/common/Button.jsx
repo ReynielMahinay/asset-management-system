@@ -1,4 +1,3 @@
-import React from "react";
 import { Button as MuiButton } from "@mui/material";
 
 function Button({ title, icon, variant, onClick, type = "button" }) {
@@ -25,10 +24,10 @@ function Button({ title, icon, variant, onClick, type = "button" }) {
       startIcon={icon}
       className={`
         !font-poppins
-        !text-[.8rem] 
+        !text-sm
         !px-4 !py-2 
         !h-11
-        !rounded-md
+        !rounded-lg
         !min-w-0 
         !shadow-sm
         !capitalize

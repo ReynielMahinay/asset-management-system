@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { dashboardchartdata } from "../../model/SampleData";
 import Button from "../../components/common/Button";
-import { FaPlus } from "react-icons/fa6";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { MdDeleteOutline } from "react-icons/md";
 import ModalComponent from "../../components/common/ModalComponent";
 import ManageAssetTable from "./components/ManageAssetTable";
-import { useAssets } from "../../hooks/useAssets";
+import { useAssets, useDeleteAsset } from "../../hooks/useAssets";
 import SearchInput from "../../components/common/SearchInput";
 
 function AssetPage() {
   const [open, setOpen] = React.useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedAsset, setSelectedAsset] = useState(null);
+  const [onSelectedAsset, setOnselectedAsset] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [page, setPage] = useState(1);
+  const deleteAssetMutation = useDeleteAsset();
   const { data: assetData, isLoading } = useAssets({
     page,
     pageSize: 5,
@@ -36,11 +39,30 @@ function AssetPage() {
     setOpen(true);
   };
 
+  const handleDeleteMultiple = () => {
+    if (onSelectedAsset.length === 0) {
+      alert("Please selected asset to delete");
+      return;
+    } //checking if no selected asset
+
+    const confirmDelete = window.confirm(
+      `Delete ${onSelectedAsset.length} selected asset(s)`
+    ); //window alert confirmation for delete selected assets
+
+    if (!confirmDelete) return; //If no seleceted just return nothing
+
+    onSelectedAsset.forEach((id) => {
+      deleteAssetMutation.mutate(id);
+    }); //All the selected asset that was stored in the onSelectedAsset state will be foreach and deleted using the hook
+
+    setOnselectedAsset([]); //then this clear all the selected checkbox after deleting
+  };
+
   const handleClose = () => setOpen(false);
 
   return (
     <div className="flex flex-col gap-4 font-poppins text-midnight ">
-      <div className="flex flex-col  bg-white shadow-sm  rounded-md">
+      <div className="flex flex-col  bg-white shadow-sm  rounded-xl">
         <div className="flex flex-row justify-between items-center border-b border-gray-300 p-4">
           <p className="flex flex-row justify-center font-light  text-sm items-center gap-3">
             {dashboardchartdata[0].name}s:
@@ -51,14 +73,15 @@ function AssetPage() {
           <div className="flex flex-row gap-2">
             <Button
               title={"Add asset"}
-              icon={<FaPlus size={12} />}
+              icon={<IoMdAddCircleOutline size={18} />}
               variant="primary"
               onClick={handleAddOpen}
             />
             <Button
               title={"Delete asset"}
-              icon={<FaPlus size={12} />}
+              icon={<MdDeleteOutline size={18} />}
               variant="primary"
+              onClick={handleDeleteMultiple}
             />
           </div>
         </div>
@@ -70,6 +93,8 @@ function AssetPage() {
         <ManageAssetTable
           onEdit={handleEditOpen}
           keyword={searchKeyword}
+          onSelectedChange={setOnselectedAsset}
+          onSelectedAsset={onSelectedAsset}
           setAssetTotal={(total) => console.log("Total assets:", total)}
         />
       </div>
