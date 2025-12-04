@@ -52,7 +52,7 @@ function SearchInput({ onSearch }) {
       </div>
 
       <Button title="Search" variant="primary" onClick={handleSearch} />
-      <Button title="Clear" onClick={handleClear} />
+      {/* <Button title="Clear" onClick={handleClear} /> */}
     </div>
   );
 }
