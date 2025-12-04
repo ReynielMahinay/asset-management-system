@@ -24,9 +24,9 @@ function Button({ title, icon, variant, onClick, type = "button" }) {
       startIcon={icon}
       className={`
         !font-poppins
-        !text-sm
+        !text-xs
         !px-4 !py-2 
-        !h-11
+        !h-9
         !rounded-lg
         !min-w-0 
         !shadow-sm

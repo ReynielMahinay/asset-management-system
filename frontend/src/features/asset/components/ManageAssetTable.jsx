@@ -72,6 +72,11 @@ function EnhancedTableHead({
           <TableCell
             key={cell.id}
             sortDirection={orderBy === cell.id ? order : false}
+            sx={{
+              fontWeight: "bold",
+              fontFamily: "var(--font-dm-sans)",
+              fontSize: 15,
+            }}
           >
             <TableSortLabel
               active={orderBy === cell.id}
@@ -96,13 +101,17 @@ function EnhancedTableHead({
 function EnhancedTableToolbar({ numSelected, isRefreshing }) {
   return (
     <Toolbar
-      sx={{
+      sx={(theme) => ({
         pl: 2,
         pr: 1,
-        ...(numSelected > 0 && {
-          bgcolor: (theme) => theme.palette.action.activatedOpacity,
-        }),
-      }}
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        border: "1px solid #e0e0e0",
+        bgcolor:
+          numSelected > 0
+            ? "#f1f5f9" // or theme.palette.action.selected
+            : "#f1f5f9",
+      })}
     >
       {numSelected > 0 ? (
         <Typography
@@ -113,7 +122,13 @@ function EnhancedTableToolbar({ numSelected, isRefreshing }) {
           {numSelected} selected
         </Typography>
       ) : (
-        <Box sx={{ display: "flex", alignItems: "center", flex: "1 1 100%" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flex: "1 1 100%",
+          }}
+        >
           <Typography variant="h6" component="div">
             Assets
           </Typography>
@@ -215,7 +230,7 @@ export default function ManageAssetTable({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2, borderRadius: 2 }}>
+      <Paper sx={{ width: "100%", mb: 2, borderRadius: 4 }}>
         <EnhancedTableToolbar
           numSelected={onSelectedAsset.length}
           isRefreshing={isFetching}
@@ -232,19 +247,24 @@ export default function ManageAssetTable({
             />
             <TableBody>
               {rows.map((asset) => (
-                <TableRow
-                  key={asset.id}
-                  hover
-                  onClick={(e) => handleClick(e, asset.id)}
-                >
+                <TableRow key={asset.id} hover>
                   <TableCell padding="checkbox">
-                    <Checkbox checked={onSelectedAsset.includes(asset.id)} />
+                    <Checkbox
+                      checked={onSelectedAsset.includes(asset.id)}
+                      onClick={(e) => handleClick(e, asset.id)}
+                    />
                   </TableCell>
                   <TableCell>{asset.name}</TableCell>
                   <TableCell>{asset.type}</TableCell>
                   <TableCell>{asset.brand}</TableCell>
                   <TableCell>{asset.tag}</TableCell>
-                  <TableCell>{asset.status}</TableCell>
+                  <TableCell
+                    style={{
+                      color: asset.status === "assigned" ? "green" : "red",
+                    }}
+                  >
+                    {asset.status}
+                  </TableCell>
                   <TableCell>{asset.timeCreated}</TableCell>
                   <TableCell>{asset.timeUpdated}</TableCell>
                   <TableCell>
