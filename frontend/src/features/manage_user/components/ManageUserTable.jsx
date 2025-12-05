@@ -1,6 +1,5 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -14,23 +13,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import { visuallyHidden } from "@mui/utils";
 import { userData } from "../../../model/SampleData";
-import { VscKebabVertical } from "react-icons/vsc";
+import KebabMenu from "../../../components/common/KebabMenu";
 // You might want to add these icons
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1;
@@ -79,15 +68,14 @@ const headCells = [
   },
 ];
 
-function EnhancedTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
+function EnhancedTableHead({
+  onSelectAllClick,
+  order,
+  orderBy,
+  numSelected,
+  rowCount,
+  onRequestSort,
+}) {
   const createSortHandler = (property) => (event) =>
     onRequestSort(event, property);
 
@@ -141,16 +129,10 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar({ numSelected }) {
   return (
     <Toolbar
-      sx={[
-        { pl: { sm: 2 }, pr: { xs: 1, sm: 1 } },
-        numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        },
-      ]}
+      sx={
+        ({ pl: { sm: 2 }, pr: { xs: 1, sm: 1 } },
+        numSelected > 0 ? "#f1f5f9" : "#f1f5f9")
+      }
     >
       {numSelected > 0 ? (
         <Typography
@@ -179,83 +161,12 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-// Edit Dialog Component
-// function EditAssetDialog({ open, onClose, asset, onSave }) {
-//   const [editedAsset, setEditedAsset] = React.useState(asset || {});
-
-//   React.useEffect(() => {
-//     setEditedAsset(asset || {});
-//   }, [asset]);
-
-//   const handleInputChange = (field, value) => {
-//     setEditedAsset((prev) => ({
-//       ...prev,
-//       [field]: value,
-//     }));
-//   };
-
-//   const handleSave = () => {
-//     onSave(editedAsset);
-//     onClose();
-//   };
-
-//   if (!asset) return null;
-
-//   return (
-//     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-//       <DialogTitle>Edit Asset</DialogTitle>
-//       <DialogContent>
-//         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-//           <TextField
-//             label="Name"
-//             value={editedAsset.name || ""}
-//             onChange={(e) => handleInputChange("name", e.target.value)}
-//             fullWidth
-//           />
-//           <TextField
-//             label="Type"
-//             value={editedAsset.type || ""}
-//             onChange={(e) => handleInputChange("type", e.target.value)}
-//             fullWidth
-//           />
-//           <TextField
-//             label="Brand"
-//             value={editedAsset.brand || ""}
-//             onChange={(e) => handleInputChange("brand", e.target.value)}
-//             fullWidth
-//           />
-//           <TextField
-//             label="Status"
-//             value={editedAsset.status || ""}
-//             onChange={(e) => handleInputChange("status", e.target.value)}
-//             fullWidth
-//           />
-//         </Box>
-//       </DialogContent>
-//       <DialogActions>
-//         <Button onClick={onClose}>Cancel</Button>
-//         <Button onClick={handleSave} variant="contained">
-//           Save
-//         </Button>
-//       </DialogActions>
-//     </Dialog>
-//   );
-// }
-
 export default function ManageUserTable() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  // Action menu state
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedAsset, setSelectedAsset] = React.useState(null);
-
-  // Edit dialog state
-  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
-  const [assetToEdit, setAssetToEdit] = React.useState(null);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -293,36 +204,6 @@ export default function ManageUserTable() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  // Action menu handlers
-  const handleActionClick = (event, asset) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
-    setSelectedAsset(asset);
-  };
-
-  const handleActionClose = () => {
-    setAnchorEl(null);
-    setSelectedAsset(null);
-  };
-
-  const handleEditClick = () => {
-    setAssetToEdit(selectedAsset);
-    setEditDialogOpen(true);
-    handleActionClose();
-  };
-
-  const handleDeleteClick = () => {
-    // Implement delete logic here
-    console.log("Delete asset:", selectedAsset);
-    handleActionClose();
-  };
-
-  const handleSaveAsset = (editedAsset) => {
-    // Implement save logic here
-    console.log("Save asset:", editedAsset);
-    // You would typically update your data source here
   };
 
   const emptyRows =
@@ -387,12 +268,7 @@ export default function ManageUserTable() {
                     <TableCell align="left">{asset.status}</TableCell>
                     <TableCell align="left">{asset.timeCreated}</TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        onClick={(event) => handleActionClick(event, asset)}
-                        size="small"
-                      >
-                        <VscKebabVertical />
-                      </IconButton>
+                      <KebabMenu />
                     </TableCell>
                   </TableRow>
                 );
@@ -415,44 +291,6 @@ export default function ManageUserTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-
-      {/* Action Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleActionClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <MenuItem onClick={handleEditClick}>
-          <ListItemIcon>
-            {/* <EditIcon fontSize="small" /> */}
-            ✏️
-          </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleDeleteClick}>
-          <ListItemIcon>
-            {/* <DeleteIcon fontSize="small" /> */}
-            🗑️
-          </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
-        </MenuItem>
-      </Menu>
-
-      {/* Edit Dialog */}
-      {/* <EditAssetDialog
-        open={editDialogOpen}
-        onClose={() => setEditDialogOpen(false)}
-        asset={assetToEdit}
-        onSave={handleSaveAsset}
-      /> */}
     </Box>
   );
 }
