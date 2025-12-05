@@ -1,3 +1,28 @@
+export async function fetchUser({
+    page = 1, 
+    pageSize = 5,
+    sort = "user_id",
+    order = "asc"
+} = {}){
+    const params =  new URLSearchParams({
+        page: String(page),
+        pageSize: String(pageSize),
+        sort,
+        order
+    })
+
+    const res = await fetch(`http://localhost:5000/api/users?${params.toString()}`);
+
+
+    if(!res.ok){
+        throw new Error("Failed to fetch users")
+    }
+
+    const json = await res.json()
+    console.log("API Response: ", json)
+    return json
+}
+
 export async function createUser(formData){
     const res = await fetch(`http://localhost:5000/api/users`, {
         method: "POST",

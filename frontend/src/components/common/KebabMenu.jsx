@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { VscKebabVertical } from "react-icons/vsc";
 import { useDeleteAsset } from "../../hooks/useAssets";
 
-const KebabMenu = ({ onEdit, assetId, asset }) => {
+const KebabMenu = ({ onEdit, dataId, dataForm }) => {
   const deleteAssetMutation = useDeleteAsset();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -19,7 +19,7 @@ const KebabMenu = ({ onEdit, assetId, asset }) => {
   const handleClose = () => setAnchorEl(null);
 
   const handleDelete = () => {
-    deleteAssetMutation.mutate(assetId);
+    deleteAssetMutation.mutate(dataId);
   };
   return (
     <>
@@ -31,7 +31,8 @@ const KebabMenu = ({ onEdit, assetId, asset }) => {
         <MenuItem
           onClick={() => {
             handleClose();
-            onEdit(asset);
+            onEdit(dataForm);
+            console.log("On edit data", dataForm);
           }}
         >
           Edit

@@ -6,7 +6,7 @@ import Divider from "@mui/material/Divider";
 import Button from "../../../components/common/Button";
 import { useCreateAsset, useUpdateAsset } from "../../../hooks/useAssets";
 
-function AssetForm({ handleClose, mode = "add", asset = null }) {
+function AssetForm({ handleClose, mode = "add", modalData = null }) {
   const createMutation = useCreateAsset();
   const updateMutation = useUpdateAsset();
 
@@ -20,17 +20,17 @@ function AssetForm({ handleClose, mode = "add", asset = null }) {
   });
 
   useEffect(() => {
-    if (mode === "edit" && asset) {
+    if (mode === "edit" && modalData) {
       setFormData({
-        name: asset.name || "",
-        type: asset.type || "",
-        brand: asset.brand || "",
-        tag: asset.tag || "",
-        status: (asset.status || "unassigned").toLowerCase(),
-        assigned_to: asset.assignedTo || null,
+        name: modalData.name || "",
+        type: modalData.type || "",
+        brand: modalData.brand || "",
+        tag: modalData.tag || "",
+        status: (modalData.status || "unassigned").toLowerCase(),
+        assigned_to: modalData.assignedTo || null,
       });
     }
-  }, [mode, asset]);
+  }, [mode, modalData]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -43,7 +43,7 @@ function AssetForm({ handleClose, mode = "add", asset = null }) {
       if (mode === "add") {
         await createMutation.mutateAsync(formData);
       } else {
-        await updateMutation.mutateAsync({ id: asset.id, data: formData });
+        await updateMutation.mutateAsync({ id: modalData.id, data: formData });
       }
       handleClose();
     } catch (error) {

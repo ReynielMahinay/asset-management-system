@@ -103,7 +103,7 @@ function AssetPage() {
         open={open}
         handleClose={handleClose}
         mode={modalMode}
-        asset={selectedAsset}
+        modalData={selectedAsset}
         FormComponent={AssetForm}
       />
     </div>

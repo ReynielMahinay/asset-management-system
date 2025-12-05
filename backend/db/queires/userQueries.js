@@ -10,4 +10,29 @@ async function insertUser(fullname, email, department, role){
 }
 
 
-module.exports = {insertUser}
+async function getUser({page = 1, pageSize = 5, sort = "user_id", order = "ASC" } = {}){
+
+    const offset = (page - 1)  * pageSize;
+
+
+    const {rows} = await pool.query(
+        `SELECT * FROM users ORDER BY ${sort } ${order} LIMIT $1 OFFSET $2`,
+        [pageSize, offset]
+    )
+
+    const {rows: countRows} = await pool.query("SELECT COUNT (*) AS total FROM users")
+
+    const total = parseInt(countRows[0].total, 10)
+
+    const data = rows.map(user => ({
+        id: user.user_id,
+        fullname: user.user_fullname,
+        department: user.user_department,
+        email: user.user_email,
+        role: user.user_role
+    }))
+
+    return{total, data, page, pageSize}
+}
+
+module.exports = {insertUser, getUser}
