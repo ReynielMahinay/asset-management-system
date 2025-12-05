@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Divider from "@mui/material/Divider";
 import SelectComponent from "../../../components/common/SelectComponent";
 import InputFieldComponent from "../../../components/common/InputFieldComponent";
@@ -6,7 +6,7 @@ import Button from "../../../components/common/Button";
 import { roleOptions } from "../../../data/options";
 import { useCreateUser } from "../../../hooks/useUsers";
 
-function UserForm({ handleClose, mode = "add" }) {
+function UserForm({ handleClose, mode = "add", modalData }) {
   const createMutation = useCreateUser();
 
   const [formData, setFormData] = useState({
@@ -15,6 +15,17 @@ function UserForm({ handleClose, mode = "add" }) {
     department: "",
     role: "",
   });
+
+  useEffect(() => {
+    if (mode === "edit" && modalData) {
+      setFormData({
+        fullname: modalData.fullname || "",
+        email: modalData.email || "",
+        department: modalData.department || "",
+        role: modalData.role || "",
+      });
+    }
+  }, [mode, modalData]);
 
   const handleChange = (field, value) => {
     console.log(field, value);

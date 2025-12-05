@@ -17,4 +17,55 @@ async function userCreatePost(req, res){
     }
 }
 
-module.exports = {userCreatePost}
+async function userGet(req, res){
+    try {
+        const {
+            page = 1, 
+            pageSize = 5,
+            sort = "user_id",
+            order = "asc",
+        } = req.query;
+
+        console.log("Query Params:", { page, pageSize, sort, order });
+
+        const users = await dbuser.getUser({
+            page: Number(page),
+            pageSize: Number(pageSize),
+            sort,
+            order: order.toUpperCase(),
+        });
+
+        res.json(users)
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Database error"})
+    }
+}
+
+// async function userGet(req, res){
+
+//     try {
+//         const {
+//             page = 1, 
+//             pageSize = 5,
+//             sort = "user_id",
+//             order = "asc",
+//         } = req.query;
+
+//         let users;
+
+//         users = await dbuser.getUser({
+//             page: Number(page),
+//             pageSize: Number(pageSize),
+//             sort,
+//             order: order.toUpperCase(),
+//         });
+
+//         res.json(users)
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({error: "Database error"})
+//     }
+// }
+
+module.exports = {userCreatePost, userGet}

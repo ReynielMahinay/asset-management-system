@@ -13,57 +13,33 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import { visuallyHidden } from "@mui/utils";
 import { userData } from "../../../model/SampleData";
 import KebabMenu from "../../../components/common/KebabMenu";
-// You might want to add these icons
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) return -1;
-  if (b[orderBy] > a[orderBy]) return 1;
-  return 0;
-}
+import { fetchUser } from "../../../api/users";
+import { useQuery } from "@tanstack/react-query";
 
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+const columnMap = {
+  fullname: "user_fullname",
+  email: "user_email",
+  department: "user_department",
+  role: "user_role",
+};
 
 const headCells = [
   {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
+    id: "fullname",
     label: "Full Name",
   },
-  { id: "email", numeric: false, disablePadding: false, label: "Email" },
+  { id: "email", label: "Email" },
   {
     id: "department",
-    numeric: false,
-    disablePadding: false,
+
     label: "Department",
   },
-  { id: "role", numeric: false, disablePadding: false, label: "Role" },
-  {
-    id: "status",
-    numeric: false,
-    disablePadding: false,
-    label: "Status",
-  },
-  {
-    id: "time_created",
-    numeric: false,
-    disablePadding: false,
-    label: "Time created",
-  },
+  { id: "role", label: "Role" },
   {
     id: "action",
-    numeric: false,
-    disablePadding: false,
     label: "Action",
   },
 ];
@@ -94,8 +70,6 @@ function EnhancedTableHead({
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -129,10 +103,17 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar({ numSelected }) {
   return (
     <Toolbar
-      sx={
-        ({ pl: { sm: 2 }, pr: { xs: 1, sm: 1 } },
-        numSelected > 0 ? "#f1f5f9" : "#f1f5f9")
-      }
+      sx={(theme) => ({
+        pl: 2,
+        pr: 1,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        border: "1px solid #e0e0e0",
+        bgcolor:
+          numSelected > 0
+            ? "#f1f5f9" // or theme.palette.action.selected
+            : "#f1f5f9",
+      })}
     >
       {numSelected > 0 ? (
         <Typography
@@ -161,12 +142,38 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function ManageUserTable() {
+export default function ManageUserTable({ setUserTotal, onEdit }) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const { data = { total: 0, data: [] } } = useQuery({
+    queryKey: ["users", page, rowsPerPage, orderBy, order],
+    queryFn: () =>
+      fetchUser({
+        page: page + 1,
+        pageSize: rowsPerPage,
+        sor: columnMap[orderBy] || "user_id",
+        order,
+      }),
+    keepPreviousData: true,
+    onSuccess: (data) => setUserTotal?.(Number(data.total)),
+  });
+
+  const rows = React.useMemo(() => {
+    if (!data?.data) return [];
+    return data.data.map((user) => ({
+      id: user.id,
+      fullname: user.user_fullname || user.fullname,
+      email: user.user_email || user.email,
+      department: user.user_department || user.department,
+      role: user.user_role || user.role,
+    }));
+  }, [data]);
+
+  const totalRows = data?.total || 0;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -206,23 +213,14 @@ export default function ManageUserTable() {
     setPage(0);
   };
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userData.length) : 0;
-
-  const visibleRows = React.useMemo(
-    () =>
-      [...userData]
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage]
-  );
+  const emptyRows = Math.max(0, rowsPerPage - rows.length);
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper sx={{ width: "100%", mb: 2, borderRadius: 3 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+          <Table aria-labelledby="tableTitle">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -232,18 +230,16 @@ export default function ManageUserTable() {
               rowCount={userData.length}
             />
             <TableBody>
-              {visibleRows.map((asset) => {
-                const isItemSelected = selected.includes(asset.id);
-                const labelId = `enhanced-table-checkbox-${asset.id}`;
+              {rows.map((user) => {
+                const isItemSelected = selected.includes(user.id);
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, asset.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={asset.id}
+                    key={user.id}
                     selected={isItemSelected}
                     sx={{ cursor: "pointer" }}
                   >
@@ -251,24 +247,21 @@ export default function ManageUserTable() {
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
-                        inputProps={{ "aria-labelledby": labelId }}
+                        onClick={(event) => handleClick(event, user.id)}
                       />
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {asset.fullName}
+                    <TableCell component="th" scope="row" padding="none">
+                      {user.fullname}
                     </TableCell>
-                    <TableCell align="left">{asset.email}</TableCell>
-                    <TableCell align="left">{asset.department}</TableCell>
-                    <TableCell align="left">{asset.role}</TableCell>
-                    <TableCell align="left">{asset.status}</TableCell>
-                    <TableCell align="left">{asset.timeCreated}</TableCell>
-                    <TableCell align="right">
-                      <KebabMenu />
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.department}</TableCell>
+                    <TableCell>{user.role}</TableCell>
+                    <TableCell>
+                      <KebabMenu
+                        onEdit={onEdit}
+                        dataId={user.id}
+                        dataForm={user}
+                      />
                     </TableCell>
                   </TableRow>
                 );
@@ -284,7 +277,7 @@ export default function ManageUserTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={userData.length}
+          count={totalRows}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

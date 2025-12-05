@@ -8,11 +8,25 @@ import { MdDeleteOutline } from "react-icons/md";
 import SearchInput from "../../components/common/SearchInput";
 import ModalComponent from "../../components/common/ModalComponent";
 import UserForm from "./components/UserForm";
+import { useUsers } from "../../hooks/useUsers";
 
 function ManageUser() {
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [page, setPage] = useState(1);
+  const { data: userData, isLoading } = useUsers({
+    page,
+    pageSize: 5,
+  });
+
   const handleAddOpenModal = (e) => {
+    setOpen(true);
+  };
+
+  const handleEditOpen = (user) => {
+    setModalMode("edit");
+    setSelectedUser(user);
     setOpen(true);
   };
 
@@ -23,7 +37,9 @@ function ManageUser() {
         <div className="flex flex-row justify-between items-center border-b border-gray-300 p-4 ">
           <p className="font-light text-sm flex flex-row gap-3 justify-center items-center font-poppins">
             Total Users:
-            <span className=" font-bold text-[1.8rem] ">{userData.length}</span>
+            <span className=" font-bold text-[1.8rem] ">
+              {userData?.total ?? 0}
+            </span>
           </p>
 
           <div className="flex flex-row gap-2">
@@ -44,13 +60,17 @@ function ManageUser() {
         </div>
       </div>
       <div>
-        <ManangerUserTable />
+        <ManangerUserTable
+          onEdit={handleEditOpen}
+          setUserTotal={(total) => console.log("Total users:", total)}
+        />
       </div>
       <ModalComponent
         open={open}
         mode={modalMode}
         FormComponent={UserForm}
         handleClose={handleClose}
+        modalData={selectedUser}
       />
     </div>
   );

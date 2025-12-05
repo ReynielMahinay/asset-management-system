@@ -21,7 +21,7 @@ function ModalComponent({
   handleClose,
   open,
   mode = "add",
-  asset,
+  modalData,
   FormComponent,
 }) {
   const config =
@@ -59,7 +59,7 @@ function ModalComponent({
             <FormComponent
               handleClose={handleClose}
               mode={mode}
-              asset={asset}
+              modalData={modalData}
             />
           </div>
         </Box>

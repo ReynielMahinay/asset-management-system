@@ -147,6 +147,7 @@ export default function ManageAssetTable({
   onSelectedAsset,
   onSelectedChange,
 }) {
+  const [selected, setSelected] = React.useState([]);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [page, setPage] = React.useState(0);
@@ -246,36 +247,45 @@ export default function ManageAssetTable({
               onSelectAllClick={handleSelectAllClick}
             />
             <TableBody>
-              {rows.map((asset) => (
-                <TableRow key={asset.id} hover>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={onSelectedAsset.includes(asset.id)}
-                      onClick={(e) => handleClick(e, asset.id)}
-                    />
-                  </TableCell>
-                  <TableCell>{asset.name}</TableCell>
-                  <TableCell>{asset.type}</TableCell>
-                  <TableCell>{asset.brand}</TableCell>
-                  <TableCell>{asset.tag}</TableCell>
-                  <TableCell
-                    style={{
-                      color: asset.status === "assigned" ? "green" : "red",
-                    }}
+              {rows.map((asset) => {
+                const isItemSelected = onSelectedAsset.includes(asset.id);
+
+                return (
+                  <TableRow
+                    key={asset.id}
+                    hover
+                    aria-checked={isItemSelected}
+                    selected={isItemSelected}
                   >
-                    {asset.status}
-                  </TableCell>
-                  <TableCell>{asset.timeCreated}</TableCell>
-                  <TableCell>{asset.timeUpdated}</TableCell>
-                  <TableCell>
-                    <KebabMenu
-                      onEdit={onEdit}
-                      assetId={asset.id}
-                      asset={asset}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={isItemSelected}
+                        onClick={(e) => handleClick(e, asset.id)}
+                      />
+                    </TableCell>
+                    <TableCell>{asset.name}</TableCell>
+                    <TableCell>{asset.type}</TableCell>
+                    <TableCell>{asset.brand}</TableCell>
+                    <TableCell>{asset.tag}</TableCell>
+                    <TableCell
+                      style={{
+                        color: asset.status === "assigned" ? "green" : "red",
+                      }}
+                    >
+                      {asset.status}
+                    </TableCell>
+                    <TableCell>{asset.timeCreated}</TableCell>
+                    <TableCell>{asset.timeUpdated}</TableCell>
+                    <TableCell>
+                      <KebabMenu
+                        onEdit={onEdit}
+                        dataId={asset.id}
+                        dataForm={asset}
+                      />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={8} />
