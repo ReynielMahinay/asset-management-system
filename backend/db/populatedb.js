@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     user_id SERIAL PRIMARY KEY,
     user_fullname VARCHAR(50) NOT NULL,
     user_email VARCHAR(50) NOT NULL,
+    user_department VARCHAR(50) NOT NULL,
     user_role VARCHAR(50)
 );
 `

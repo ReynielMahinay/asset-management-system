@@ -28,7 +28,8 @@ export const statusOptions = [
 ]
 
 export const roleOptions = [
-  {id: 1, value: 'techinical', label: "Technical" }
+  {id: 1, value: 'techinical', label: "Technical" },
+  {id: 2, value: 'Pre-sales', label: "Pre-sales"}
 ]
 
 export const departmentOptions = [
