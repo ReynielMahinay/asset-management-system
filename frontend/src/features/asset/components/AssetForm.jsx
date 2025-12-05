@@ -5,7 +5,6 @@ import { statusOptions } from "../../../data/options";
 import Divider from "@mui/material/Divider";
 import Button from "../../../components/common/Button";
 import { useCreateAsset, useUpdateAsset } from "../../../hooks/useAssets";
-import { MdDescription } from "react-icons/md";
 
 function AssetForm({ handleClose, mode = "add", asset = null }) {
   const createMutation = useCreateAsset();

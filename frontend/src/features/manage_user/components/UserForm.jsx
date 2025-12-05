@@ -4,23 +4,62 @@ import SelectComponent from "../../../components/common/SelectComponent";
 import InputFieldComponent from "../../../components/common/InputFieldComponent";
 import Button from "../../../components/common/Button";
 import { roleOptions } from "../../../data/options";
+import { useCreateUser } from "../../../hooks/useUsers";
+
 function UserForm({ handleClose, mode = "add" }) {
+  const createMutation = useCreateUser();
+
   const [formData, setFormData] = useState({
-    name: "",
+    fullname: "",
     email: "",
     department: "",
     role: "",
-    joined_data: "",
   });
+
+  const handleChange = (field, value) => {
+    console.log(field, value);
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (mode === "add") {
+        await createMutation.mutateAsync(formData);
+      }
+      console.log("Form data: ", formData);
+      handleClose();
+    } catch (error) {
+      console.error("Error submitting user: ", error);
+    }
+  };
+
   return (
-    <form className="flex flex-col gap-4">
-      <InputFieldComponent label="name" value={formData.name} />
-      <InputFieldComponent label="email" value={formData.email} />
-      <InputFieldComponent label="department" value={formData.department} />
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <InputFieldComponent
+        label="name"
+        value={formData.fullname}
+        onChange={(e) => handleChange("fullname", e.target.value)}
+      />
+      <InputFieldComponent
+        label="email"
+        value={formData.email}
+        onChange={(e) => handleChange("email", e.target.value)}
+      />
+      <InputFieldComponent
+        label="department"
+        value={formData.department}
+        onChange={(e) => handleChange("department", e.target.value)}
+      />
       <SelectComponent
         label="Role"
         options={roleOptions}
         value={formData.role}
+        onChange={(val) => {
+          console.log("Selected role:", val);
+          handleChange("role", val);
+        }}
       />
 
       <Divider />
