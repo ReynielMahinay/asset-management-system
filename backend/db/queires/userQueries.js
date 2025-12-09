@@ -53,7 +53,7 @@ async function updateUser(id, fullname, email, department, role){
 }
 
 async function deleteUser(id){
-    const result = await pool.query(`DELETE FROM users WHERE users_id = $1 RETURNING *`, [id])
+    const result = await pool.query(`DELETE FROM users WHERE user_id = $1 RETURNING *`, [id])
     return result.rowCount > 0;
 }
 

@@ -8,17 +8,20 @@ import { MdDeleteOutline } from "react-icons/md";
 import SearchInput from "../../components/common/SearchInput";
 import ModalComponent from "../../components/common/ModalComponent";
 import UserForm from "./components/UserForm";
-import { useUsers } from "../../hooks/useUsers";
+import { useDeleteUser, useUsers } from "../../hooks/useUsers";
 
 function ManageUser() {
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null); //for selecting one user for delete/edit
+  const [onSelectedUser, setOnselectedUser] = useState([]); //for multiple selection of user for delete
   const [page, setPage] = useState(1);
   const { data: userData, isLoading } = useUsers({
     page,
     pageSize: 5,
   });
+
+  const deleteUserMutation = useDeleteUser();
 
   const handleAddOpenModal = (e) => {
     setOpen(true);
@@ -28,6 +31,25 @@ function ManageUser() {
     setModalMode("edit");
     setSelectedUser(user);
     setOpen(true);
+  };
+
+  const handleDeleteMultiple = () => {
+    if (onSelectedUser.length === 0) {
+      alert("Please select user to delete");
+      return;
+    } //checking if no selected user
+
+    const confirmDelete = window.confirm(
+      `Delete ${onSelectedUser.length} selected user(s)`
+    ); //window alert confirmation for deleting selected user
+
+    if (!confirmDelete) return; // if no selected just return nothing
+
+    onSelectedUser.forEach((id) => {
+      deleteUserMutation.mutate(id);
+    }); //All the selected user that was stored in the onSelectedUser state will be foreach and deleted using the hook
+
+    setOnselectedUser([]); //then this will clear all the selected checkbox after deleting
   };
 
   const handleClose = () => setOpen(false);
@@ -52,6 +74,7 @@ function ManageUser() {
               icon={<MdDeleteOutline size={18} />}
               title="Delete User"
               variant="primary"
+              onClick={handleDeleteMultiple}
             />
           </div>
         </div>
@@ -63,6 +86,8 @@ function ManageUser() {
         <ManangerUserTable
           onEdit={handleEditOpen}
           setUserTotal={(total) => console.log("Total users:", total)}
+          onSelectedUser={onSelectedUser}
+          setOnselectedUser={setOnselectedUser}
         />
       </div>
       <ModalComponent

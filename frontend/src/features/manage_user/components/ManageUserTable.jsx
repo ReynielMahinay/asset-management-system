@@ -51,6 +51,7 @@ function EnhancedTableHead({
   numSelected,
   rowCount,
   onRequestSort,
+  onSelectedUser,
 }) {
   const createSortHandler = (property) => (event) =>
     onRequestSort(event, property);
@@ -61,8 +62,10 @@ function EnhancedTableHead({
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
+            indeterminate={
+              onSelectedUser.length > 0 && onSelectedUser.length < rowCount
+            }
+            checked={onSelectedUser.length === rowCount && rowCount > 0}
             onChange={onSelectAllClick}
             inputProps={{ "aria-label": "select all desserts" }}
           />
@@ -142,7 +145,12 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function ManageUserTable({ setUserTotal, onEdit }) {
+export default function ManageUserTable({
+  setUserTotal,
+  onEdit,
+  setOnselectedUser,
+  onSelectedUser,
+}) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
@@ -181,29 +189,17 @@ export default function ManageUserTable({ setUserTotal, onEdit }) {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      setSelected(userData.map((n) => n.id));
-    } else {
-      setSelected([]);
-    }
+  const handleSelectAllClick = (e) => {
+    const newSelected = e.target.checked ? rows.map((row) => row.id) : [];
+
+    setOnselectedUser?.(newSelected);
   };
 
-  const handleClick = (event, id) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) newSelected = selected.concat(id);
-    else if (selectedIndex === 0) newSelected = selected.slice(1);
-    else if (selectedIndex === selected.length - 1)
-      newSelected = selected.slice(0, -1);
-    else if (selectedIndex > 0)
-      newSelected = [
-        ...selected.slice(0, selectedIndex),
-        ...selected.slice(selectedIndex + 1),
-      ];
-
-    setSelected(newSelected);
+  const handleClick = (_, id) => {
+    const newSelected = onSelectedUser.includes(id)
+      ? onSelectedUser.filter((x) => x !== id)
+      : [...onSelectedUser, id];
+    setOnselectedUser(newSelected);
   };
 
   const handleChangePage = (event, newPage) => setPage(newPage);
@@ -218,20 +214,20 @@ export default function ManageUserTable({ setUserTotal, onEdit }) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2, borderRadius: 3 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={onSelectedUser.length} />
         <TableContainer>
           <Table aria-labelledby="tableTitle">
             <EnhancedTableHead
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
+              onSelectedUser={onSelectedUser}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={userData.length}
+              rowCount={rows.length}
             />
             <TableBody>
               {rows.map((user) => {
-                const isItemSelected = selected.includes(user.id);
+                const isItemSelected = onSelectedUser.includes(user.id);
 
                 return (
                   <TableRow

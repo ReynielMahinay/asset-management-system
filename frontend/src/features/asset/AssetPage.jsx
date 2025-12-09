@@ -12,8 +12,8 @@ import AssetForm from "./components/AssetForm";
 function AssetPage() {
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
-  const [selectedAsset, setSelectedAsset] = useState(null);
-  const [onSelectedAsset, setOnselectedAsset] = useState([]);
+  const [selectedAsset, setSelectedAsset] = useState(null); //for selecting one user for delete/edit
+  const [onSelectedAsset, setOnselectedAsset] = useState([]); //for multiple selection of user for delete
   const [searchKeyword, setSearchKeyword] = useState("");
   const [page, setPage] = useState(1);
   const deleteAssetMutation = useDeleteAsset();

@@ -4,9 +4,11 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { VscKebabVertical } from "react-icons/vsc";
 import { useDeleteAsset } from "../../hooks/useAssets";
+import { useDeleteUser } from "../../hooks/useUsers";
 
 const KebabMenu = ({ onEdit, dataId, dataForm, type }) => {
   const deleteAssetMutation = useDeleteAsset();
+  const deleteUserMutation = useDeleteUser();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -22,7 +24,7 @@ const KebabMenu = ({ onEdit, dataId, dataForm, type }) => {
     if (type === "asset") {
       deleteAssetMutation.mutate(dataId);
     } else if (type === "user") {
-      console.log("testing dynamic deletion");
+      deleteUserMutation.mutate(dataId);
     }
   };
   return (
