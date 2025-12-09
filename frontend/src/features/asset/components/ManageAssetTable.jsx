@@ -147,7 +147,6 @@ export default function ManageAssetTable({
   onSelectedAsset,
   onSelectedChange,
 }) {
-  const [selected, setSelected] = React.useState([]);
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [page, setPage] = React.useState(0);
