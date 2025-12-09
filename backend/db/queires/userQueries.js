@@ -52,4 +52,9 @@ async function updateUser(id, fullname, email, department, role){
     return result.rows[0]
 }
 
-module.exports = {insertUser, getUser, updateUser}
+async function deleteUser(id){
+    const result = await pool.query(`DELETE FROM users WHERE users_id = $1 RETURNING *`, [id])
+    return result.rowCount > 0;
+}
+
+module.exports = {insertUser, getUser, updateUser, deleteUser}

@@ -88,5 +88,22 @@ async function userUpdate(req, res){
     }
 }
 
+async function userDelete(req, res){
+    try{
+        const {id} = req.params
 
-module.exports = {userCreatePost, userGet,  userUpdate}
+        console.log("Deleting user with ID:", id)
+        
+        const deleted = await dbuser.deleteUser(id)
+
+        if(deleted){
+            res.json({message: "User deleted succesfuly"})
+        }else{
+            res.status(404).json({error: "User not found"})
+        }
+    }catch(error){
+        console.error("Error deleting user: ", error)
+        res.status(500).json({error: "Database error"})
+    }
+}
+module.exports = {userCreatePost, userGet,  userUpdate, userDelete}
