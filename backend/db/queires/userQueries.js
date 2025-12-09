@@ -35,4 +35,21 @@ async function getUser({page = 1, pageSize = 5, sort = "user_id", order = "ASC" 
     return{total, data, page, pageSize}
 }
 
-module.exports = {insertUser, getUser}
+
+async function updateUser(id, fullname, email, department, role){
+    const result = await pool.query(
+        `UPDATE users
+        SET user_fullname = $1,
+        user_email = $2, 
+        user_department = $3,
+        user_role = $4
+        WHERE user_id = $5
+        RETURNING *
+        `,
+        [fullname, email, department, role, id]
+    )
+
+    return result.rows[0]
+}
+
+module.exports = {insertUser, getUser, updateUser}

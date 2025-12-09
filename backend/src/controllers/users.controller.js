@@ -68,4 +68,25 @@ async function userGet(req, res){
 //     }
 // }
 
-module.exports = {userCreatePost, userGet}
+async function userUpdate(req, res){
+    try{
+        const {id} = req.params;
+        const {fullname, email, department, role} = req.body
+
+        console.log("Updating asset", id, req.body)
+
+        const updated = await dbuser.updateUser(id, fullname, email, department, role)
+
+        if(!updated){
+            return res.status(404).json({error: "Asset not found"})
+        }
+
+        res.json(updated)
+    }catch(error){
+        console.error("Error updating the user: ", error)
+        res.status(500).json({error: "Database error"})
+    }
+}
+async
+
+module.exports = {userCreatePost, userGet,  userUpdate}
