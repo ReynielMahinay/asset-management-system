@@ -4,16 +4,17 @@ import SelectComponent from "../../../components/common/SelectComponent";
 import InputFieldComponent from "../../../components/common/InputFieldComponent";
 import Button from "../../../components/common/Button";
 import { roleOptions } from "../../../data/options";
-import { useCreateUser } from "../../../hooks/useUsers";
+import { useCreateUser, useUpdateUser } from "../../../hooks/useUsers";
 
 function UserForm({ handleClose, mode = "add", modalData }) {
   const createMutation = useCreateUser();
+  const updateMutation = useUpdateUser();
 
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
     department: "",
-    role: "",
+    role: "technical",
   });
 
   useEffect(() => {
@@ -22,7 +23,7 @@ function UserForm({ handleClose, mode = "add", modalData }) {
         fullname: modalData.fullname || "",
         email: modalData.email || "",
         department: modalData.department || "",
-        role: modalData.role || "",
+        role: modalData.role || "technical",
       });
     }
   }, [mode, modalData]);
@@ -38,6 +39,8 @@ function UserForm({ handleClose, mode = "add", modalData }) {
     try {
       if (mode === "add") {
         await createMutation.mutateAsync(formData);
+      } else {
+        await updateMutation.mutateAsync({ id: modalData.id, data: formData });
       }
       console.log("Form data: ", formData);
       handleClose();
@@ -66,7 +69,7 @@ function UserForm({ handleClose, mode = "add", modalData }) {
       <SelectComponent
         label="Role"
         options={roleOptions}
-        value={formData.role}
+        value={formData.role || "technical"}
         onChange={(val) => {
           console.log("Selected role:", val);
           handleChange("role", val);

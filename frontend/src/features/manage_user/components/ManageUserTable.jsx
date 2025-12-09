@@ -261,6 +261,7 @@ export default function ManageUserTable({ setUserTotal, onEdit }) {
                         onEdit={onEdit}
                         dataId={user.id}
                         dataForm={user}
+                        type="user"
                       />
                     </TableCell>
                   </TableRow>

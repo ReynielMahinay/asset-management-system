@@ -87,6 +87,6 @@ async function userUpdate(req, res){
         res.status(500).json({error: "Database error"})
     }
 }
-async
+
 
 module.exports = {userCreatePost, userGet,  userUpdate}

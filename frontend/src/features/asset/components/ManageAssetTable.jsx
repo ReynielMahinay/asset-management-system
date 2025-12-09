@@ -281,6 +281,7 @@ export default function ManageAssetTable({
                         onEdit={onEdit}
                         dataId={asset.id}
                         dataForm={asset}
+                        type="asset"
                       />
                     </TableCell>
                   </TableRow>
