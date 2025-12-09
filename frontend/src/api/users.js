@@ -36,3 +36,18 @@ export async function createUser(formData){
 
     return res.json()
 }
+
+
+export async function updateUser(id, formData){
+    const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+        method: "PUT",
+        headers: {"Content-Type" : "application/json"},
+        body: JSON.stringify(formData)
+    })
+
+    if(!res.ok){
+        throw new Error("Failed to update user")
+    }
+
+    return res.json()
+}

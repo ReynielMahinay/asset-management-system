@@ -1,5 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createUser, fetchUser } from "../api/users";
+import { createUser, fetchUser, updateUser } from "../api/users";
+import { updateAsset } from "../api/assets";
 
 
 export function useUsers({page = 1, pageSize = 5, sort = "user_id", order = "asc"} = {}){
@@ -16,6 +17,16 @@ export function useCreateUser(){
 
     return useMutation({
         mutationFn: createUser,
+        onSuccess: () => queryClient.invalidateQueries(["users"])
+    })
+}
+
+//hook for updating user on the backend
+export function useUpdateUser(){
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({id, data}) => updateUser(id, data),
         onSuccess: () => queryClient.invalidateQueries(["users"])
     })
 }
