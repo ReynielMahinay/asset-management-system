@@ -1,32 +1,31 @@
 import React from "react";
+import { IoIosArrowDown } from "react-icons/io";
 
-function Dropdown({ value, options, label }) {
+function Dropdown({ value, options, bg_color, placeholder }) {
   return (
-    <div className="relative text-midnight">
-      {/* <fieldset className="border border-gray-500 rounded-lg">
-        <legend className="text-[.6rem]">{label}</legend> */}
-      <label
-        htmlFor="dropdown"
-        className="text-[.6rem] absolute top-[-8px] left-3 bg-white"
-      >
-        {label}
-      </label>
+    <div className="relative text-gray-700 font-poppins font-semibold w-[160px]">
       <select
         id="dropdown"
+        defaultValue=""
         name={value}
-        className="px-4 py-2 border border-[#577a9c] rounded-lg h-9 text-sm font-open-sans"
+        className={`relative py-2 px-2 border border-[#cdd2d7] rounded-xl h-9 text-sm font-open-sans ${bg_color} appearance-none w-[150px] `}
       >
+        <option value="" disabled>
+          {placeholder}
+        </option>
         {options.map((opt) => (
           <option
             key={opt.id}
             value={opt.value}
-            className={`px-4 py-2 cursor-pointer hover:bg-blue-50 `}
+            className={`  cursor-pointer hover:bg-blue-50 `}
           >
             {opt.label}
           </option>
         ))}
       </select>
-      {/* </fieldset> */}
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        <IoIosArrowDown />
+      </div>
     </div>
   );
 }

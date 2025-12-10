@@ -104,6 +104,7 @@ function EnhancedTableToolbar({ numSelected, isRefreshing }) {
       sx={(theme) => ({
         pl: 2,
         pr: 1,
+        minHeight: "55px !important",
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         border: "1px solid #e0e0e0",
@@ -235,8 +236,8 @@ export default function ManageAssetTable({
           numSelected={onSelectedAsset.length}
           isRefreshing={isFetching}
         />
-        <TableContainer>
-          <Table>
+        <TableContainer sx={{ maxHeight: 300 }}>
+          <Table size="small">
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
