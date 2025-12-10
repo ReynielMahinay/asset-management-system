@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import ComboBox from "./components/ComboBox";
-import { FaPlus } from "react-icons/fa6";
-import { userData, assetData } from "../../model/SampleData";
-import Button from "../../components/common/Button";
-import AssignmentForm from "./components/AssignmentForm";
-
-import { MdDelete } from "react-icons/md";
-
+import SearchInput from "../../components/common/SearchInput";
+import AssignmentTable from "./components/AssignmentTable";
+import Dropdown from "../../components/common/Dropdown";
+import { statusOptions } from "../../data/options";
 function Assignment() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
@@ -32,55 +28,31 @@ function Assignment() {
   };
 
   return (
-    <div className="bg-white flex flex-col  p-4 rounded-md shadow-sm gap-5">
-      {assignments.map((row, index) => (
-        <div
-          key={index}
-          className="flex flex-col w-full justify-between items-center gap-5 p-4 "
-        >
-          <div className="flex flex-col items-start justify-center w-full gap-4">
-            <p className="font-open-sans font-semibold text-xl">Assign to:</p>
-            <ComboBox
-              data={userData}
-              value={selectedUser}
-              onChange={setSelectedUser}
-              label="User"
-              getOptionLabel={(option) => option?.fullName}
-            />
-            {/* <FaPlus size={32} /> */}
-          </div>
+    <div className=" flex flex-col gap-4 font-poppins text-midnight">
+      <p className="font-bold  text-2xl">Asset assignement</p>
+      <div className="flex flex-row gap-4">
+        <div className="bg-white min-w-[65%]  border border-gray-300 shadow-sm rounded-xl ">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 p-4">
+              <h2 className="font-bold capitalize">select assset to assign</h2>
+              <SearchInput bg_color={"bg-[#f5f7f9]"} />
+              <div>
+                <Dropdown
+                  options={statusOptions}
+                  bg_color={"bg-[#f5f7f9]"}
+                  placeholder="Filter by Status"
+                />
+              </div>
+            </div>
 
-          <div className="flex flex-col w-full gap-4">
-            <p className="font-open-sans font-semibold text-xl">
-              Assets to assigned
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              <ComboBox
-                data={assetData}
-                value={selectedAsset}
-                onChange={setSelectedAsset}
-                label="Asset"
-                getOptionLabel={(option) => option?.name}
-              />
-              <ComboBox
-                data={assetData}
-                value={selectedAsset}
-                onChange={setSelectedAsset}
-                label="Asset"
-                getOptionLabel={(option) => option?.name}
-              />
+            <div className="">
+              <AssignmentTable />
             </div>
           </div>
-          {assignments.length > 1 && (
-            <button onClick={() => removeRow(index)}>
-              <MdDelete size={24} />
-            </button>
-          )}
         </div>
-      ))}
-      <div className="flex flex-row items-center justify-end gap-5">
-        <Button title="Add Row" variant="primary" onClick={addRow} />
-        <Button title="Assign" variant="primary" />
+        <div className="bg-white min-w-[33.5%] border border-gray-300 shadow-sm rounded-xl p-4">
+          test
+        </div>
       </div>
     </div>
   );

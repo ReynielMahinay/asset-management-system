@@ -57,7 +57,7 @@ function Sidebard() {
   return (
     <div
       className={`bg-white text-midnight min-h-screen flex flex-col transition-all duration-300 eass-in-out overflow-hidden  border-r  border-gray-300 overflow-y-auto ${
-        isCollapsed ? "w-16 gap-1 " : "w-64 gap-1"
+        isCollapsed ? "w-16 gap-1 " : "min-w-64 gap-1"
       }`}
     >
       <div

@@ -8,6 +8,7 @@ import ManageAssetTable from "./components/ManageAssetTable";
 import { useAssets, useDeleteAsset } from "../../hooks/useAssets";
 import SearchInput from "../../components/common/SearchInput";
 import AssetForm from "./components/AssetForm";
+import { FaArrowRight } from "react-icons/fa";
 
 function AssetPage() {
   const [open, setOpen] = useState(false);
@@ -16,6 +17,7 @@ function AssetPage() {
   const [onSelectedAsset, setOnselectedAsset] = useState([]); //for multiple selection of user for delete
   const [searchKeyword, setSearchKeyword] = useState("");
   const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState("");
   const deleteAssetMutation = useDeleteAsset();
   const { data: assetData, isLoading } = useAssets({
     page,
@@ -61,17 +63,54 @@ function AssetPage() {
 
   const handleClose = () => setOpen(false);
 
+  const handleSearchInput = (e) => {
+    const trimmedKeyword = keyword.trim();
+    console.log("Searching for:", trimmedKeyword);
+    handleSearch(trimmedKeyword);
+  };
+
+  const handleClear = () => {
+    setKeyword("");
+    handleSearchInput("");
+  };
+
   return (
     <div className="flex flex-col gap-4 font-poppins text-midnight ">
-      <div className="flex flex-col  bg-white shadow-sm  rounded-xl">
-        <div className="flex flex-row justify-between items-center border-b border-gray-300 p-4">
-          <p className="flex flex-row justify-center font-light  text-sm items-center gap-3">
+      <div className="flex justify-between items-center py-2">
+        <p className="font-bold text-2xl">Asset management</p>
+        <p className="flex flex-row items-center justify-center font-semibold gap-1 hover:underline hover:cursor-pointer hover:text-blue-500 text-sm">
+          Asset signment
+          <span>
+            <FaArrowRight size={13} />
+          </span>
+        </p>
+      </div>
+      <div className="flex flex-col  gap-6 rounded-xl ">
+        <div className="flex flex-row justify-between items-center">
+          <p className="flex flex-row justify-center font-semibold  text-sm items-center gap-3">
             {dashboardchartdata[0].name}s:
-            <span className="font-bold text-[1.8rem] ">
+            <span className="font-bold text-[1.5rem] ">
               {assetData?.total ?? 0}
             </span>
           </p>
-          <div className="flex flex-row gap-2">
+        </div>
+        <div className="flex flex-row w-full ">
+          <div className="flex flex-row  gap-2 w-[50%] boder-1 border-red-500 ">
+            <SearchInput
+              onSearch={handleSearch}
+              keyword={keyword}
+              handleClear={handleClear}
+              setKeyword={setKeyword}
+              handleSearchInput={handleSearchInput}
+              bg_color={"bg-white"}
+            />
+            <Button
+              title="Search"
+              variant="primary"
+              onClick={handleSearchInput}
+            />
+          </div>
+          <div className="flex flex-row gap-2 w-[50%] justify-end">
             <Button
               title={"Add asset"}
               icon={<IoMdAddCircleOutline size={18} />}
@@ -85,9 +124,6 @@ function AssetPage() {
               onClick={handleDeleteMultiple}
             />
           </div>
-        </div>
-        <div className="p-4">
-          <SearchInput onSearch={handleSearch} />
         </div>
       </div>
       <div className="flex">
