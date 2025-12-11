@@ -2,21 +2,16 @@ import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
 const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "firstName", headerName: "First name", width: 130 },
-  { field: "lastName", headerName: "Last name", width: 130 },
-  {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    width: 90,
-  },
+  { field: "id", headerName: "ID", flex: 0.5 },
+  { field: "firstName", headerName: "First name", flex: 1 },
+  { field: "lastName", headerName: "Last name", flex: 1 },
+
   {
     field: "fullName",
     headerName: "Full name",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
-    width: 160,
+    flex: 1,
     valueGetter: (value, row) => `${row.firstName || ""} ${row.lastName || ""}`,
   },
 ];
@@ -39,9 +34,11 @@ export default function AssignmentTable() {
   return (
     <Paper
       sx={{
-        height: 400,
         width: "100%",
         boxShadow: "none",
+        borderBottomLeftRadius: 12, // <--- bottom only
+        borderBottomRightRadius: 12, // <--- your radius
+        overflow: "hidden", // <--- IMPORTANT!
       }}
     >
       <DataGrid
@@ -55,6 +52,29 @@ export default function AssignmentTable() {
           "& .MuiDataGrid-columnSeparator": {
             display: "none",
           },
+
+          // Header background (main wrapper)
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "#f1f5f9",
+          },
+
+          // Header cells (each th)
+          "& .MuiDataGrid-columnHeader": {
+            backgroundColor: "#f1f5f9",
+          },
+
+          // Checkbox header cell
+          "& .MuiDataGrid-columnHeaderCheckbox": {
+            backgroundColor: "#f1f5f9",
+          },
+
+          // Inner header wrapper
+          "& .MuiDataGrid-columnHeadersInner": {
+            backgroundColor: "#f1f5f9",
+          },
+          maxHeight: 200,
+          minHeight: 369,
+          width: "100%",
         }}
       />
     </Paper>
