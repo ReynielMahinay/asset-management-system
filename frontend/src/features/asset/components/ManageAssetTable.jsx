@@ -236,7 +236,7 @@ export default function ManageAssetTable({
           numSelected={onSelectedAsset.length}
           isRefreshing={isFetching}
         />
-        <TableContainer sx={{ maxHeight: 300 }}>
+        <TableContainer sx={{ maxHeight: 307 }}>
           <Table size="small">
             <EnhancedTableHead
               order={order}
