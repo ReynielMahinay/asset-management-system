@@ -1,25 +1,44 @@
-function SelectComponent({ value, options, label, onChange }) {
-  const inputId = label.replace(/\s+/g, "-").toLowerCase();
+import { Select, ConfigProvider } from "antd";
 
+function SelectComponent({ value, options, label, onChange, bg_color }) {
+  // const inputId = label.replace(/\s+/g, "-").toLowerCase();
+  const onSearch = (value) => {
+    console.log("search:", value);
+  };
+
+  console.log("Options:", options);
   return (
-    <div className="flex flex-col gap-2 text-[0.7rem] font-poppins font-semibold text-midnight">
-      <label htmlFor={inputId}>
-        {label} <span className="text-red-600">*</span>
-      </label>
-      <select
-        id={inputId}
-        value={value || ""} // fallback if undefined
-        onChange={(e) => onChange(e.target.value)}
-        className="border-gray-400 border-1 rounded shadow-xsm px-2 py-1.5 font-normal"
+    <div className="text-[0.7rem] font-poppins font-semibold text-midnight">
+      <p>
+        {label}
+        <span className="text-red-600">*</span>
+      </p>
+      <ConfigProvider
+        theme={{
+          components: {
+            Select: {
+              optionFontSize: 12,
+              colorBorder: "#99a1af",
+              colorBgContainer: bg_color,
+            },
+          },
+        }}
       >
-        {options.map((opt) => (
-          <option key={opt.id || opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+        <Select
+          size="large"
+          showSearch
+          placeholder="Select a person"
+          value={value}
+          onChange={onChange}
+          options={options}
+          getPopupContainer={(triggerNode) => triggerNode.parentNode}
+          style={{ width: "100%", fontSize: "0.7rem" }}
+        />
+      </ConfigProvider>
     </div>
   );
+
+  console.log((options = { options }));
 }
 
 export default SelectComponent;

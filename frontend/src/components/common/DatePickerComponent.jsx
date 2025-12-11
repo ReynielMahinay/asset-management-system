@@ -1,38 +1,32 @@
-import React from "react";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker, Space, ConfigProvider } from "antd";
 
-function DatePickerComponent() {
+const onChange = (date, dateString) => {
+  console.log(date, dateString);
+};
+
+export default function DatePickerComponent({ bg_color }) {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={["DateTimePicker"]}>
-        <DateTimePicker
-          label="Pick date"
-          slotProps={{
-            textField: {
-              size: "small",
-              InputProps: {
-                style: { fontSize: "0.8rem", margin: "0px 7px 0px 0px" }, // Direct style on input
-              },
-              inputProps: {
-                style: { fontSize: "0.8rem" }, // Style on the actual input element
-              },
-              sx: {
-                "& .MuiInputLabel-shrink": {
-                  fontSize: "0.8rem",
-                },
-                "& .MuiInputLabel-root": {
-                  fontSize: "0.8rem",
-                },
-              },
-            },
+    <ConfigProvider
+      theme={{
+        components: {
+          DatePicker: {
+            colorBorder: "#99a1af",
+            colorBgContainer: bg_color,
+          },
+        },
+      }}
+    >
+      <Space vertical style={{ width: "100%" }}>
+        <DatePicker
+          onChange={onChange}
+          size="large"
+          style={{
+            width: "100%",
+            height: "35px",
+            borderRadius: "10px",
           }}
         />
-      </DemoContainer>
-    </LocalizationProvider>
+      </Space>
+    </ConfigProvider>
   );
 }
-
-export default DatePickerComponent;
