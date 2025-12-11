@@ -3,6 +3,8 @@ import SearchInput from "../../components/common/SearchInput";
 import AssignmentTable from "./components/AssignmentTable";
 import Dropdown from "../../components/common/Dropdown";
 import { statusOptions } from "../../data/options";
+import AssignmentForm from "./components/AssignmentForm";
+import SelectAssignment from "./components/SelectAssignment";
 function Assignment() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
@@ -37,15 +39,15 @@ function Assignment() {
               <h2 className="font-bold capitalize">select assset to assign</h2>
               <SearchInput bg_color={"bg-[#f5f7f9]"} />
               <div className="flex flex-row gap-4">
-                <Dropdown
+                <SelectAssignment
                   options={statusOptions}
-                  bg_color={"bg-[#f5f7f9]"}
+                  bg_color="#f5f7f9"
                   placeholder="Filter by Status"
                 />
 
-                <Dropdown
+                <SelectAssignment
                   options={statusOptions}
-                  bg_color={"bg-[#f5f7f9]"}
+                  bg_color="#f5f7f9"
                   placeholder="Filter by Type"
                 />
               </div>
@@ -56,8 +58,10 @@ function Assignment() {
             </div>
           </div>
         </div>
-        <div className="bg-white min-w-[33.5%] border border-gray-300 shadow-sm rounded-xl p-4">
-          test
+        <div className="bg-white min-w-[33.5%] border border-gray-300 shadow-sm rounded-xl p-4 space-y-2">
+          <p className="font-bold capitalize">Assignmend Details</p>
+
+          <AssignmentForm />
         </div>
       </div>
     </div>

@@ -23,8 +23,8 @@ export const brandOptions = [
 ]
 
 export const statusOptions = [
-  {id: 1, value: 'assigned', label: "Assigned"},
-  {id: 2, value: 'unassigned', label: "Unassigned"}
+  { value: 'assigned', label: "Assigned"},
+  { value: 'unassigned', label: "Unassigned"}
 ]
 
 export const roleOptions = [
