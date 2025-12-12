@@ -9,7 +9,7 @@ import { useAssets, useDeleteAsset } from "../../hooks/useAssets";
 import SearchInput from "../../components/common/SearchInput";
 import AssetForm from "./components/AssetForm";
 import { FaArrowRight } from "react-icons/fa";
-
+import AssetTable from "./components/AssetTable";
 function AssetPage() {
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -126,8 +126,16 @@ function AssetPage() {
           </div>
         </div>
       </div>
-      <div className="flex">
-        <ManageAssetTable
+      <div className="">
+        {/* <ManageAssetTable
+          onEdit={handleEditOpen}
+          keyword={searchKeyword}
+          onSelectedChange={setOnselectedAsset}
+          onSelectedAsset={onSelectedAsset}
+          setAssetTotal={(total) => console.log("Total assets:", total)}
+        /> */}
+
+        <AssetTable
           onEdit={handleEditOpen}
           keyword={searchKeyword}
           onSelectedChange={setOnselectedAsset}
