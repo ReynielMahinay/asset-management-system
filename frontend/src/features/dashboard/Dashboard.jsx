@@ -35,9 +35,9 @@ function Dashboard() {
         />
       ))}
 
-      <div className="flex flex-col gap-5 bg-white col-span-full shadow-md rounded-xl w-full p-4 py-5">
+      <div className="flex flex-col gap-5 border border-zinc-300  bg-white col-span-full shadow-md rounded-xl w-full p-4 py-5">
         {/* Bar Chart Container - Fixed height */}
-        <div className="border-gray-300 border-2 rounded-lg p-5 w-full h-[400px]">
+        <div className="rounded-lg p-5 w-full h-[400px]">
           <BarChartAssets
             recentlyAdded={recentlyAdded}
             assetTotal={assetTotal}
