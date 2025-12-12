@@ -9,6 +9,7 @@ import SearchInput from "../../components/common/SearchInput";
 import ModalComponent from "../../components/common/ModalComponent";
 import UserForm from "./components/UserForm";
 import { useDeleteUser, useUsers } from "../../hooks/useUsers";
+import UserTable from "./components/UserTable";
 
 function ManageUser() {
   const [open, setOpen] = useState(false);
@@ -83,12 +84,13 @@ function ManageUser() {
         </div>
       </div>
       <div>
-        <ManangerUserTable
+        <UserTable />
+        {/* <ManangerUserTable
           onEdit={handleEditOpen}
           setUserTotal={(total) => console.log("Total users:", total)}
           onSelectedUser={onSelectedUser}
           setOnselectedUser={setOnselectedUser}
-        />
+        /> */}
       </div>
       <ModalComponent
         open={open}

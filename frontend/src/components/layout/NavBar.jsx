@@ -5,7 +5,7 @@ import Breadcrumbs from "../common/Breadcrumbs";
 
 const NavBar = ({ isActivePage }) => {
   return (
-    <div className="bg-[#f5f7f9] px-4 py-2 flex flex-row justify-between items-center text-midnight border-b border-gray-200">
+    <div className="bg-[#ffffff] px-4 py-2 flex flex-row justify-between items-center text-midnight border-b border-gray-200">
       <div>
         <h1 className="capitalize font-open-sans font-semibold text-[.8rem] ">
           <Breadcrumbs />
