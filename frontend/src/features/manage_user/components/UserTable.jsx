@@ -40,7 +40,7 @@ export default function UserTable({
   const mappedData = useMemo(
     () =>
       data.data.map((user) => ({
-        key: user.id,
+        id: user.id,
         fullname: user.user_fullname || user.fullname,
         email: user.user_email || user.email,
         department: user.user_department || user.department,
@@ -89,7 +89,7 @@ export default function UserTable({
         <KebabMenu
           onEdit={onEdit}
           dataForm={record}
-          dataId={record.key}
+          dataId={record.id}
           type="user"
         />
       ),

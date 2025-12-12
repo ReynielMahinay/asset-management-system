@@ -45,13 +45,6 @@ function Sidebard() {
       active_icon: FaUser,
       label: "Manage user",
     },
-    {
-      id: "assignment",
-      path: "/assignment",
-      icon: MdOutlineAssignmentInd,
-      active_icon: MdAssignmentInd,
-      label: "Assignment",
-    },
   ];
 
   return (
