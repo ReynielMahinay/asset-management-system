@@ -111,7 +111,7 @@ function EnhancedTableToolbar({ numSelected }) {
         pr: 1,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
-        border: "1px solid #e0e0e0",
+        border: "1px solid #d4d4d8",
         bgcolor:
           numSelected > 0
             ? "#f1f5f9" // or theme.palette.action.selected
@@ -213,10 +213,13 @@ export default function ManageUserTable({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2, borderRadius: 3 }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={onSelectedUser.length} />
         <TableContainer>
-          <Table aria-labelledby="tableTitle">
+          <Table
+            aria-labelledby="tableTitle"
+            sx={{ border: "1px solid #d4d4d8" }}
+          >
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}
@@ -279,6 +282,11 @@ export default function ManageUserTable({
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            border: "1px solid #d4d4d8",
+            borderBottomLeftRadius: 15,
+            borderBottomRightRadius: 15,
+          }}
         />
       </Paper>
     </Box>
