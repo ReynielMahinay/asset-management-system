@@ -3,8 +3,7 @@ import { Table, ConfigProvider } from "antd";
 import { fetchUser } from "../../../api/users";
 import { useQuery } from "@tanstack/react-query";
 import KebabMenu from "../../../components/common/KebabMenu";
-import { FaDove } from "react-icons/fa";
-import SelectPagination from "../../../components/common/SelectPagination";
+
 // Column mapping for sorting
 const columnMap = {
   fullname: "user_fullname",
@@ -13,7 +12,11 @@ const columnMap = {
   role: "user_role",
 };
 
-export default function UserTable({ onEdit }) {
+export default function UserTable({
+  onEdit,
+  onSelectedUser,
+  setOnselectedUser,
+}) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -83,15 +86,20 @@ export default function UserTable({ onEdit }) {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => (
-        <KebabMenu onEdit={onEdit} dataForm={record} dataId={record.key} />
+        <KebabMenu
+          onEdit={onEdit}
+          dataForm={record}
+          dataId={record.key}
+          type="user"
+        />
       ),
     },
   ];
 
   // Handle selection change
   const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys) => setSelectedRowKeys(keys),
+    selectedRowKeys: setOnselectedUser,
+    onChange: (keys) => setOnselectedUser(keys),
   };
 
   // Handle pagination, sorting
@@ -118,13 +126,17 @@ export default function UserTable({ onEdit }) {
           }}
         >
           <Table
-            rowSelection={rowSelection}
+            rowSelection={{
+              selectedRowKeys: onSelectedUser,
+              onChange: (keys) => setOnselectedUser(keys),
+            }}
             columns={columns}
             dataSource={mappedData}
             pagination={{
               current: page,
               pageSize: rowsPerPage,
-              total: data.total,
+              total: data.total, // total rows from API
+              showTotal: (total) => `Total Users: ${total}`,
             }}
             onChange={handleTableChange}
           />
