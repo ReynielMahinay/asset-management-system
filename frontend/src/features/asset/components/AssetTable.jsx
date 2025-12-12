@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Table, ConfigProvider } from "antd";
+import { Table, ConfigProvider, Alert, Spin } from "antd";
 import { fetchAssets } from "../../../api/assets";
 import { useQuery } from "@tanstack/react-query";
 import KebabMenu from "../../../components/common/KebabMenu";
@@ -20,10 +20,12 @@ function AssetTable({
   onSelectedUser,
   setOnselectedUser,
   keyword = "",
+  setPage,
+  page,
 }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
-  const [page, setPage] = useState(1);
+
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const {
     data = { total: 0, data: [] },
@@ -47,7 +49,7 @@ function AssetTable({
   const mappedData = useMemo(
     () =>
       data.data.map((asset) => ({
-        key: asset.id,
+        id: asset.id,
         name: asset.asset_name || asset.name,
         type: asset.asset_type || asset.type,
         brand: asset.asset_brand || asset.brand,
@@ -96,7 +98,7 @@ function AssetTable({
         <KebabMenu
           onEdit={onEdit}
           dataForm={record}
-          dataId={record.key}
+          dataId={record.id}
           type="asset"
         />
       ),
@@ -107,6 +109,25 @@ function AssetTable({
     setPage(pagination.current);
     setRowsPerPage(pagination.pageSize);
   };
+
+  if (isError) {
+    return (
+      <Alert
+        message="Error loading assets"
+        description={error?.message || "Something went wrong"}
+        type="error"
+        showIcon
+      />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-4">
+        <Spin />
+      </div>
+    );
+  }
   return (
     <div>
       <div className="border rounded-xl overflow-hidden border-zinc-300 w-full">
@@ -132,9 +153,10 @@ function AssetTable({
               current: page,
               pageSize: rowsPerPage,
               total: data.total, // total rows from API
-              showTotal: (total) => `Total Users: ${total}`,
+              showTotal: (total) => `Total asset : ${total}`,
             }}
             onChange={handleTableChange}
+            loading={isFetching}
           />
         </ConfigProvider>
       </div>

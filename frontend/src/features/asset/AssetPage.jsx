@@ -10,6 +10,7 @@ import SearchInput from "../../components/common/SearchInput";
 import AssetForm from "./components/AssetForm";
 import { FaArrowRight } from "react-icons/fa";
 import AssetTable from "./components/AssetTable";
+import { useNavigate } from "react-router-dom";
 function AssetPage() {
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -19,6 +20,8 @@ function AssetPage() {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
   const deleteAssetMutation = useDeleteAsset();
+
+  const navigate = useNavigate();
   const { data: assetData, isLoading } = useAssets({
     page,
     pageSize: 5,
@@ -78,7 +81,10 @@ function AssetPage() {
     <div className="flex flex-col gap-4 font-poppins text-midnight ">
       <div className="flex justify-between items-center py-2">
         <p className="font-bold text-2xl">Asset management</p>
-        <p className="flex flex-row items-center justify-center font-semibold gap-1 hover:underline hover:cursor-pointer hover:text-blue-500 text-sm">
+        <p
+          className="flex flex-row items-center justify-center font-semibold gap-1 hover:underline hover:cursor-pointer hover:text-blue-500 text-sm"
+          onClick={() => navigate("assignment")}
+        >
           Asset signment
           <span>
             <FaArrowRight size={13} />
@@ -86,14 +92,6 @@ function AssetPage() {
         </p>
       </div>
       <div className="flex flex-col  gap-6 rounded-xl ">
-        <div className="flex flex-row justify-between items-center">
-          <p className="flex flex-row justify-center font-semibold  text-sm items-center gap-3">
-            {dashboardchartdata[0].name}s:
-            <span className="font-bold text-[1.5rem] ">
-              {assetData?.total ?? 0}
-            </span>
-          </p>
-        </div>
         <div className="flex flex-row w-full ">
           <div className="flex flex-row  gap-2 w-[50%] boder-1 border-red-500 ">
             <SearchInput
@@ -127,15 +125,9 @@ function AssetPage() {
         </div>
       </div>
       <div className="">
-        {/* <ManageAssetTable
-          onEdit={handleEditOpen}
-          keyword={searchKeyword}
-          onSelectedChange={setOnselectedAsset}
-          onSelectedAsset={onSelectedAsset}
-          setAssetTotal={(total) => console.log("Total assets:", total)}
-        /> */}
-
         <AssetTable
+          setPage={setPage}
+          page={page}
           onEdit={handleEditOpen}
           keyword={searchKeyword}
           onSelectedChange={setOnselectedAsset}
