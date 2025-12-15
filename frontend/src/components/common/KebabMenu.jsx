@@ -5,14 +5,16 @@ import MenuItem from "@mui/material/MenuItem";
 import { VscKebabVertical } from "react-icons/vsc";
 import { useDeleteAsset } from "../../hooks/useAssets";
 import { useDeleteUser } from "../../hooks/useUsers";
+import { message, Modal } from "antd";
+import { useAppNotification } from "./Notificaiton";
 
 const KebabMenu = ({ onEdit, dataId, dataForm, type }) => {
   const deleteAssetMutation = useDeleteAsset();
   const deleteUserMutation = useDeleteUser();
-
+  const notify = useAppNotification(); //notifcation
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
+  const { confirm } = Modal;
   const handleClick = (event) => {
     event.stopPropagation(); // prevent row selection
     setAnchorEl(event.currentTarget);
@@ -22,9 +24,33 @@ const KebabMenu = ({ onEdit, dataId, dataForm, type }) => {
 
   const handleDelete = () => {
     if (type === "asset") {
-      deleteAssetMutation.mutate(dataId);
+      confirm({
+        title: "Are you sure you want to delete this?",
+        okText: "Yes",
+        okType: "danger",
+        cancelText: "No",
+        onOk() {
+          deleteAssetMutation.mutate(dataId);
+          notify({
+            title: "Asset deleted",
+            description: "Asset was deleted succesfuly",
+          });
+        },
+      });
     } else if (type === "user") {
-      deleteUserMutation.mutate(dataId);
+      confirm({
+        title: "Are you sure you want to delete this?",
+        okText: "Yes",
+        okType: "danger",
+        cancelText: "No",
+        onOk() {
+          deleteUserMutation.mutate(dataId);
+          notify({
+            title: "User deleted",
+            description: "User was deleted succesfuly",
+          });
+        },
+      });
     }
   };
   return (

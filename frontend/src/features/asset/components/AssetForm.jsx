@@ -44,13 +44,13 @@ function AssetForm({ handleClose, mode = "add", modalData = null }) {
       if (mode === "add") {
         await createMutation.mutateAsync(formData);
         notify({
-          message: "Asset created",
+          title: "Asset created",
           description: "The asset was added successfully",
         });
       } else {
         await updateMutation.mutateAsync({ id: modalData.id, data: formData });
         notify({
-          message: "Asset updated",
+          title: "Asset updated",
           description: "Changes saved successfully",
         });
       }

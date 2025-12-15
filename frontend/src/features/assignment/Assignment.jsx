@@ -35,12 +35,18 @@ function Assignment() {
 
   return (
     <div className=" flex flex-col gap-4 font-poppins text-midnight ">
-      <p className="flex flex-row justify-start items-center gap-2 font-bold  text-2xl">
-        <span className="cursor-pointer">
-          <IoReturnUpBack size={25} onClick={() => navigate("..")} />
-        </span>
-        Asset assignement
-      </p>
+      <header className=" py-2">
+        <p className="flex flex-row justify-start items-center gap-2 font-bold  text-2xl">
+          <span className="cursor-pointer hover:bg-gray-200 rounded-lg p-1">
+            <IoReturnUpBack size={25} onClick={() => navigate("..")} />
+          </span>
+          Asset assignement
+        </p>
+        <p className="text-xs font-light text-gray-600 pl-10">
+          Easily assign assets to your team and keep track of who has what
+        </p>
+      </header>
+
       <div className="flex flex-row gap-4 ">
         <div className="bg-white min-w-[65%] border border-zinc-300 shadow-sm rounded-xl ">
           <div className="flex flex-col gap-4">

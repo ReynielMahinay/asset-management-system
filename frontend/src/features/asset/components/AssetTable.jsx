@@ -84,11 +84,11 @@ function AssetTable({
       render: (status) => (
         <span>
           {status === "assigned" ? (
-            <span className="text-green-700 bg-green-100 px-2 py-1 capitalize text-xs rounded-full font-poppins font-semibold ">
+            <span className="text-green-700 bg-green-100 px-2 py-1 capitalize text-xs rounded-full font-poppins font-normal ">
               {status}
             </span>
           ) : (
-            <span className="text-red-700  bg-red-100 px-2 py-1 rounded-full capitalize font-poppins font-semibold text-xs">
+            <span className="text-red-700  bg-red-100 px-2 py-1 rounded-full capitalize font-poppins font-normal text-xs">
               {status}
             </span>
           )}
