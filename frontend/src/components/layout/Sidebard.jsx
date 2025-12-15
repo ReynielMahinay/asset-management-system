@@ -8,8 +8,7 @@ import { RiDashboardFill } from "react-icons/ri";
 import { RiAlignItemLeftLine } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import { MdOutlineAssignmentInd } from "react-icons/md";
-import { MdAssignmentInd } from "react-icons/md";
+import { FiPackage } from "react-icons/fi";
 import { IoMdSettings } from "react-icons/io";
 
 import { RiAlignItemLeftFill } from "react-icons/ri";
@@ -50,15 +49,22 @@ function Sidebard() {
   return (
     <div
       className={`bg-white text-midnight min-h-screen flex flex-col transition-all duration-300 eass-in-out overflow-hidden  border-r  border-gray-300 overflow-y-auto ${
-        isCollapsed ? "w-16 gap-1 " : "min-w-64 gap-1"
+        isCollapsed ? "w-16 gap-1" : "min-w-64 gap-1 "
       }`}
     >
       <div
-        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 px-2 py-1.5 ${
-          isCollapsed ? "hidden" : "block"
+        className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 px-3 h-20 ${
+          isCollapsed ? "hidden " : "block"
         }`}
       >
-        <h1 className="text-2xl">Assetfy</h1>
+        <div className="flex flex-row items-center gap-2">
+          <span className="bg-black text-white p-2 rounded-xl">
+            <FiPackage size={20} />
+          </span>
+
+          <h1 className="text-xl">Assetfy</h1>
+        </div>
+
         <button onClick={toggleSideBar} className="cursor-pointer group">
           <TbLayoutSidebarLeftCollapse
             size={24}
@@ -72,8 +78,8 @@ function Sidebard() {
       </div>
 
       <div
-        className={`flex justify-center items-center  px-3 py-[10px] ${
-          isCollapsed ? "block" : "hidden"
+        className={`flex justify-center items-center  px-3 ${
+          isCollapsed ? "block  h-20" : "hidden"
         }`}
       >
         <button onClick={toggleSideBar} className="cursor-pointer group ">
@@ -84,11 +90,10 @@ function Sidebard() {
           />
         </button>
       </div>
-      {/* <div className="border-b border-gray-300 w-full" /> */}
 
       <div className="flex flex-col justify-between h-full">
         <div
-          className={`flex flex-col  gap-1 py-2 ${
+          className={`flex flex-col  gap-1 py-5 px-2 ${
             isCollapsed ? "justify-center items-center" : "  "
           }`}
         >
@@ -98,7 +103,7 @@ function Sidebard() {
                 to={item.path}
                 key={item.id}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 cursor-pointer p-3 ${
+                  `flex items-center gap-2 cursor-pointer py-3 px-4 ${
                     isActive ? "bg-midnight mx-2 rounded-xl text-white" : "mx-2"
                   }`
                 }
@@ -108,9 +113,9 @@ function Sidebard() {
 
                   return (
                     <>
-                      <Icon size={20} className="flex-shrink-0" />
+                      <Icon size={18} className="flex-shrink-0" />
                       {!isCollapsed && (
-                        <span className="transition-opacity duration-300 font-dm-sans text-small font-medium whitespace-nowrap">
+                        <span className="transition-opacity duration-300 font-dm-sans text-sm font-semibold whitespace-nowrap">
                           {item.label}
                         </span>
                       )}

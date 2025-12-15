@@ -64,7 +64,7 @@ function ManageUser() {
       <div className="flex flex-col gap-5">
         <div className="flex flex-row justify-between items-center">
           <div className="w-[50%]">
-            <SearchInput />
+            <SearchInput bg_color="ffffff" />
           </div>
           <div className="flex flex-row gap-2">
             <Button

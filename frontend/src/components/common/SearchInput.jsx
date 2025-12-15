@@ -10,7 +10,6 @@ function SearchInput({
   handleClear,
   setKeyword,
   handleSearchInput,
-  bg_color,
 }) {
   const handleKeydown = (e) => {
     if (e.key === "Enter") {
@@ -42,7 +41,7 @@ function SearchInput({
           onChange={handleClearText}
           onKeyDown={handleKeydown}
           placeholder="Search asset by ID or Name"
-          className={`w-full p-2 border border-[#d4d4d8] rounded-[10px] borderbg-gray-100 ${bg_color} focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none font-poppins text-sm font-light pl-10`}
+          className={`w-full p-2 border border-[#d4d4d8] rounded-[10px] borderbg-gray-100 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none font-poppins text-sm font-light pl-10`}
         />
       </div>
 

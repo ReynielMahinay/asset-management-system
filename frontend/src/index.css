@@ -6,7 +6,8 @@
   --font-poppins: "Poppins", sans-serif;
 }
 @theme {
-  --color-midnight: #293034;
+  --color-midnight: #000000;
+  /* --color-midnight: #293034; */
 }
 
 body {

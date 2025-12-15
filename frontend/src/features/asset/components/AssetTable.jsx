@@ -17,8 +17,8 @@ const columnMap = {
 
 function AssetTable({
   onEdit,
-  onSelectedUser,
-  setOnselectedUser,
+  onSelectedAsset,
+  onSelectedChange,
   keyword = "",
   setPage,
   page,
@@ -155,10 +155,11 @@ function AssetTable({
           }}
         >
           <Table
+            rowKey="id"
             style={{ width: "100%" }}
             rowSelection={{
-              selectedRowKeys: onSelectedUser,
-              onChange: (keys) => setOnselectedUser(keys),
+              selectedRowKeys: onSelectedAsset,
+              onChange: (keys) => onSelectedChange(keys),
             }}
             columns={columns}
             dataSource={mappedData}

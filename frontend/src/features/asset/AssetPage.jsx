@@ -1,16 +1,15 @@
 import React, { use, useState } from "react";
-import { dashboardchartdata } from "../../model/SampleData";
 import Button from "../../components/common/Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import ModalComponent from "../../components/common/ModalComponent";
-import ManageAssetTable from "./components/ManageAssetTable";
 import { useAssets, useDeleteAsset } from "../../hooks/useAssets";
 import SearchInput from "../../components/common/SearchInput";
 import AssetForm from "./components/AssetForm";
-import { FaArrowRight } from "react-icons/fa";
 import AssetTable from "./components/AssetTable";
 import { useNavigate } from "react-router-dom";
+import { BsPersonAdd } from "react-icons/bs";
+
 function AssetPage() {
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -80,16 +79,18 @@ function AssetPage() {
   return (
     <div className="flex flex-col gap-4 font-poppins text-midnight ">
       <div className="flex justify-between items-center py-2">
-        <p className="font-bold text-2xl">Asset management</p>
-        <p
-          className="flex flex-row items-center justify-center font-semibold gap-1 hover:underline hover:cursor-pointer hover:text-blue-500 text-sm"
+        <header>
+          <h1 className="font-bold text-2xl">Asset management</h1>
+          <p className="text-xs font-light text-gray-600">
+            View, manage, and assign company assets
+          </p>
+        </header>
+
+        <Button
+          title="Assigned Asset"
+          icon={<BsPersonAdd size={18} />}
           onClick={() => navigate("assignment")}
-        >
-          Asset signment
-          <span>
-            <FaArrowRight size={13} />
-          </span>
-        </p>
+        />
       </div>
       <div className="flex flex-col  gap-6 rounded-xl ">
         <div className="flex flex-row w-full ">

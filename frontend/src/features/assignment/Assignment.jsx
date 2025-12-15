@@ -5,11 +5,15 @@ import Dropdown from "../../components/common/Dropdown";
 import { statusOptions } from "../../data/options";
 import AssignmentForm from "./components/AssignmentForm";
 import SelectAssignment from "./components/SelectAssignment";
+import { IoReturnUpBack } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
+
 function Assignment() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [assignments, setAssignments] = useState([{ user: null, asset: null }]);
 
+  const navigate = useNavigate();
   const handleChange = (index, field, value) => {
     const newAssigntments = [...assignments];
     newAssigntments[index][field] = value;
@@ -31,7 +35,12 @@ function Assignment() {
 
   return (
     <div className=" flex flex-col gap-4 font-poppins text-midnight ">
-      <p className="font-bold  text-2xl">Asset assignement</p>
+      <p className="flex flex-row justify-start items-center gap-2 font-bold  text-2xl">
+        <span className="cursor-pointer">
+          <IoReturnUpBack size={25} onClick={() => navigate("..")} />
+        </span>
+        Asset assignement
+      </p>
       <div className="flex flex-row gap-4 ">
         <div className="bg-white min-w-[65%] border border-zinc-300 shadow-sm rounded-xl ">
           <div className="flex flex-col gap-4">
