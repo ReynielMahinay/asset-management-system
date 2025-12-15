@@ -7,15 +7,16 @@ import { IoIosSearch } from "react-icons/io";
 function SearchInput({
   onSearch,
   keyword,
-  handleClear,
   setKeyword,
   handleSearchInput,
+  placeholder,
 }) {
   const handleKeydown = (e) => {
     if (e.key === "Enter") {
       handleSearchInput();
     } else if (e.key === "Escape") {
-      handleClear();
+      onSearch("");
+      setKeyword("");
     }
   };
   const handleClearText = (e) => {
@@ -40,7 +41,7 @@ function SearchInput({
           value={keyword}
           onChange={handleClearText}
           onKeyDown={handleKeydown}
-          placeholder="Search asset by ID or Name"
+          placeholder={placeholder}
           className={`w-full p-2 border border-[#d4d4d8] rounded-[10px] borderbg-gray-100 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none font-poppins text-sm font-light pl-10`}
         />
       </div>

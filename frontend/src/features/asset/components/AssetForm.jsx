@@ -57,7 +57,10 @@ function AssetForm({ handleClose, mode = "add", modalData = null }) {
       handleClose();
     } catch (error) {
       console.error("Error submitting asset:", error);
-      notificationRef.current?.("Something went wrong");
+      notify({
+        title: "Error submitting",
+        description: "The asset was not created successfully",
+      });
     }
   };
 

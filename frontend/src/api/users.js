@@ -2,7 +2,8 @@ export async function fetchUser({
     page = 1, 
     pageSize = 5,
     sort = "user_id",
-    order = "asc"
+    order = "asc",
+    keyword = ""
 } = {}){
     const params =  new URLSearchParams({
         page: String(page),
@@ -10,6 +11,8 @@ export async function fetchUser({
         sort,
         order
     })
+
+    if(keyword) params.append("keyword", keyword)
 
     const res = await fetch(`http://localhost:5000/api/users?${params.toString()}`);
 

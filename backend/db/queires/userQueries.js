@@ -35,6 +35,19 @@ async function getUser({page = 1, pageSize = 5, sort = "user_id", order = "ASC" 
     return{total, data, page, pageSize}
 }
 
+async function searchUser(keyword){
+    const result = await pool.query(
+        `SELECT * FROM users WHERE user_fullname ILIKE '%' || $1 || '%' OR user_email ILIKE '%' || $1 || '%' LIMIT 50`, [keyword]
+    )
+
+    return result.rows.map(user => ({
+         id: user.user_id,
+        fullname: user.user_fullname,
+        department: user.user_department,
+        email: user.user_email,
+        role: user.user_role
+    }))
+}
 
 async function updateUser(id, fullname, email, department, role){
     const result = await pool.query(
@@ -57,4 +70,4 @@ async function deleteUser(id){
     return result.rowCount > 0;
 }
 
-module.exports = {insertUser, getUser, updateUser, deleteUser}
+module.exports = {insertUser, getUser, updateUser, deleteUser, searchUser}

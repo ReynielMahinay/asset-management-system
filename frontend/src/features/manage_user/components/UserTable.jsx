@@ -16,9 +16,11 @@ export default function UserTable({
   onEdit,
   onSelectedUser,
   setOnselectedUser,
+  keyword = "",
+  page,
+  setPage,
 }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState("fullname");
   const [order, setOrder] = useState("asc");
@@ -31,13 +33,14 @@ export default function UserTable({
     error,
     isFetching,
   } = useQuery({
-    queryKey: ["users", page, rowsPerPage, orderBy, order],
+    queryKey: ["users", page, rowsPerPage, orderBy, order, keyword],
     queryFn: () =>
       fetchUser({
-        page,
+        page: page,
         pageSize: rowsPerPage,
         sor: columnMap[orderBy] || "user_id",
         order,
+        keyword,
       }),
     keepPreviousData: true,
   });
@@ -102,20 +105,10 @@ export default function UserTable({
     },
   ];
 
-  // Handle selection change
-  const rowSelection = {
-    selectedRowKeys: setOnselectedUser,
-    onChange: (keys) => setOnselectedUser(keys),
-  };
-
   // Handle pagination, sorting
-  const handleTableChange = (pagination, filters, sorter) => {
+  const handleTableChange = (pagination) => {
     setPage(pagination.current);
     setRowsPerPage(pagination.pageSize);
-    if (sorter && sorter.field) {
-      setOrderBy(sorter.field);
-      setOrder(sorter.order === "ascend" ? "asc" : "desc");
-    }
   };
 
   if (isError) {
@@ -165,6 +158,7 @@ export default function UserTable({
               showTotal: (total) => `Total Users: ${total}`,
             }}
             onChange={handleTableChange}
+            loading={isFetching}
           />
         </ConfigProvider>
       </div>
