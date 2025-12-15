@@ -9,9 +9,13 @@ import AssetForm from "./components/AssetForm";
 import AssetTable from "./components/AssetTable";
 import { useNavigate } from "react-router-dom";
 import { BsPersonAdd } from "react-icons/bs";
+import { useAppNotification } from "../../components/common/Notificaiton";
+import { message, Modal } from "antd";
+import useApp from "antd/es/app/useApp";
 
 function AssetPage() {
   const [open, setOpen] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [selectedAsset, setSelectedAsset] = useState(null); //for selecting one user for delete/edit
   const [onSelectedAsset, setOnselectedAsset] = useState([]); //for multiple selection of user for delete
@@ -19,6 +23,8 @@ function AssetPage() {
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
   const deleteAssetMutation = useDeleteAsset();
+  const { confirm } = Modal; // modal confirmation for delete
+  const notify = useAppNotification();
 
   const navigate = useNavigate();
   const { data: assetData, isLoading } = useAssets({
@@ -46,21 +52,33 @@ function AssetPage() {
 
   const handleDeleteMultiple = () => {
     if (onSelectedAsset.length === 0) {
-      alert("Please selected asset to delete");
-      return;
-    } //checking if no selected asset
-
-    const confirmDelete = window.confirm(
-      `Delete ${onSelectedAsset.length} selected asset(s)`
-    ); //window alert confirmation for delete selected assets
-
-    if (!confirmDelete) return; //If no seleceted just return nothing
-
-    onSelectedAsset.forEach((id) => {
-      deleteAssetMutation.mutate(id);
-    }); //All the selected asset that was stored in the onSelectedAsset state will be foreach and deleted using the hook
-
-    setOnselectedAsset([]); //then this clear all the selected checkbox after deleting
+      confirm({
+        title: "Please select the asset",
+        okText: "Yes",
+        okType: "danger",
+        mask: true,
+        cancelText: "No",
+        onOk() {
+          return;
+        },
+      });
+    } else {
+      confirm({
+        title: `Are you sure you want to delete ${onSelectedAsset.length} asset(s)?`,
+        okText: "Yes",
+        okType: "danger",
+        mask: true,
+        cancelText: "No",
+        onOk() {
+          onSelectedAsset.forEach((id) => deleteAssetMutation.mutate(id));
+          setOnselectedAsset([]);
+          notify({
+            title: "Asset deleted",
+            description: "The assets was deleted successfuly",
+          });
+        },
+      }); //then this clear all the selected checkbox after deleting
+    }
   };
 
   const handleClose = () => setOpen(false);
