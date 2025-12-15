@@ -151,6 +151,7 @@ export default function UserTable({
           }}
         >
           <Table
+            rowKey="id"
             rowSelection={{
               selectedRowKeys: onSelectedUser,
               onChange: (keys) => setOnselectedUser(keys),

@@ -4,6 +4,7 @@ import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
 import Box from "@mui/material/Box";
 import { IoClose } from "react-icons/io5";
+import Notificaiton from "./Notificaiton";
 
 const style = {
   position: "absolute",

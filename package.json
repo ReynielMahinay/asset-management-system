@@ -25,6 +25,7 @@
     "concurrently": "^9.2.0"
   },
   "dependencies": {
-    "antd": "^6.1.0"
+    "antd": "^6.1.0",
+    "antd-style": "^3.7.1"
   }
 }

@@ -60,6 +60,9 @@ function ManageUser() {
         <p className="font-poppins text-2xl font-semibold">
           Employee Management{" "}
         </p>
+        <p className="text-xs font-poppins font-light text-gray-600">
+          Add, update, and monitor employee assets
+        </p>
       </div>
       <div className="flex flex-col gap-5">
         <div className="flex flex-row justify-between items-center">
