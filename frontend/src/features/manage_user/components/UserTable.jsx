@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Table, ConfigProvider } from "antd";
+import { Table, ConfigProvider, Spin } from "antd";
 import { fetchUser } from "../../../api/users";
 import { useQuery } from "@tanstack/react-query";
 import KebabMenu from "../../../components/common/KebabMenu";
@@ -24,7 +24,13 @@ export default function UserTable({
   const [order, setOrder] = useState("asc");
 
   // Fetch user data with react-query
-  const { data = { total: 0, data: [] } } = useQuery({
+  const {
+    data = { total: 0, data: [] },
+    isLoading,
+    isError,
+    error,
+    isFetching,
+  } = useQuery({
     queryKey: ["users", page, rowsPerPage, orderBy, order],
     queryFn: () =>
       fetchUser({
@@ -111,6 +117,25 @@ export default function UserTable({
       setOrder(sorter.order === "ascend" ? "asc" : "desc");
     }
   };
+
+  if (isError) {
+    return (
+      <Alert
+        message="Error loading assets"
+        description={error?.message || "Something went wrong"}
+        type="error"
+        showIcon
+      />
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-4">
+        <Spin />
+      </div>
+    );
+  }
 
   return (
     <div>
