@@ -5,11 +5,12 @@ import InputFieldComponent from "../../../components/common/InputFieldComponent"
 import Button from "../../../components/common/Button";
 import { roleOptions } from "../../../data/options";
 import { useCreateUser, useUpdateUser } from "../../../hooks/useUsers";
+import { useAppNotification } from "../../../components/common/Notificaiton";
 
 function UserForm({ handleClose, mode = "add", modalData }) {
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();
-
+  const notify = useAppNotification();
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -39,13 +40,25 @@ function UserForm({ handleClose, mode = "add", modalData }) {
     try {
       if (mode === "add") {
         await createMutation.mutateAsync(formData);
+        notify({
+          title: "User created",
+          description: "The user was added successfully",
+        });
       } else {
         await updateMutation.mutateAsync({ id: modalData.id, data: formData });
+        notify({
+          title: "User updated",
+          description: "Changes saved successfully",
+        });
       }
       console.log("Form data: ", formData);
       handleClose();
     } catch (error) {
       console.error("Error submitting user: ", error);
+      notify({
+        title: "Error submitting",
+        description: "The user was not created successfully",
+      });
     }
   };
 

@@ -24,17 +24,34 @@ async function userGet(req, res){
             pageSize = 5,
             sort = "user_id",
             order = "asc",
+            keyword = ""
         } = req.query;
+            console.log("Query Params:", { page, pageSize, sort, order });
 
-        console.log("Query Params:", { page, pageSize, sort, order });
+        let users; 
+        if(keyword) {
+            const rows = await dbuser.searchUser(keyword)
 
-        const users = await dbuser.getUser({
+            const start = (page -1 ) * pageSize;
+            const paginationRows = rows.slice(start, start + pageSize)
+
+            users = {
+                total: rows.length,
+                page: Number(page),
+                pageSize: Number(pageSize),
+                data: paginationRows
+            }
+        }else {
+              users = await dbuser.getUser({
             page: Number(page),
             pageSize: Number(pageSize),
             sort,
             order: order.toUpperCase(),
         });
 
+        }
+
+     
         res.json(users)
     } catch (error) {
         console.error(error);
@@ -42,31 +59,6 @@ async function userGet(req, res){
     }
 }
 
-// async function userGet(req, res){
-
-//     try {
-//         const {
-//             page = 1, 
-//             pageSize = 5,
-//             sort = "user_id",
-//             order = "asc",
-//         } = req.query;
-
-//         let users;
-
-//         users = await dbuser.getUser({
-//             page: Number(page),
-//             pageSize: Number(pageSize),
-//             sort,
-//             order: order.toUpperCase(),
-//         });
-
-//         res.json(users)
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({error: "Database error"})
-//     }
-// }
 
 async function userUpdate(req, res){
     try{

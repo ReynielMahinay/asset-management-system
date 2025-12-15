@@ -89,11 +89,6 @@ function AssetPage() {
     handleSearch(trimmedKeyword);
   };
 
-  const handleClear = () => {
-    setKeyword("");
-    handleSearchInput("");
-  };
-
   return (
     <div className="flex flex-col gap-4 font-poppins text-midnight ">
       <div className="flex justify-between items-center py-2">
@@ -116,10 +111,10 @@ function AssetPage() {
             <SearchInput
               onSearch={handleSearch}
               keyword={keyword}
-              handleClear={handleClear}
               setKeyword={setKeyword}
               handleSearchInput={handleSearchInput}
               bg_color={"bg-white"}
+              placeholder="Search by Name or Tag"
             />
             <Button
               title="Search"

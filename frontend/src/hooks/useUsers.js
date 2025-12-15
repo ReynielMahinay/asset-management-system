@@ -1,9 +1,9 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createUser, deleteUser, fetchUser, updateUser } from "../api/users";
 
-export function useUsers({page = 1, pageSize = 5, sort = "user_id", order = "asc"} = {}){
+export function useUsers({page = 1, pageSize = 5, sort = "user_id", order = "asc", keyword = ""} = {}){
     return useQuery({
-        queryKey: ["users", page, pageSize, sort, order ],
+        queryKey: ["users", page, pageSize, sort, order, keyword],
         queryFn: () => fetchUser({page, pageSize, sort, order}),
         keepPreviousData: true,
     })
