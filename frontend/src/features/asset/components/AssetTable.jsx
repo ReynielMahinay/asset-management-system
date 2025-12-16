@@ -2,8 +2,11 @@ import React, { useState, useMemo } from "react";
 import { Table, ConfigProvider, Alert, Spin } from "antd";
 import { fetchAssets } from "../../../api/assets";
 import { useQuery } from "@tanstack/react-query";
-import KebabMenu from "../../../components/common/KebabMenu";
-
+import ActionMenu from "../../../components/common/ActionMenu";
+import { useDeleteAsset } from "../../../hooks/useAssets";
+import { useAppNotification } from "../../../components/common/Notificaiton";
+import { AssetAcionIcon } from "../../../data/options";
+import { Modal } from "antd";
 const columnMap = {
   name: "asset_name",
   type: "asset_type",
@@ -25,8 +28,10 @@ function AssetTable({
 }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
-
+  const deleteAssetMutation = useDeleteAsset();
+  const notify = useAppNotification(); //notifcation
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const { confirm } = Modal;
   const {
     data = { total: 0, data: [] },
     isLoading,
@@ -61,10 +66,32 @@ function AssetTable({
     [data]
   );
 
+  const handleTableChange = (pagination) => {
+    setPage(pagination.current);
+    setRowsPerPage(pagination.pageSize);
+  };
+
+  const handleDelete = (id) => {
+    confirm({
+      title: "Are you sure you want to delete this?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        deleteAssetMutation.mutate(id);
+        notify({
+          title: "Asset deleted",
+          description: "Asset was deleted succesfuly",
+        });
+      },
+    });
+  };
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
+      render: (name) => <span className="font-semibold">{name}</span>,
     },
     {
       title: "Type",
@@ -77,6 +104,7 @@ function AssetTable({
     {
       title: "Tag",
       dataIndex: "tag",
+      render: (tag) => <span className="font-semibold">{tag}</span>,
     },
     {
       title: "Status",
@@ -107,21 +135,18 @@ function AssetTable({
     {
       title: "Action",
       dataIndex: "action",
+      align: "center",
       render: (_, record) => (
-        <KebabMenu
-          onEdit={onEdit}
-          dataForm={record}
-          dataId={record.id}
-          type="asset"
+        <ActionMenu
+          actionIcon={AssetAcionIcon}
+          action={{
+            delete: () => handleDelete(record.id),
+            edit: () => onEdit(record),
+          }}
         />
       ),
     },
   ];
-
-  const handleTableChange = (pagination) => {
-    setPage(pagination.current);
-    setRowsPerPage(pagination.pageSize);
-  };
 
   if (isError) {
     return (

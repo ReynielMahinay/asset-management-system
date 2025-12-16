@@ -7,7 +7,9 @@ import ModalComponent from "../../components/common/ModalComponent";
 import UserForm from "./components/UserForm";
 import { useDeleteUser, useUsers } from "../../hooks/useUsers";
 import UserTable from "./components/UserTable";
-import { Modal } from "antd";
+import { Descriptions, Modal } from "antd";
+import { useAppNotification } from "../../components/common/Notificaiton";
+import useApp from "antd/es/app/useApp";
 function ManageUser() {
   //State
   const [open, setOpen] = useState(false);
@@ -17,7 +19,7 @@ function ManageUser() {
   const [page, setPage] = useState(1);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [keyword, setKeyword] = useState("");
-
+  const notify = useAppNotification();
   //Data fetch from hook
   const { data: userData, isLoading } = useUsers({
     page,
@@ -62,7 +64,7 @@ function ManageUser() {
       });
     } else {
       confirm({
-        title: `Are you sure you wan to delet ${onSelectedUser.length} user(s)`,
+        title: `Are you sure you wan to deleted ${onSelectedUser.length} user(s)`,
         okText: "Yes",
         okType: "danger",
         mask: true,
@@ -72,6 +74,10 @@ function ManageUser() {
             deleteUserMutation.mutate(id);
           }); //All the selected user that was stored in the onSelectedUser state will be foreach and deleted using the hook
           setOnselectedUser([]); //then this will clear all the selected checkbox after deleting
+          notify({
+            title: "Assets Deleted",
+            description: `${onSelectedUser.length} asset was deleted`,
+          });
         },
       });
     }

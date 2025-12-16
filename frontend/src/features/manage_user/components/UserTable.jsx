@@ -1,8 +1,13 @@
 import React, { useState, useMemo } from "react";
-import { Table, ConfigProvider, Spin } from "antd";
+import { Table, ConfigProvider, Spin, notification } from "antd";
 import { fetchUser } from "../../../api/users";
 import { useQuery } from "@tanstack/react-query";
 import KebabMenu from "../../../components/common/KebabMenu";
+import { UserAcionIcon } from "../../../data/options";
+import ActionMenu from "../../../components/common/ActionMenu";
+import { Modal } from "antd";
+import { useAppNotification } from "../../../components/common/Notificaiton";
+import { useDeleteUser } from "../../../hooks/useUsers";
 
 // Column mapping for sorting
 const columnMap = {
@@ -24,7 +29,9 @@ export default function UserTable({
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState("fullname");
   const [order, setOrder] = useState("asc");
-
+  const deleteUserMutation = useDeleteUser();
+  const { confirm } = Modal;
+  const notify = useAppNotification();
   // Fetch user data with react-query
   const {
     data = { total: 0, data: [] },
@@ -58,6 +65,22 @@ export default function UserTable({
     [data]
   );
 
+  const handleDelete = (id) => {
+    confirm({
+      title: "Are you sure you want to delte this?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        deleteUserMutation.mutate(id);
+        notify({
+          title: "User deleted",
+          description: "User was deleted successfully",
+        });
+      },
+    });
+  };
+
   // Table columns with sorting and action column
   const columns = [
     {
@@ -75,31 +98,35 @@ export default function UserTable({
     {
       title: "Role",
       dataIndex: "role",
-      render: (role) => (
-        <span
-          style={{
-            display: "inline-block",
-            padding: "2px 8px",
-            border: "1px solid #d4d4d8", // border color
-            borderRadius: "12px", // rounded corners
-            backgroundColor: "#f9fafb", // optional background
-            fontSize: "12px",
-            fontWeight: 500,
-          }}
-        >
-          {role}
-        </span>
-      ),
+      render: (role) => {
+        if (role === "technical") {
+          return (
+            <span className="text-blue-500 bg-blue-100 py-1 px-2 text-xs capitalize rounded-full font-poppins ">
+              {role}
+            </span>
+          );
+        } else if (role === "Pre-sales") {
+          return (
+            <span className="text-yellow-500 bg-yellow-100 px-2 py-1 text-xs capitalize rounded-full font-poppins">
+              {role}
+            </span>
+          );
+        }
+
+        return <span>{role}</span>;
+      },
     },
     {
       title: "Action",
       dataIndex: "action",
+      align: "center",
       render: (_, record) => (
-        <KebabMenu
-          onEdit={onEdit}
-          dataForm={record}
-          dataId={record.id}
-          type="user"
+        <ActionMenu
+          actionIcon={UserAcionIcon}
+          action={{
+            delete: () => handleDelete(record.id),
+            edit: () => onEdit(record),
+          }}
         />
       ),
     },
