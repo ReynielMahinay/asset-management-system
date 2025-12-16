@@ -12,8 +12,7 @@ const SelectAssignment = ({
         components: {
           Select: {
             optionFontSize: 12,
-            colorBorder: "#99a1af",
-            colorBgContainer: bg_color,
+            colorBorder: "#d4d4d8",
           },
         },
       }}
