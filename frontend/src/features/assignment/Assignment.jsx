@@ -48,21 +48,22 @@ function Assignment() {
       </header>
 
       <div className="flex flex-row gap-4 ">
-        <div className="bg-white min-w-[65%] border border-zinc-300 shadow-sm rounded-xl ">
-          <div className="flex flex-col gap-4">
+        <div className=" bg-white min-w-[65%] border border-zinc-300 shadow-sm rounded-xl ">
+          <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-4 p-4">
               <h2 className="font-bold capitalize">select assset to assign</h2>
-              <SearchInput bg_color={"bg-[#f5f7f9]"} />
+              <SearchInput
+                bg_color={"bg-[#f5f7f9]"}
+                placeholder="Search by Name or Tag"
+              />
               <div className="flex flex-row gap-4">
                 <SelectAssignment
                   options={statusOptions}
-                  bg_color="#f5f7f9"
                   placeholder="Filter by Status"
                 />
 
                 <SelectAssignment
                   options={statusOptions}
-                  bg_color="#f5f7f9"
                   placeholder="Filter by Type"
                 />
               </div>

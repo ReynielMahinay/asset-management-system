@@ -7,8 +7,8 @@ function TextAreaComponent() {
       theme={{
         components: {
           Input: {
-            colorBorder: "#99a1af",
-            colorBgContainer: "#f5f7f9", // Optional: background color
+            colorBorder: "#d4d4d8",
+
             borderRadius: 10, // Optional: border radius
           },
         },

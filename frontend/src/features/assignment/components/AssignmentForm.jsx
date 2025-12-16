@@ -14,12 +14,11 @@ function AssignmentForm({ data = [], value, label, onChange, getOptionLabel }) {
             <div className="w-[50%]">
               <SelectAssignment
                 options={statusOptions}
-                bg_color="#f5f7f9"
                 placeholder="Select user"
               />
             </div>
             <div className="w-[50%]">
-              <DatePickerComponent bg_color="#f5f7f9" />
+              <DatePickerComponent />
             </div>
           </div>
           <div>

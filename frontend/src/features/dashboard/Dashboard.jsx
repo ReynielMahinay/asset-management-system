@@ -7,7 +7,9 @@ import PieChartAssets from "../../components/common/PieChartAssets";
 import AreaChartAssets from "../../components/common/AreaChartAssets";
 
 function Dashboard() {
-  const { data, isLoading, error } = useAssets();
+  const { data, isLoading, error } = useAssets({
+    unassigned: true,
+  });
   const recentlyAdded = data?.recentlyAddedCount || 0;
   const assetTotal = data?.total || 0;
   const assignedAsset = data?.assignedCount || 0;

@@ -4,14 +4,13 @@ const onChange = (date, dateString) => {
   console.log(date, dateString);
 };
 
-export default function DatePickerComponent({ bg_color }) {
+export default function DatePickerComponent() {
   return (
     <ConfigProvider
       theme={{
         components: {
           DatePicker: {
-            colorBorder: "#99a1af",
-            colorBgContainer: bg_color,
+            colorBorder: "#d4d4d8",
           },
         },
       }}
