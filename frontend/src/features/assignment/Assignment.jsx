@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import SearchInput from "../../components/common/SearchInput";
 import AssignmentTable from "./components/AssignmentTable";
 import { assetTypeOptions } from "../../data/options";
@@ -6,6 +6,7 @@ import AssignmentForm from "./components/AssignmentForm";
 import SelectAssignment from "./components/SelectAssignment";
 import { IoReturnUpBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useUsers } from "../../hooks/useUsers";
 import Button from "../../components/common/Button";
 
 function Assignment() {
@@ -15,6 +16,19 @@ function Assignment() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [filterType, setFilterType] = useState(null);
   const navigate = useNavigate();
+
+  const { data: usersData, isLoading: isUserloading } = useUsers();
+
+  const userOptions = useMemo(() => {
+    return (
+      usersData?.data?.map((user) => ({
+        label: user.fullname,
+        value: user.id,
+      })) ?? []
+    );
+  }, [usersData]);
+
+  console.log("Selected asset on the Assignment page: ", onSelectedAsset);
 
   const handleSearch = (keyword) => {
     setSearchKeyword(keyword);
@@ -85,7 +99,11 @@ function Assignment() {
         <div className="bg-white min-w-[33.5%] border border-zinc-300 shadow-sm rounded-xl p-4 space-y-2">
           <p className="font-bold capitalize">Assignmend Details</p>
 
-          <AssignmentForm />
+          <AssignmentForm
+            userOptions={userOptions}
+            assets={onSelectedAsset}
+            selectedAsset={setOnselectedAsset}
+          />
         </div>
       </div>
     </div>

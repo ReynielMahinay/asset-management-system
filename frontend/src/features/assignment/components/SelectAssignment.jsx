@@ -20,6 +20,7 @@ const SelectAssignment = ({
       <Select
         size="large"
         showSearch
+        allowClear
         placeholder={placeholder}
         value={value}
         onChange={onChange}
