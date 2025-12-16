@@ -78,8 +78,7 @@ export default function AssignmentTable({
     setPage(pagination.current);
     setRowsPerPage(pagination.pageSize);
   };
-  console.log("Selected Asset(s): ", onSelectedAsset);
-  console.log("RAW API DATA:", data?.data);
+
   return (
     <div className="font-poppins">
       <ConfigProvider
@@ -93,15 +92,43 @@ export default function AssignmentTable({
           rowKey="id"
           style={{ width: "100%" }}
           rowSelection={{
-            selectedRowKeys: onSelectedAsset,
-            onChange: (keys) => setOnselectedAsset(keys),
+            selectedRowKeys: onSelectedAsset.map((a) => a.id),
+            // triggered whenever user selects/deselects any visible row
+            onSelect: (record, selected) => {
+              if (selected) {
+                // add selected row if not already selected
+                if (!onSelectedAsset.find((a) => a.id === record.id)) {
+                  setOnselectedAsset([...onSelectedAsset, record]);
+                }
+              } else {
+                // remove deselected row
+                setOnselectedAsset(
+                  onSelectedAsset.filter((a) => a.id !== record.id)
+                );
+              }
+            },
+            onSelectAll: (selected, selectedRows, changeRows) => {
+              if (selected) {
+                // add all newly selected rows
+                const newRows = changeRows.filter(
+                  (r) => !onSelectedAsset.find((a) => a.id === r.id)
+                );
+                setOnselectedAsset([...onSelectedAsset, ...newRows]);
+              } else {
+                // remove deselected rows
+                const deselectedIds = changeRows.map((r) => r.id);
+                setOnselectedAsset(
+                  onSelectedAsset.filter((a) => !deselectedIds.includes(a.id))
+                );
+              }
+            },
           }}
           columns={columns}
           dataSource={filterData}
           pagination={{
             current: page,
             pageSize: rowsPerPage,
-            tota: filterData.lenght,
+            total: filterData.length,
             showTotal: (total) => `Total asset: ${total}`,
           }}
           onChange={handleTableChange}
