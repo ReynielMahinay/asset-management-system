@@ -1,6 +1,7 @@
-import React, { Component, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Table, ConfigProvider } from "antd";
 import { useAssets } from "../../../hooks/useAssets";
+import { useIsFetching } from "@tanstack/react-query";
 
 const columnMap = {
   name: "asset_name",
@@ -10,22 +11,50 @@ const columnMap = {
   status: "asset_status",
 };
 
-export default function AssignmentTable() {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-  const { data, isLoading, isError } = useAssets({
-    page,
-    pageSize,
+export default function AssignmentTable({
+  onSelectedAsset,
+  setOnselectedAsset,
+  filterType,
+  page,
+  setPage,
+  keyword = "",
+}) {
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const {
+    data = { total: 0, data: [] },
+    isLoading,
+    isError,
+    isFetching,
+  } = useAssets({
+    page: page,
+    pageSize: rowsPerPage,
     sort: "asset_id",
     order: "asc",
-    keyword: "",
+    keyword: keyword,
     unassigned: true,
   });
-  const [selectionType, setSelectionType] = useState("checkbox");
+
+  const mappedData = useMemo(() => {
+    if (!data?.data) return [];
+    return data.data.map((asset) => ({
+      id: asset.id,
+      name: asset.asset_name ?? asset.name ?? "",
+      type: asset.asset_type ?? asset.type ?? "",
+      brand: asset.asset_brand ?? asset.brand ?? "",
+      tag: asset.asset_tag ?? asset.tag ?? "",
+    }));
+  }, [data]);
+
+  const normalizeFiler = filterType?.toLowerCase();
+  const filterData = normalizeFiler
+    ? mappedData.filter((item) => item.type?.toLowerCase() === normalizeFiler)
+    : mappedData;
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
+      render: (name) => <span className="font-semibold">{name}</span>,
     },
     {
       title: "Type",
@@ -45,23 +74,14 @@ export default function AssignmentTable() {
     },
   ];
 
-  // rowSelection object indicates the need for row selection
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name,
-    }),
+  const handleTableChange = (pagination) => {
+    setPage(pagination.current);
+    setRowsPerPage(pagination.pageSize);
   };
-
+  console.log("Selected Asset(s): ", onSelectedAsset);
+  console.log("RAW API DATA:", data?.data);
   return (
-    <div>
+    <div className="font-poppins">
       <ConfigProvider
         theme={{
           components: {
@@ -70,9 +90,22 @@ export default function AssignmentTable() {
         }}
       >
         <Table
-          rowSelection={{ type: selectionType, ...rowSelection }}
+          rowKey="id"
+          style={{ width: "100%" }}
+          rowSelection={{
+            selectedRowKeys: onSelectedAsset,
+            onChange: (keys) => setOnselectedAsset(keys),
+          }}
           columns={columns}
-          dataSource={data?.data}
+          dataSource={filterData}
+          pagination={{
+            current: page,
+            pageSize: rowsPerPage,
+            tota: filterData.lenght,
+            showTotal: (total) => `Total asset: ${total}`,
+          }}
+          onChange={handleTableChange}
+          loading={isFetching}
         />
       </ConfigProvider>
     </div>

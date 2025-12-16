@@ -31,6 +31,34 @@ export const statusOptions = [
   { value: "unassigned", label: "Unassigned" },
 ];
 
+export const assetTypeOptions = [
+  {
+    id: 1,
+    value: "laptop",
+    label: "Laptop",
+  },
+  {
+    id: 2,
+    value: "monitor",
+    label: "Monitor",
+  },
+  {
+    id: 3,
+    value: "mouse",
+    label: "Mouse",
+  },
+  {
+    id: 4,
+    value: "ssd",
+    label: "SSD",
+  },
+  {
+    id: 5,
+    value: "headset",
+    label: "Headset",
+  },
+];
+
 export const roleOptions = [
   { id: 1, value: "techinical", label: "Technical" },
   { id: 2, value: "Pre-sales", label: "Pre-sales" },

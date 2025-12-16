@@ -1,36 +1,29 @@
 import React, { useState } from "react";
 import SearchInput from "../../components/common/SearchInput";
 import AssignmentTable from "./components/AssignmentTable";
-import Dropdown from "../../components/common/Dropdown";
-import { statusOptions } from "../../data/options";
+import { assetTypeOptions } from "../../data/options";
 import AssignmentForm from "./components/AssignmentForm";
 import SelectAssignment from "./components/SelectAssignment";
 import { IoReturnUpBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import Button from "../../components/common/Button";
 
 function Assignment() {
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedAsset, setSelectedAsset] = useState(null);
-  const [assignments, setAssignments] = useState([{ user: null, asset: null }]);
-
+  const [onSelectedAsset, setOnselectedAsset] = useState([]);
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState("");
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [filterType, setFilterType] = useState(null);
   const navigate = useNavigate();
-  const handleChange = (index, field, value) => {
-    const newAssigntments = [...assignments];
-    newAssigntments[index][field] = value;
-    setAssignments(newAssigntments);
+
+  const handleSearch = (keyword) => {
+    setSearchKeyword(keyword);
+    setPage(1);
   };
 
-  const addRow = () => {
-    setAssignments([...assignments, { user: null, asset: null }]);
-  };
-
-  const removeRow = (index) => {
-    const newAssigntments = assignments.filter((_, i) => i !== index);
-    setAssignments(newAssigntments);
-  };
-
-  const hangleAssign = () => {
-    console.log("Assignnets: ", assignments);
+  const handleSearchInput = (e) => {
+    const trimmedKeyword = keyword.trim();
+    handleSearch(trimmedKeyword);
   };
 
   return (
@@ -55,22 +48,37 @@ function Assignment() {
               <SearchInput
                 bg_color={"bg-[#f5f7f9]"}
                 placeholder="Search by Name or Tag"
+                onSearch={handleSearch}
+                keyword={keyword}
+                setKeyword={setKeyword}
+                handleSearchInput={handleSearchInput}
               />
-              <div className="flex flex-row gap-4">
+              <div className="flex flex-row gap-4 w-[50%]">
                 <SelectAssignment
-                  options={statusOptions}
-                  placeholder="Filter by Status"
-                />
-
-                <SelectAssignment
-                  options={statusOptions}
+                  options={assetTypeOptions}
+                  value={filterType}
+                  onChange={(value) => setFilterType(value)}
                   placeholder="Filter by Type"
+                />
+                <Button
+                  title="Clear"
+                  onClick={() => {
+                    setFilterType(null);
+                    setPage(1);
+                  }}
                 />
               </div>
             </div>
 
             <div className=" ">
-              <AssignmentTable />
+              <AssignmentTable
+                page={page}
+                setPage={setPage}
+                keyword={searchKeyword}
+                onSelectedAsset={onSelectedAsset}
+                setOnselectedAsset={setOnselectedAsset}
+                filterType={filterType}
+              />
             </div>
           </div>
         </div>
