@@ -100,7 +100,7 @@ function AssetPage() {
         </header>
 
         <Button
-          title="Assigned Asset"
+          title="Bulk Assigned"
           icon={<BsPersonAdd size={18} />}
           onClick={() => navigate("assignment")}
         />
