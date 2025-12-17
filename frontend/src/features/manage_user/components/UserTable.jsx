@@ -24,6 +24,13 @@ export default function UserTable({
   keyword = "",
   page,
   setPage,
+  data,
+  setOpenModaUserInfo,
+  isLoading,
+  isError,
+  error,
+  isFetching,
+  setSelectedUser,
 }) {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -32,27 +39,7 @@ export default function UserTable({
   const deleteUserMutation = useDeleteUser();
   const { confirm } = Modal;
   const notify = useAppNotification();
-  // Fetch user data with react-query
-  const {
-    data = { total: 0, data: [] },
-    isLoading,
-    isError,
-    error,
-    isFetching,
-  } = useQuery({
-    queryKey: ["users", page, rowsPerPage, orderBy, order, keyword],
-    queryFn: () =>
-      fetchUser({
-        page: page,
-        pageSize: rowsPerPage,
-        sor: columnMap[orderBy] || "user_id",
-        order,
-        keyword,
-      }),
-    keepPreviousData: true,
-  });
 
-  // Map data to AntD table format
   const mappedData = useMemo(
     () =>
       data.data.map((user) => ({
@@ -64,6 +51,11 @@ export default function UserTable({
       })),
     [data]
   );
+
+  const handleView = (user) => {
+    setSelectedUser(user);
+    setOpenModaUserInfo(true);
+  };
 
   const handleDelete = (id) => {
     confirm({
@@ -130,6 +122,7 @@ export default function UserTable({
           action={{
             delete: () => handleDelete(record.id),
             edit: () => onEdit(record),
+            view: () => handleView(record),
           }}
         />
       ),

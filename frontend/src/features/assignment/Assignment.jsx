@@ -71,6 +71,7 @@ function Assignment() {
         setOnselectedAsset([]);
         setSelectedDate([]);
         setAssignmentNotes([]);
+        setPage(1);
       },
       onError: (error) => {
         console.error("Assignment failed:", error.message);
