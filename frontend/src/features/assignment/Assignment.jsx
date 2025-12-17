@@ -48,7 +48,9 @@ function Assignment() {
     selectedUserId,
     selectedDate,
     assignmentNotes,
-    selectedAssets
+    selectedAssets,
+    setSelectedDate,
+    setAssignmentNotes
   ) => {
     if (!selectedUserId || selectedAssets.length === 0) {
       alert("Please select a user and at least one asset.");
@@ -67,6 +69,8 @@ function Assignment() {
         console.log("Assignment successful:", data);
         // Optionally, clear selection
         setOnselectedAsset([]);
+        setSelectedDate([]);
+        setAssignmentNotes([]);
       },
       onError: (error) => {
         console.error("Assignment failed:", error.message);
@@ -90,7 +94,7 @@ function Assignment() {
 
       <div className="flex flex-row gap-4 ">
         <div className=" bg-white min-w-[65%] border border-zinc-300 shadow-sm rounded-xl ">
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-4 p-4">
               <h2 className="font-bold capitalize">select assset to assign</h2>
               <SearchInput

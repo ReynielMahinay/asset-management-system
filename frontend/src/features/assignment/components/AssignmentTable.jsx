@@ -42,6 +42,7 @@ export default function AssignmentTable({
       type: asset.asset_type ?? asset.type ?? "",
       brand: asset.asset_brand ?? asset.brand ?? "",
       tag: asset.asset_tag ?? asset.tag ?? "",
+      status: asset.asset_status ?? asset.status ?? "",
     }));
   }, [data]);
 
@@ -54,23 +55,31 @@ export default function AssignmentTable({
     {
       title: "Name",
       dataIndex: "name",
-      render: (name) => <span className="font-semibold">{name}</span>,
+      render: (name) => <span className="font-semibold text-xs">{name}</span>,
     },
     {
       title: "Type",
       dataIndex: "type",
+      render: (type) => <span className="text-xs">{type}</span>,
     },
     {
       title: "Brand",
       dataIndex: "brand",
+      render: (brand) => <span className="text-xs">{brand}</span>,
     },
     {
       title: "Tag",
       dataIndex: "tag",
+      render: (tag) => <span className="text-xs font-semibold">{tag}</span>,
     },
     {
       title: "status",
       dataIndex: "status",
+      render: (status) => (
+        <span className="text-xs text-red-500 bg-red-100 px-2 py-1 rounded-full">
+          {status}
+        </span>
+      ),
     },
   ];
 
@@ -78,7 +87,7 @@ export default function AssignmentTable({
     setPage(pagination.current);
     setRowsPerPage(pagination.pageSize);
   };
-
+  console.log("number of unassigned asset: ", filterData);
   return (
     <div className="font-poppins">
       <ConfigProvider
@@ -128,7 +137,7 @@ export default function AssignmentTable({
           pagination={{
             current: page,
             pageSize: rowsPerPage,
-            total: filterData.length,
+            total: data.total,
             showTotal: (total) => `Total asset: ${total}`,
           }}
           onChange={handleTableChange}

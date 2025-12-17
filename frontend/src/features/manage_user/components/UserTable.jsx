@@ -86,14 +86,19 @@ export default function UserTable({
     {
       title: "Full Name",
       dataIndex: "fullname",
+      render: (fullname) => (
+        <span className="text-xs font-semibold">{fullname}</span>
+      ),
     },
     {
       title: "Email",
       dataIndex: "email",
+      render: (email) => <span className="text-xs">{email}</span>,
     },
     {
       title: "Department",
       dataIndex: "department",
+      render: (department) => <span className="text-xs">{department}</span>,
     },
     {
       title: "Role",
@@ -101,18 +106,17 @@ export default function UserTable({
       render: (role) => {
         if (role === "technical") {
           return (
-            <span className="text-blue-500 bg-blue-100 py-1 px-2 text-xs capitalize rounded-full font-poppins ">
+            <span className="text-blue-500 bg-blue-100 py-1 px-2 text-xs capitalize rounded-full  ">
               {role}
             </span>
           );
         } else if (role === "Pre-sales") {
           return (
-            <span className="text-yellow-500 bg-yellow-100 px-2 py-1 text-xs capitalize rounded-full font-poppins">
+            <span className="text-yellow-500 bg-yellow-100 px-2 py-1 text-xs capitalize rounded-full ">
               {role}
             </span>
           );
         }
-
         return <span>{role}</span>;
       },
     },
