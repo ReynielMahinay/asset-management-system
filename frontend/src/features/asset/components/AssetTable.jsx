@@ -92,27 +92,33 @@ function AssetTable({
     {
       title: "Name",
       dataIndex: "name",
-      render: (name) => <span className="font-semibold">{name}</span>,
+
+      render: (name) => <span className="font-semibold text-xs ">{name}</span>,
     },
     {
       title: "Type",
       dataIndex: "type",
+      render: (type) => <span className=" text-xs">{type}</span>,
     },
     {
       title: "Brand",
       dataIndex: "brand",
+      render: (brand) => <span className=" text-xs">{brand}</span>,
     },
     {
       title: "Tag",
       dataIndex: "tag",
-      render: (tag) => <span className="font-semibold">{tag}</span>,
+      render: (tag) => <span className="font-semibold text-xs">{tag}</span>,
     },
     {
       title: "Assigned To",
       dataIndex: "assignedToName",
+      width: 150, // px
       render: (name) =>
         name ? (
-          <span className="font-semibold">{name}</span>
+          <span className="text-xs bg-neutral-100 px-2 py-1 rounded-full">
+            {name}
+          </span>
         ) : (
           <span className="text-gray-400">Unassigned</span>
         ),
@@ -123,11 +129,11 @@ function AssetTable({
       render: (status) => (
         <span>
           {status === "assigned" ? (
-            <span className="text-green-700 bg-green-100 px-2 py-1 capitalize text-xs rounded-full font-poppins font-normal ">
+            <span className="text-green-700 bg-green-100 px-2 py-1 capitalize text-xs  rounded-full  font-normal ">
               {status}
             </span>
           ) : (
-            <span className="text-red-700  bg-red-100 px-2 py-1 rounded-full capitalize font-poppins font-normal text-xs">
+            <span className="text-red-700  bg-red-100 px-2 py-1 rounded-full text-xs capitalize font-normal  ">
               {status}
             </span>
           )}
@@ -137,10 +143,13 @@ function AssetTable({
     {
       title: "Time Created",
       dataIndex: "timeCreated",
+      render: (timeCreated) => <span className=" text-xs ">{timeCreated}</span>,
     },
     {
       title: "Time Updated",
       dataIndex: "timeUpdated",
+
+      render: (timeUpdated) => <span className="text-xs ">{timeUpdated}</span>,
     },
 
     {

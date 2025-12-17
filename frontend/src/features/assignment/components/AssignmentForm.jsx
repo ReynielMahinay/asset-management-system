@@ -2,24 +2,11 @@ import { useState } from "react";
 import DatePickerComponent from "../../../components/common/DatePickerComponent";
 import SelectAssignment from "./SelectAssignment";
 import { Divider } from "antd";
-
 import TextAreaComponent from "../../../components/common/TextAreaComponent";
-import SelectedAssetContainer from "../../../components/common/SelectedAssetContainer";
 import Button from "../../../components/common/Button";
 import SelectedAssetsCard from "../../../components/common/SelectedAssetsCard";
 
-function AssignmentForm({
-  data = [],
-  value,
-  label,
-  onChange,
-  getOptionLabel,
-  userOptions,
-  assets,
-  selectedAsset,
-  onSubmit,
-  allUsers,
-}) {
+function AssignmentForm({ assets, selectedAsset, onSubmit, allUsers }) {
   const [selectedUserId, setSelectedUserId] = useState(null); // for SelectAssignment
   const [selectedDate, setSelectedDate] = useState(null); // for DatePickerComponent
 
@@ -38,6 +25,7 @@ function AssignmentForm({
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit(selectedUserId, selectedDate, assignmentNotes, assets);
+          setSelectedDate(null), setAssignmentNotes("");
         }}
         className="space-y-5"
       >
@@ -45,7 +33,12 @@ function AssignmentForm({
           <div className="flex flex-row gap-2 justify-start items-center">
             <div className="w-[50%]">
               <SelectAssignment
-                options={allUsers || []}
+                options={
+                  allUsers?.data?.map((u) => ({
+                    label: u.fullname,
+                    value: u.id,
+                  })) || []
+                }
                 value={selectedUserId}
                 onChange={(userId) => setSelectedUserId(userId)}
                 placeholder="Select user"

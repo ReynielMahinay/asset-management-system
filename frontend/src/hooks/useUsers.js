@@ -9,7 +9,7 @@ import { createUser, deleteUser, fetchUser, updateUser } from "../api/users";
 export function useAllUser() {
   return useQuery({
     queryKey: ["allUsers"],
-    queryFn: fetchUser({ page: 1, pageSize: 1000 }),
+    queryFn: () => fetchUser({ page: 1, pageSize: 1000 }),
   });
 }
 
