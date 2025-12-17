@@ -137,7 +137,7 @@ export default function AssignmentTable({
           pagination={{
             current: page,
             pageSize: rowsPerPage,
-            total: data.total,
+            total: filterData.length,
             showTotal: (total) => `Total asset: ${total}`,
           }}
           onChange={handleTableChange}

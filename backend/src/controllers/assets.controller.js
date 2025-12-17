@@ -30,6 +30,7 @@ async function assetGet(req, res) {
       order = "asc",
       keyword = "",
       unassigned = "false",
+      type = null,
     } = req.query;
 
     let assets;

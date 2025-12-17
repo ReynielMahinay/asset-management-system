@@ -1,5 +1,6 @@
 const pool = require("../pool");
 const formatDate = require("../../src/utils/dateFormatter");
+
 async function getAsset({
   page = 1,
   pageSize = 5,
@@ -9,6 +10,7 @@ async function getAsset({
 } = {}) {
   const offset = (page - 1) * pageSize;
 
+  // Only unassigned assets if requested
   const whereClause = unassigned ? "WHERE asset_status <> 'assigned'" : "";
 
   const allowedSort = [
@@ -23,16 +25,9 @@ async function getAsset({
   if (!allowedSort.includes(sort)) sort = "asset_id";
   order = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
-  // Join with users table to get assigned user's fullname
+  // Query assets
   const { rows } = await pool.query(
-    `
-    SELECT a.*, u.user_fullname AS assigned_to_name
-    FROM assets a
-    LEFT JOIN users u ON a.assigned_to = u.user_id
-    ${whereClause}
-    ORDER BY ${sort} ${order}
-    LIMIT $1 OFFSET $2
-  `,
+    `SELECT * FROM assets ${whereClause} ORDER BY ${sort} ${order} LIMIT $1 OFFSET $2`,
     [pageSize, offset]
   );
 
@@ -42,33 +37,36 @@ async function getAsset({
   );
   const total = parseInt(countRows[0].total, 10);
 
-  // Recently added rows count
+  //Count recently added rows
   const { rows: recentlyCountRows } = await pool.query(
     "SELECT COUNT(*)::int AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '30 days'"
   );
+
   const recentlyAddedCount = parseInt(
     recentlyCountRows[0].recently_added_count,
     10
   );
 
-  // Count by status per month
-  const { rows: addedPerMonth } = await pool.query(`
-    SELECT 
-      DATE_TRUNC('month', created_at) AS month,
-      COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assignedPerMonth,
-      COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS unassignedPerMonth
-    FROM assets
-    GROUP BY 1
-    ORDER BY 1;
-  `);
+  // const { rows: addedPerMonth } = await pool.query(`
+  //   SELECT
+  //     DATE_TRUNC('month', created_at) AS month,
+  //     COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assignedPerMonth,
+  //     COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS unassignedPerMonth
+  //   FROM assets
+  //   GROUP BY 1
+  //   ORDER BY 1;
+  // `);
 
-  // Count by status overall
+  //Count by status
   const { rows: statusCount } =
     await pool.query(`SELECT COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assigned_count, 
-      COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count FROM assets`);
+    COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count FROM assets`);
+
   const { assigned_count, not_assigned_count } = statusCount[0];
 
-  // Map results
+  //Filter Unassigned asset
+
+  // Map
   const data = rows.map((asset) => ({
     id: asset.asset_id,
     name: asset.asset_name,
@@ -76,8 +74,7 @@ async function getAsset({
     brand: asset.asset_brand,
     tag: asset.asset_tag,
     status: asset.asset_status,
-    assignedToId: asset.assigned_to,
-    assignedToName: asset.assigned_to_name, // <-- user's fullname
+    assignedTo: asset.assigned_to,
     timeCreated: formatDate(asset.created_at),
     timeUpdated: formatDate(asset.updated_at),
   }));

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Button from "../../components/common/Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
@@ -6,25 +6,56 @@ import SearchInput from "../../components/common/SearchInput";
 import ModalComponent from "../../components/common/ModalComponent";
 import UserForm from "./components/UserForm";
 import { useDeleteUser, useUsers } from "../../hooks/useUsers";
+import { fetchUser } from "../../api/users";
 import UserTable from "./components/UserTable";
+import { useQuery } from "@tanstack/react-query";
 import { Descriptions, Modal } from "antd";
 import { useAppNotification } from "../../components/common/Notificaiton";
-import useApp from "antd/es/app/useApp";
+import ModalView from "../../components/common/ModalView";
 function ManageUser() {
   //State
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
+  const [openModalUserInfo, setOpenModaUserInfo] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null); //for selecting one user for delete/edit
   const [onSelectedUser, setOnselectedUser] = useState([]); //for multiple selection of user for delete
   const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [keyword, setKeyword] = useState("");
+  const [orderBy, setOrderBy] = useState("fullname");
+  const [order, setOrder] = useState("asc");
   const notify = useAppNotification();
-  //Data fetch from hook
-  const { data: userData, isLoading } = useUsers({
-    page,
-    pageSize: 5,
+
+  // Column mapping for sorting
+  const columnMap = {
+    fullname: "user_fullname",
+    email: "user_email",
+    department: "user_department",
+    role: "user_role",
+  };
+
+  // Fetch user data with react-query
+  const {
+    data = { total: 0, data: [] },
+    isLoading,
+    isError,
+    error,
+    isFetching,
+  } = useQuery({
+    queryKey: ["users", page, rowsPerPage, orderBy, order, keyword],
+    queryFn: () =>
+      fetchUser({
+        page: page,
+        pageSize: rowsPerPage,
+        sort: columnMap[orderBy] || "user_id",
+        order,
+        keyword,
+      }),
+    keepPreviousData: true,
   });
+
+  console.log("Fetch user: ", data);
 
   //Delete hook
   const deleteUserMutation = useDeleteUser();
@@ -122,6 +153,7 @@ function ManageUser() {
 
         <div>
           <UserTable
+            setSelectedUser={setSelectedUser}
             onEdit={handleEditOpen}
             setUserTotal={(total) => console.log("Total users:", total)}
             onSelectedUser={onSelectedUser}
@@ -129,6 +161,13 @@ function ManageUser() {
             keyword={searchKeyword}
             page={page}
             setPage={setPage}
+            isLoading={isLoading}
+            isError={isError}
+            error={error}
+            isFetching={isFetching}
+            data={data}
+            rowsPerPage={rowsPerPage}
+            setOpenModaUserInfo={setOpenModaUserInfo}
           />
         </div>
       </div>
@@ -139,6 +178,12 @@ function ManageUser() {
         FormComponent={UserForm}
         handleClose={handleClose}
         modalData={selectedUser}
+      />
+
+      <ModalView
+        data={selectedUser}
+        open={openModalUserInfo}
+        setOpenModaUserInfo={setOpenModaUserInfo}
       />
     </div>
   );
