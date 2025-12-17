@@ -6,6 +6,13 @@ import {
 } from "@tanstack/react-query";
 import { createUser, deleteUser, fetchUser, updateUser } from "../api/users";
 
+export function useAllUser() {
+  return useQuery({
+    queryKey: ["allUsers"],
+    queryFn: fetchUser({ page: 1, pageSize: 1000 }),
+  });
+}
+
 export function useUsers({
   page = 1,
   pageSize = 5,
@@ -26,7 +33,7 @@ export function useCreateUser() {
 
   return useMutation({
     mutationFn: createUser,
-    onSuccess: () => queryClient.invalidateQueries(["users"]),
+    onSuccess: () => queryClient.invalidateQueries(["allUsers"]),
   });
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Input, ConfigProvider } from "antd";
 const { TextArea } = Input;
-function TextAreaComponent() {
+function TextAreaComponent({ value, onChange }) {
   return (
     <ConfigProvider
       theme={{
@@ -14,7 +14,12 @@ function TextAreaComponent() {
         },
       }}
     >
-      <TextArea rows={4} placeholder="Add any relevant details." />
+      <TextArea
+        rows={4}
+        placeholder="Add any relevant details."
+        value={value}
+        onChange={onChange}
+      />
     </ConfigProvider>
   );
 }

@@ -1,6 +1,5 @@
 const pool = require("../pool");
 const formatDate = require("../../src/utils/dateFormatter");
-
 async function getAsset({
   page = 1,
   pageSize = 5,
@@ -10,7 +9,6 @@ async function getAsset({
 } = {}) {
   const offset = (page - 1) * pageSize;
 
-  // Only unassigned assets if requested
   const whereClause = unassigned ? "WHERE asset_status <> 'assigned'" : "";
 
   const allowedSort = [
@@ -25,9 +23,16 @@ async function getAsset({
   if (!allowedSort.includes(sort)) sort = "asset_id";
   order = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
-  // Query assets
+  // Join with users table to get assigned user's fullname
   const { rows } = await pool.query(
-    `SELECT * FROM assets ${whereClause} ORDER BY ${sort} ${order} LIMIT $1 OFFSET $2`,
+    `
+    SELECT a.*, u.user_fullname AS assigned_to_name
+    FROM assets a
+    LEFT JOIN users u ON a.assigned_to = u.user_id
+    ${whereClause}
+    ORDER BY ${sort} ${order}
+    LIMIT $1 OFFSET $2
+  `,
     [pageSize, offset]
   );
 
@@ -37,16 +42,16 @@ async function getAsset({
   );
   const total = parseInt(countRows[0].total, 10);
 
-  //Count recently added rows
+  // Recently added rows count
   const { rows: recentlyCountRows } = await pool.query(
     "SELECT COUNT(*)::int AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '30 days'"
   );
-
   const recentlyAddedCount = parseInt(
     recentlyCountRows[0].recently_added_count,
     10
   );
 
+  // Count by status per month
   const { rows: addedPerMonth } = await pool.query(`
     SELECT 
       DATE_TRUNC('month', created_at) AS month,
@@ -57,16 +62,13 @@ async function getAsset({
     ORDER BY 1;
   `);
 
-  //Count by status
+  // Count by status overall
   const { rows: statusCount } =
     await pool.query(`SELECT COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assigned_count, 
-    COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count FROM assets`);
-
+      COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count FROM assets`);
   const { assigned_count, not_assigned_count } = statusCount[0];
 
-  //Filter Unassigned asset
-
-  // Map
+  // Map results
   const data = rows.map((asset) => ({
     id: asset.asset_id,
     name: asset.asset_name,
@@ -74,7 +76,8 @@ async function getAsset({
     brand: asset.asset_brand,
     tag: asset.asset_tag,
     status: asset.asset_status,
-    assignedTo: asset.assigned_to,
+    assignedToId: asset.assigned_to,
+    assignedToName: asset.assigned_to_name, // <-- user's fullname
     timeCreated: formatDate(asset.created_at),
     timeUpdated: formatDate(asset.updated_at),
   }));

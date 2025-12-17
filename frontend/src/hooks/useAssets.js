@@ -5,7 +5,6 @@ import {
   updateAsset,
   createAsset,
 } from "../api/assets";
-import { use } from "react";
 
 export function useAssets({
   page = 1,

@@ -1,10 +1,6 @@
 import { DatePicker, Space, ConfigProvider } from "antd";
 
-const onChange = (date, dateString) => {
-  console.log(date, dateString);
-};
-
-export default function DatePickerComponent() {
+export default function DatePickerComponent({ value, onChange }) {
   return (
     <ConfigProvider
       theme={{
@@ -18,6 +14,7 @@ export default function DatePickerComponent() {
       <Space vertical style={{ width: "100%" }}>
         <DatePicker
           onChange={onChange}
+          value={value}
           size="large"
           style={{
             width: "100%",
