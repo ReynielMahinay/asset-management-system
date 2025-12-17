@@ -6,8 +6,10 @@ import AssignmentForm from "./components/AssignmentForm";
 import SelectAssignment from "./components/SelectAssignment";
 import { IoReturnUpBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { useUsers } from "../../hooks/useUsers";
+import { useUsers, useAllUser } from "../../hooks/useUsers";
 import Button from "../../components/common/Button";
+import { useAssignmentAsset } from "../../hooks/useAssignment";
+import dayjs from "dayjs";
 
 function Assignment() {
   const [onSelectedAsset, setOnselectedAsset] = useState([]);
@@ -18,6 +20,8 @@ function Assignment() {
   const navigate = useNavigate();
 
   const { data: usersData, isLoading: isUserloading } = useUsers();
+  const { data: allUsers } = useAllUser();
+  const mutation = useAssignmentAsset();
 
   const userOptions = useMemo(() => {
     return (
@@ -38,6 +42,36 @@ function Assignment() {
   const handleSearchInput = (e) => {
     const trimmedKeyword = keyword.trim();
     handleSearch(trimmedKeyword);
+  };
+
+  const handleAssign = (
+    selectedUserId,
+    selectedDate,
+    assignmentNotes,
+    selectedAssets
+  ) => {
+    if (!selectedUserId || selectedAssets.length === 0) {
+      alert("Please select a user and at least one asset.");
+      return;
+    }
+
+    const payload = {
+      asset_ids: selectedAssets.map((asset) => asset.id),
+      user_id: selectedUserId,
+      assigned_date: dayjs(selectedDate).format("YYYY-MM-DD"),
+      notes: assignmentNotes,
+    };
+    console.log("Assign payload:", payload);
+    mutation.mutate(payload, {
+      onSuccess: (data) => {
+        console.log("Assignment successful:", data);
+        // Optionally, clear selection
+        setOnselectedAsset([]);
+      },
+      onError: (error) => {
+        console.error("Assignment failed:", error.message);
+      },
+    });
   };
 
   return (
@@ -103,6 +137,8 @@ function Assignment() {
             userOptions={userOptions}
             assets={onSelectedAsset}
             selectedAsset={setOnselectedAsset}
+            onSubmit={handleAssign}
+            allUsers={allUsers}
           />
         </div>
       </div>

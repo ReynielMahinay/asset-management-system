@@ -16,35 +16,53 @@ function AssignmentForm({
   getOptionLabel,
   userOptions,
   assets,
+  selectedAsset,
+  onSubmit,
+  allUsers,
 }) {
-  const [selectedUser, setSelectedUser] = useState(null); // for SelectAssignment
+  const [selectedUserId, setSelectedUserId] = useState(null); // for SelectAssignment
   const [selectedDate, setSelectedDate] = useState(null); // for DatePickerComponent
-  const [selectedAssets, setSelectedAssets] = useState();
+
+  const [assignmentNotes, setAssignmentNotes] = useState("");
 
   const handleRemoveAsset = (id) => {
-    selectedAssets((prev) => prev.filter((asset) => asset.id !== id));
+    selectedAsset((prev) => prev.filter((asset) => asset.id !== id));
   };
 
-  console.log("AssignmentForm asset selected:", assets);
+  console.log("AssignmentForm user selected:", selectedUserId);
+  console.log("Selected date of the user: ", selectedDate);
+  console.log("Assignment notes: ", assignmentNotes);
   return (
     <div className="flex flex-col">
-      <form action="" className="space-y-5">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit(selectedUserId, selectedDate, assignmentNotes, assets);
+        }}
+        className="space-y-5"
+      >
         <div className="flex flex-col gap-4">
           <div className="flex flex-row gap-2 justify-start items-center">
             <div className="w-[50%]">
               <SelectAssignment
-                options={userOptions}
-                value={selectedUser}
-                onChange={(value) => setSelectedUser(value)}
+                options={allUsers || []}
+                value={selectedUserId}
+                onChange={(userId) => setSelectedUserId(userId)}
                 placeholder="Select user"
               />
             </div>
             <div className="w-[50%]">
-              <DatePickerComponent />
+              <DatePickerComponent
+                value={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+              />
             </div>
           </div>
           <div>
-            <TextAreaComponent />
+            <TextAreaComponent
+              value={assignmentNotes}
+              onChange={(e) => setAssignmentNotes(e.target.value)}
+            />
           </div>
         </div>
 
@@ -56,7 +74,7 @@ function AssignmentForm({
             {assets.map((asset) => (
               <div key={asset.id}>
                 <SelectedAssetsCard
-                  selectedAsset={selectedAssets}
+                  selectedAsset={selectedAsset}
                   name={asset.name}
                   tag={asset.tag}
                   brand={asset.brand}
@@ -70,7 +88,11 @@ function AssignmentForm({
         </div>
 
         <div className="flex justify-center items-center ">
-          <Button title="Assigned Asset" variant="modal_primary" />
+          <Button
+            title="Assigned Asset"
+            variant="modal_primary"
+            type="submit"
+          />
         </div>
       </form>
     </div>

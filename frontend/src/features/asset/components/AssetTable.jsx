@@ -60,6 +60,7 @@ function AssetTable({
         brand: asset.asset_brand || asset.brand,
         tag: asset.asset_tag || asset.tag,
         status: asset.asset_status || asset.status,
+        assignedToName: asset.assignedToName || "N/A",
         timeCreated: asset.created_at || asset.timeCreated,
         timeUpdated: asset.updated_at || asset.timeUpdated,
       })),
@@ -105,6 +106,16 @@ function AssetTable({
       title: "Tag",
       dataIndex: "tag",
       render: (tag) => <span className="font-semibold">{tag}</span>,
+    },
+    {
+      title: "Assigned To",
+      dataIndex: "assignedToName",
+      render: (name) =>
+        name ? (
+          <span className="font-semibold">{name}</span>
+        ) : (
+          <span className="text-gray-400">Unassigned</span>
+        ),
     },
     {
       title: "Status",
