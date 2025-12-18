@@ -25,6 +25,8 @@ function AssetTable({
   keyword = "",
   setPage,
   page,
+  setOpenModalAssetInfo,
+  setSelectedAsset,
 }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
@@ -66,6 +68,11 @@ function AssetTable({
       })),
     [data]
   );
+
+  const handleView = (user) => {
+    setSelectedAsset(user);
+    setOpenModalAssetInfo(true);
+  };
 
   const handleTableChange = (pagination) => {
     setPage(pagination.current);
@@ -162,6 +169,7 @@ function AssetTable({
           action={{
             delete: () => handleDelete(record.id),
             edit: () => onEdit(record),
+            view: () => handleView(record),
           }}
         />
       ),

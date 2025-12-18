@@ -25,7 +25,9 @@ function AssignmentForm({ assets, selectedAsset, onSubmit, allUsers }) {
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit(selectedUserId, selectedDate, assignmentNotes, assets);
-          setSelectedDate(null), setAssignmentNotes("");
+          setSelectedDate(null),
+            setAssignmentNotes(""),
+            setSelectedUserId(null);
         }}
         className="space-y-5"
       >
