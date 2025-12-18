@@ -11,7 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { BsPersonAdd } from "react-icons/bs";
 import { useAppNotification } from "../../components/common/Notificaiton";
 import { message, Modal } from "antd";
-import useApp from "antd/es/app/useApp";
+import ModalView from "../../components/common/ModalView";
+import AssetView from "./components/AssetView";
 
 function AssetPage() {
   const [open, setOpen] = useState(false);
@@ -22,6 +23,7 @@ function AssetPage() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState("");
+  const [openModalAssetInfo, setOpenModalAssetInfo] = useState(false);
   const deleteAssetMutation = useDeleteAsset();
   const { confirm } = Modal; // modal confirmation for delete
   const notify = useAppNotification();
@@ -146,6 +148,8 @@ function AssetPage() {
           keyword={searchKeyword}
           onSelectedChange={setOnselectedAsset}
           onSelectedAsset={onSelectedAsset}
+          setOpenModalAssetInfo={setOpenModalAssetInfo}
+          setSelectedAsset={setSelectedAsset}
           setAssetTotal={(total) => console.log("Total assets:", total)}
         />
       </div>
@@ -155,6 +159,13 @@ function AssetPage() {
         mode={modalMode}
         modalData={selectedAsset}
         FormComponent={AssetForm}
+      />
+
+      <ModalView
+        data={selectedAsset}
+        open={openModalAssetInfo}
+        close={setOpenModalAssetInfo}
+        ViewComponent={AssetView}
       />
     </div>
   );

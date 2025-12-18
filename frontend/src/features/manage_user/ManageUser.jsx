@@ -12,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Descriptions, Modal } from "antd";
 import { useAppNotification } from "../../components/common/Notificaiton";
 import ModalView from "../../components/common/ModalView";
+import UserVIew from "./components/UserVIew";
 function ManageUser() {
   //State
   const [open, setOpen] = useState(false);
@@ -183,7 +184,8 @@ function ManageUser() {
       <ModalView
         data={selectedUser}
         open={openModalUserInfo}
-        setOpenModaUserInfo={setOpenModaUserInfo}
+        close={setOpenModaUserInfo}
+        ViewComponent={UserVIew}
       />
     </div>
   );
