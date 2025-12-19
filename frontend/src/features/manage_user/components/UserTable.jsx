@@ -1,8 +1,5 @@
 import React, { useState, useMemo } from "react";
 import { Table, ConfigProvider, Spin, notification } from "antd";
-import { fetchUser } from "../../../api/users";
-import { useQuery } from "@tanstack/react-query";
-import KebabMenu from "../../../components/common/KebabMenu";
 import { UserAcionIcon } from "../../../data/options";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { Modal } from "antd";
@@ -32,10 +29,7 @@ export default function UserTable({
   isFetching,
   setSelectedUser,
 }) {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [orderBy, setOrderBy] = useState("fullname");
-  const [order, setOrder] = useState("asc");
   const deleteUserMutation = useDeleteUser();
   const { confirm } = Modal;
   const notify = useAppNotification();

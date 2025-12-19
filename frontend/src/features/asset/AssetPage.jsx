@@ -50,19 +50,6 @@ function AssetPage() {
     setSelectedAsset(asset);
     setOpen(true);
   };
-  //trigger to open modal for adding
-  const handleAddOpen = () => {
-    setModalMode("add");
-    setSelectedAsset(null);
-    setOpen(true);
-  };
-
-  //trigger for open modal edit
-  const handleEditOpen = (asset) => {
-    setModalMode("edit");
-    setSelectedAsset(asset);
-    setOpen(true);
-  };
 
   //multiple deletion on asset table
   const handleDeleteMultiple = () => {
