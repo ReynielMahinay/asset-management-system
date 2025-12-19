@@ -6,6 +6,7 @@ import {
   createAsset,
 } from "../api/assets";
 
+//<------------------Using fecth asset custom hook --------------------->
 export function useAssets({
   page = 1,
   pageSize = 5,
@@ -22,7 +23,7 @@ export function useAssets({
   });
 }
 
-//Hook for create asset
+//<------------------Using creating asset custom hook --------------------->
 export function useCreateAsset() {
   const queryClient = useQueryClient();
 
@@ -32,7 +33,7 @@ export function useCreateAsset() {
   });
 }
 
-//Hook for updating asset
+//<------------------Using updating asset custom hook --------------------->
 export function useUpdateAsset() {
   const queryClient = useQueryClient();
 
@@ -42,7 +43,7 @@ export function useUpdateAsset() {
   });
 }
 
-//Hook for deleting asset
+//<------------------Using deleting asset custom hook --------------------->
 export function useDeleteAsset() {
   const queryClient = useQueryClient();
 

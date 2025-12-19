@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { createUser, deleteUser, fetchUser, updateUser } from "../api/users";
 
+//<------------------Using fecth all user custom hook --------------------->
 export function useAllUser() {
   return useQuery({
     queryKey: ["allUsers"],
@@ -13,6 +14,7 @@ export function useAllUser() {
   });
 }
 
+//<------------------Using fecth user with filter custom hook --------------------->
 export function useUsers({
   page = 1,
   pageSize = 5,
@@ -27,7 +29,7 @@ export function useUsers({
   });
 }
 
-//hook for creating new user on the backend
+//<------------------Using creating asset custom hook --------------------->
 export function useCreateUser() {
   const queryClient = useQueryClient();
 
@@ -37,7 +39,7 @@ export function useCreateUser() {
   });
 }
 
-//hook for updating user on the backend
+//<------------------Using updating asset custom hook --------------------->
 export function useUpdateUser() {
   const queryClient = useQueryClient();
 
@@ -47,7 +49,7 @@ export function useUpdateUser() {
   });
 }
 
-//hook for deleting user on the backend
+//<------------------Using deleting asset custom hook --------------------->
 export function useDeleteUser() {
   const queryClient = useQueryClient();
 
@@ -58,5 +60,3 @@ export function useDeleteUser() {
     },
   });
 }
-
-//hook for displa
