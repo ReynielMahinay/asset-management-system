@@ -1,4 +1,6 @@
 // api/assets.js
+
+//<------------------Fetchn function API--------------------->
 export async function fetchAssets({
   page = 1,
   pageSize = 5,
@@ -15,7 +17,7 @@ export async function fetchAssets({
   });
 
   if (keyword) params.append("keyword", keyword); // check if there is keyword on from frontend then append it on the url fetch
-  if (unassigned) params.append("unassigned", "true");
+  if (unassigned) params.append("unassigned", "true"); // if unassigned is true just fetch the unssigned asset
 
   const res = await fetch(
     `http://localhost:5000/api/assets?${params.toString()}`
@@ -30,6 +32,7 @@ export async function fetchAssets({
   return json; // { total, page, pageSize, data: [...] }
 }
 
+//<------------------Delete function API--------------------->
 export async function deleteAsset(id) {
   const res = await fetch(`http://localhost:5000/api/assets/${id}`, {
     method: "DELETE",
@@ -44,6 +47,7 @@ export async function deleteAsset(id) {
   return res.json();
 }
 
+//<------------------Create function API--------------------->
 export async function createAsset(formData) {
   const res = await fetch(`http://localhost:5000/api/assets`, {
     method: "POST",
@@ -58,6 +62,7 @@ export async function createAsset(formData) {
   return res.json();
 }
 
+//<------------------Update function API--------------------->
 export async function updateAsset(id, formData) {
   const res = await fetch(`http://localhost:5000/api/assets/${id}`, {
     method: "PUT",
