@@ -7,7 +7,7 @@ function InputFieldComponent({
   className = "",
   required = true,
 }) {
-  const inputId = label.replace(/\s+/g, "-").toLowerCase();
+  const inputId = label.replace(/\s+/g, "-").toLowerCase(); //just for unique id to for label - input field
 
   return (
     <div

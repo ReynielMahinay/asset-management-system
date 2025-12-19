@@ -2,56 +2,69 @@ import React, { use, useState } from "react";
 import Button from "../../components/common/Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
-import ModalComponent from "../../components/common/ModalComponent";
+import ModalComponent from "../../components/modals/ModalComponent";
 import { useAssets, useDeleteAsset } from "../../hooks/useAssets";
-import SearchInput from "../../components/common/SearchInput";
+import SearchInput from "../../components/form/SearchInput";
 import AssetForm from "./components/AssetForm";
 import AssetTable from "./components/AssetTable";
 import { useNavigate } from "react-router-dom";
 import { BsPersonAdd } from "react-icons/bs";
 import { useAppNotification } from "../../components/common/Notificaiton";
 import { message, Modal } from "antd";
-import ModalView from "../../components/common/ModalView";
+import ModalView from "../../components/modals/ModalView";
 import AssetView from "./components/AssetView";
 
 function AssetPage() {
-  const [open, setOpen] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [modalMode, setModalMode] = useState("add");
+  // <-------------------states for modals---------------------->
+  const [open, setOpen] = useState(false); //state to open modal
+  const [modalMode, setModalMode] = useState("add"); //State to check if add or edit mode the modal should be
+  const [openModalAssetInfo, setOpenModalAssetInfo] = useState(false); // for modal view of asset info
+
+  // <-------------------states for user intervention---------------------->
   const [selectedAsset, setSelectedAsset] = useState(null); //for selecting one user for delete/edit
   const [onSelectedAsset, setOnselectedAsset] = useState([]); //for multiple selection of user for delete
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [page, setPage] = useState(1);
-  const [keyword, setKeyword] = useState("");
-  const [openModalAssetInfo, setOpenModalAssetInfo] = useState(false);
-  const deleteAssetMutation = useDeleteAsset();
-  const { confirm } = Modal; // modal confirmation for delete
-  const notify = useAppNotification();
+  const [searchKeyword, setSearchKeyword] = useState(""); //this state is what use for API call to search
+  const [keyword, setKeyword] = useState(""); // while this state is what user search is. need this since for manual triggering
+  const [page, setPage] = useState(1); //for setting the page state
 
+  // <-------------------Return function hooks ---------------------->
+  const deleteAssetMutation = useDeleteAsset(); //delete hook for asset
+  const { confirm } = Modal; // modal confirmation for delete
+  const notify = useAppNotification(); //notifcation context
   const navigate = useNavigate();
+
   const { data: assetData, isLoading } = useAssets({
     page,
     pageSize: 5,
     keyword: searchKeyword,
   });
 
+  //trigger for search
   const handleSearch = (keyword) => {
     setSearchKeyword(keyword);
     setPage(1);
   };
 
+  const handleModalOpen = (mode, asset = null) => {
+    setModalMode(mode);
+    setSelectedAsset(asset);
+    setOpen(true);
+  };
+  //trigger to open modal for adding
   const handleAddOpen = () => {
     setModalMode("add");
     setSelectedAsset(null);
     setOpen(true);
   };
 
+  //trigger for open modal edit
   const handleEditOpen = (asset) => {
     setModalMode("edit");
     setSelectedAsset(asset);
     setOpen(true);
   };
 
+  //multiple deletion on asset table
   const handleDeleteMultiple = () => {
     if (onSelectedAsset.length === 0) {
       confirm({
@@ -129,7 +142,7 @@ function AssetPage() {
               title={"Add asset"}
               icon={<IoMdAddCircleOutline size={18} />}
               variant="primary"
-              onClick={handleAddOpen}
+              onClick={() => handleModalOpen("add")}
             />
             <Button
               title={"Delete asset"}
@@ -142,15 +155,15 @@ function AssetPage() {
       </div>
       <div className="">
         <AssetTable
-          setPage={setPage}
-          page={page}
-          onEdit={handleEditOpen}
-          keyword={searchKeyword}
-          onSelectedChange={setOnselectedAsset}
-          onSelectedAsset={onSelectedAsset}
-          setOpenModalAssetInfo={setOpenModalAssetInfo}
-          setSelectedAsset={setSelectedAsset}
-          setAssetTotal={(total) => console.log("Total assets:", total)}
+          setPage={setPage} //for setting page if search and pagination
+          page={page} //initial value of the page
+          onEdit={(asset) => handleModalOpen("edit", asset)} //editing function of the asset on action column
+          keyword={searchKeyword} //keyword to check on the backend for rendering it on the table
+          onSelectedChange={setOnselectedAsset} //setter or trigger to for state to remember what column or asset is selected
+          onSelectedAsset={onSelectedAsset} // holder of selected asset that from onSelectedAsset
+          setOpenModalAssetInfo={setOpenModalAssetInfo} //state to open Modal view info
+          setSelectedAsset={setSelectedAsset} //this state was use for modal view data
+          setAssetTotal={(total) => console.log("Total assets:", total)} //for tracking the total assets
         />
       </div>
       <ModalComponent

@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { Table, ConfigProvider, Alert, Spin } from "antd";
-import { fetchAssets } from "../../../api/assets";
-import { useQuery } from "@tanstack/react-query";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { useDeleteAsset } from "../../../hooks/useAssets";
 import { useAppNotification } from "../../../components/common/Notificaiton";
 import { AssetAcionIcon } from "../../../data/options";
+import { useAssets } from "../../../hooks/useAssets";
 import { Modal } from "antd";
 const columnMap = {
   name: "asset_name",
@@ -28,29 +27,28 @@ function AssetTable({
   setOpenModalAssetInfo,
   setSelectedAsset,
 }) {
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("name");
+  // <-------------------states for table---------------------->
+  const [order, setOrder] = useState("asc"); //state for ordering the column based on the orderBy
+  const [orderBy, setOrderBy] = useState("name"); //state for what column is will be sorted
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  // <-------------------return function hooks---------------------->
   const deleteAssetMutation = useDeleteAsset();
   const notify = useAppNotification(); //notifcation
-  const [rowsPerPage, setRowsPerPage] = useState(5);
   const { confirm } = Modal;
+
+  //Fetching data using custom hook
   const {
     data = { total: 0, data: [] },
     isLoading,
     isError,
     error,
     isFetching,
-  } = useQuery({
-    queryKey: ["assets", page, rowsPerPage, orderBy, order, keyword],
-    queryFn: () =>
-      fetchAssets({
-        page: page,
-        pageSize: rowsPerPage,
-        sort: columnMap[orderBy] || "asset_id",
-        order,
-        keyword,
-      }),
-    keepPreviousData: true,
+  } = useAssets({
+    page: page,
+    pageSize: rowsPerPage,
+    sort: columnMap[orderBy] || "asset_id",
+    order,
+    keyword,
   });
 
   const mappedData = useMemo(

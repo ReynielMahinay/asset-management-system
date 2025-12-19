@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import InputFieldComponent from "../../../components/common/InputFieldComponent";
-import SelectComponent from "../../../components/common/SelectComponent";
+import InputFieldComponent from "../../../components/form/InputFieldComponent";
+import SelectComponent from "../../../components/form/SelectComponent";
 import { statusOptions } from "../../../data/options";
-import Divider from "@mui/material/Divider";
-import Button from "../../../components/common/Button";
 import { useCreateAsset, useUpdateAsset } from "../../../hooks/useAssets";
 import { useAppNotification } from "../../../components/common/Notificaiton";
+import Divider from "@mui/material/Divider";
+import Button from "../../../components/common/Button";
+
 function AssetForm({ handleClose, mode = "add", modalData = null }) {
-  const createMutation = useCreateAsset();
-  const updateMutation = useUpdateAsset();
+  const createMutation = useCreateAsset(); // for createing asset hook
+  const updateMutation = useUpdateAsset(); // for Updating asset hook
   const notify = useAppNotification(); // for useContext nofitcation details
 
   const [formData, setFormData] = useState({
@@ -31,7 +32,7 @@ function AssetForm({ handleClose, mode = "add", modalData = null }) {
         assigned_to: modalData.assignedTo || null,
       });
     }
-  }, [mode, modalData]);
+  }, [mode, modalData]); // to get the data if the modal is on edit mode
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -41,6 +42,7 @@ function AssetForm({ handleClose, mode = "add", modalData = null }) {
     e.preventDefault();
 
     try {
+      // add asset mode
       if (mode === "add") {
         await createMutation.mutateAsync(formData);
         notify({
@@ -48,6 +50,7 @@ function AssetForm({ handleClose, mode = "add", modalData = null }) {
           description: "The asset was added successfully",
         });
       } else {
+        // update asset mode
         await updateMutation.mutateAsync({ id: modalData.id, data: formData });
         notify({
           title: "Asset updated",
@@ -58,6 +61,7 @@ function AssetForm({ handleClose, mode = "add", modalData = null }) {
     } catch (error) {
       console.error("Error submitting asset:", error);
       notify({
+        //
         title: "Error submitting",
         description: "The asset was not created successfully",
       });
@@ -117,6 +121,7 @@ function AssetForm({ handleClose, mode = "add", modalData = null }) {
   );
 }
 
+// config for Modal based on mode
 AssetForm.modalConfig = (mode) => ({
   title: mode === "add" ? "Add Asset" : "Edit Asset",
   description:
