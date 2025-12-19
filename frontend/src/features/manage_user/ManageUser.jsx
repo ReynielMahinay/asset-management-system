@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Button from "../../components/common/Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
@@ -6,18 +6,18 @@ import SearchInput from "../../components/form/SearchInput";
 import ModalComponent from "../../components/modals/ModalComponent";
 import UserForm from "./components/UserForm";
 import { useDeleteUser, useUsers } from "../../hooks/useUsers";
-import { fetchUser } from "../../api/users";
 import UserTable from "./components/UserTable";
-import { useQuery } from "@tanstack/react-query";
-import { Descriptions, Modal } from "antd";
+import { Modal } from "antd";
 import { useAppNotification } from "../../components/common/Notificaiton";
 import ModalView from "../../components/modals/ModalView";
 import UserVIew from "./components/UserVIew";
 function ManageUser() {
-  //State
+  // <-------------------states for modals---------------------->
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
   const [openModalUserInfo, setOpenModaUserInfo] = useState(false);
+
+  // <-------------------states for user intervention---------------------->
   const [selectedUser, setSelectedUser] = useState(null); //for selecting one user for delete/edit
   const [onSelectedUser, setOnselectedUser] = useState([]); //for multiple selection of user for delete
   const [page, setPage] = useState(1);
@@ -26,6 +26,8 @@ function ManageUser() {
   const [keyword, setKeyword] = useState("");
   const [orderBy, setOrderBy] = useState("fullname");
   const [order, setOrder] = useState("asc");
+
+  // <-------------------return function hook---------------------->
   const notify = useAppNotification();
 
   // Column mapping for sorting
@@ -43,20 +45,13 @@ function ManageUser() {
     isError,
     error,
     isFetching,
-  } = useQuery({
-    queryKey: ["users", page, rowsPerPage, orderBy, order, keyword],
-    queryFn: () =>
-      fetchUser({
-        page: page,
-        pageSize: rowsPerPage,
-        sort: columnMap[orderBy] || "user_id",
-        order,
-        keyword,
-      }),
-    keepPreviousData: true,
+  } = useUsers({
+    page: page,
+    pageSize: rowsPerPage,
+    sort: columnMap[orderBy] || "user_id",
+    order,
+    keyword,
   });
-
-  console.log("Fetch user: ", data);
 
   //Delete hook
   const deleteUserMutation = useDeleteUser();
@@ -67,19 +62,15 @@ function ManageUser() {
     setSearchKeyword(keyword), setPage(1);
   };
 
-  const handleAddOpenModal = (e) => {
+  const handleModalOpen = (mode, user = null) => {
+    setModalMode(mode);
+    setSelectedUser(user);
     setOpen(true);
   };
 
   const handleSearchInput = (e) => {
     const trimmedKeyword = keyword.trim();
     handleSearch(trimmedKeyword);
-  };
-
-  const handleEditOpen = (user) => {
-    setModalMode("edit");
-    setSelectedUser(user);
-    setOpen(true);
   };
 
   const handleDeleteMultiple = () => {
@@ -141,7 +132,7 @@ function ManageUser() {
             <Button
               title="Add User"
               icon={<IoMdAddCircleOutline size={18} variant="primary" />}
-              onClick={handleAddOpenModal}
+              onClick={() => handleModalOpen("add")}
             />
             <Button
               icon={<MdDeleteOutline size={18} />}
@@ -154,12 +145,12 @@ function ManageUser() {
 
         <div>
           <UserTable
+            //<-------------- for user intervention ------------------->
             setSelectedUser={setSelectedUser}
-            onEdit={handleEditOpen}
-            setUserTotal={(total) => console.log("Total users:", total)}
             onSelectedUser={onSelectedUser}
             setOnselectedUser={setOnselectedUser}
             keyword={searchKeyword}
+            //<-------------- table props ------------------->
             page={page}
             setPage={setPage}
             isLoading={isLoading}
@@ -168,6 +159,9 @@ function ManageUser() {
             isFetching={isFetching}
             data={data}
             rowsPerPage={rowsPerPage}
+            setUserTotal={(total) => console.log("Total users:", total)}
+            //<-------------- for modal ------------------->
+            onEdit={(user) => handleModalOpen("edit", user)}
             setOpenModaUserInfo={setOpenModaUserInfo}
           />
         </div>
