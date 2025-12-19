@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import Button from "./Button";
+import Button from "../common/Button";
 import { IoIosSearch } from "react-icons/io";
 
 function SearchInput({

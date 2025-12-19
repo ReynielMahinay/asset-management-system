@@ -2,8 +2,8 @@ import React, { useState, useMemo } from "react";
 import Button from "../../components/common/Button";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
-import SearchInput from "../../components/common/SearchInput";
-import ModalComponent from "../../components/common/ModalComponent";
+import SearchInput from "../../components/form/SearchInput";
+import ModalComponent from "../../components/modals/ModalComponent";
 import UserForm from "./components/UserForm";
 import { useDeleteUser, useUsers } from "../../hooks/useUsers";
 import { fetchUser } from "../../api/users";
@@ -11,7 +11,7 @@ import UserTable from "./components/UserTable";
 import { useQuery } from "@tanstack/react-query";
 import { Descriptions, Modal } from "antd";
 import { useAppNotification } from "../../components/common/Notificaiton";
-import ModalView from "../../components/common/ModalView";
+import ModalView from "../../components/modals/ModalView";
 import UserVIew from "./components/UserVIew";
 function ManageUser() {
   //State

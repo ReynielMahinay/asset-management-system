@@ -1,24 +1,20 @@
 import { useState } from "react";
-import DatePickerComponent from "../../../components/common/DatePickerComponent";
-import SelectAssignment from "./SelectAssignment";
 import { Divider } from "antd";
-import TextAreaComponent from "../../../components/common/TextAreaComponent";
 import Button from "../../../components/common/Button";
+import SelectAssignment from "./SelectAssignment";
+import DatePickerComponent from "../../../components/form/DatePickerComponent";
+import TextAreaComponent from "../../../components/form/TextAreaComponent";
 import SelectedAssetsCard from "../../../components/common/SelectedAssetsCard";
 
 function AssignmentForm({ assets, selectedAsset, onSubmit, allUsers }) {
   const [selectedUserId, setSelectedUserId] = useState(null); // for SelectAssignment
   const [selectedDate, setSelectedDate] = useState(null); // for DatePickerComponent
-
-  const [assignmentNotes, setAssignmentNotes] = useState("");
+  const [assignmentNotes, setAssignmentNotes] = useState(""); // for Textarea notes
 
   const handleRemoveAsset = (id) => {
     selectedAsset((prev) => prev.filter((asset) => asset.id !== id));
   };
 
-  console.log("AssignmentForm user selected:", selectedUserId);
-  console.log("Selected date of the user: ", selectedDate);
-  console.log("Assignment notes: ", assignmentNotes);
   return (
     <div className="flex flex-col">
       <form

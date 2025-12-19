@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Button, Flex, Modal, Divider } from "antd";
 function ModalView({ open, close, data, ViewComponent }) {
-  console.log("Modal view data", data);
   return (
     <Flex vertical gap="middle" align="flex-start">
       {/* Responsive */}

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import SearchInput from "../../components/common/SearchInput";
+import SearchInput from "../../components/form/SearchInput";
 import AssignmentTable from "./components/AssignmentTable";
 import { assetTypeOptions } from "../../data/options";
 import AssignmentForm from "./components/AssignmentForm";

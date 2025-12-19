@@ -1,10 +1,10 @@
 import React from "react";
 import Card from "../../components/common/Card";
 import { dashboardData } from "../../model/SampleData";
-import BarChartAssets from "../../components/common/BarChartAssets";
 import { useAssets } from "../../hooks/useAssets";
-import PieChartAssets from "../../components/common/PieChartAssets";
-import AreaChartAssets from "../../components/common/AreaChartAssets";
+import BarChartAssets from "../../components/charts/BarChartAssets";
+import PieChartAssets from "../../components/charts/PieChartAssets";
+import AreaChartAssets from "../../components/charts/AreaChartAssets";
 
 function Dashboard() {
   const { data, isLoading, error } = useAssets({

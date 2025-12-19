@@ -14,7 +14,7 @@ export async function fetchAssets({
     order,
   });
 
-  if (keyword) params.append("keyword", keyword);
+  if (keyword) params.append("keyword", keyword); // check if there is keyword on from frontend then append it on the url fetch
   if (unassigned) params.append("unassigned", "true");
 
   const res = await fetch(

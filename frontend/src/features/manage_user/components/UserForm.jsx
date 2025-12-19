@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Divider from "@mui/material/Divider";
-import SelectComponent from "../../../components/common/SelectComponent";
-import InputFieldComponent from "../../../components/common/InputFieldComponent";
+import SelectComponent from "../../../components/form/SelectComponent";
+import InputFieldComponent from "../../../components/form/InputFieldComponent";
 import Button from "../../../components/common/Button";
 import { roleOptions } from "../../../data/options";
 import { useCreateUser, useUpdateUser } from "../../../hooks/useUsers";
