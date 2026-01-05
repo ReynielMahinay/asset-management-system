@@ -5,6 +5,7 @@ import { useDeleteAsset } from "../../../hooks/useAssets";
 import { useAppNotification } from "../../../components/common/Notificaiton";
 import { AssetAcionIcon } from "../../../data/options";
 import { useAssets } from "../../../hooks/useAssets";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "antd";
 const columnMap = {
   name: "asset_name",
@@ -35,7 +36,7 @@ function AssetTable({
   const deleteAssetMutation = useDeleteAsset();
   const notify = useAppNotification(); //notifcation
   const { confirm } = Modal;
-
+  const navigate = useNavigate();
   //Fetching data using custom hook
   const {
     data = { total: 0, data: [] },
@@ -70,6 +71,9 @@ function AssetTable({
   const handleView = (user) => {
     setSelectedAsset(user);
     setOpenModalAssetInfo(true);
+    navigate(`/asset/${asset.id}`, {
+      state: { assetName: asset.name },
+    });
   };
 
   const handleTableChange = (pagination) => {

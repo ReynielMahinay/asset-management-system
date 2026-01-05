@@ -8,7 +8,10 @@ function Breadcrumbs() {
     .filter((match) => match.handle?.breadcrumb)
     .map((match, index, arr) => {
       const isLast = index === arr.length - 1;
-
+      // Handle both string and function breadcrumbs
+      const breadcrumb = match.handle.breadcrumb;
+      const label =
+        typeof breadcrumb === "function" ? breadcrumb(match.data) : breadcrumb;
       return (
         <span key={match.pathname} className="flex items-center gap-2">
           {!isLast ? (
@@ -21,7 +24,6 @@ function Breadcrumbs() {
           ) : (
             <span className=" text-midnight">{match.handle.breadcrumb}</span>
           )}
-
           {!isLast && (
             <span className="text-gray-400">
               <IoIosArrowForward />

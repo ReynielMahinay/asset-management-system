@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Table, ConfigProvider, Spin, notification } from "antd";
+import { Table, ConfigProvider, Spin, Alert } from "antd";
 import { UserAcionIcon } from "../../../data/options";
 import ActionMenu from "../../../components/common/ActionMenu";
 import { Modal } from "antd";
