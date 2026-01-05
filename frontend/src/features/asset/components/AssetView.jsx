@@ -1,4 +1,5 @@
 import React from "react";
+import { Divider } from "antd";
 
 function AssetView({ data }) {
   return (
@@ -13,10 +14,21 @@ function AssetView({ data }) {
           <p className="text-xs font-light">{data.status}</p>
         </div>
       </div>
-      <div>{data.assignedToName}</div>
+      <Divider />
       <div>
-        <p>{data.timeCreated}</p>
-        <p>{data.timeUpdated}</p>
+        <p className="font-semibold">Assigned to: </p>
+        {data.assignedToName}
+      </div>
+
+      <div className="flex flex-row justify-between">
+        <span>
+          <p className="font-semibold">Time created: </p>
+          {data.timeCreated}
+        </span>
+        <span>
+          <p className="font-semibold">Latest update: </p>
+          {data.timeUpdated}
+        </span>
       </div>
     </div>
   );
