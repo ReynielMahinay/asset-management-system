@@ -38,7 +38,7 @@ async function getAsset({
 
   // Count total assets
   const { rows: countRows } = await pool.query(
-    "SELECT COUNT(*) AS total FROM assets"
+    `SELECT COUNT(*) AS total FROM assets ${whereClause}`
   );
   const total = parseInt(countRows[0].total, 10);
 

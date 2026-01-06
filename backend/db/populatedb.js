@@ -1,7 +1,7 @@
 require("dotenv").config({ path: "../.env" });
 const { Client } = require("pg");
 
-const SQL = `
+const assetTable = `
 CREATE TABLE IF NOT EXISTS assets (
     asset_id SERIAL PRIMARY KEY,
     asset_name VARCHAR(200) NOT NULL,

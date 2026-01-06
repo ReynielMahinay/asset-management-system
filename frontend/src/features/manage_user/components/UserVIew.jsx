@@ -24,11 +24,14 @@ function UserVIew({ data }) {
 
         <Divider />
         <div>
-          <h1 className="text-lg font-semibold">Assigned Assets:</h1>
+          <h1 className="text-[1rem] font-semibold">Assigned Assets:</h1>
           {assetArray.length > 0 ? (
             <ul>
               {assetArray.map((item) => (
-                <li key={item}> {item}</li>
+                <li key={item} className="text-sm">
+                  {" "}
+                  {item}
+                </li>
               ))}
             </ul>
           ) : (
