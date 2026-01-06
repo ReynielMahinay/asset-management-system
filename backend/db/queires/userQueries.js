@@ -1,57 +1,88 @@
-const pool = require("../pool")
+const pool = require("../pool");
 
-async function insertUser(fullname, email, department, role){
-    const result = await pool.query(
-        `INSERT INTO users 
-        (user_fullname, user_email, user_department, user_role) VALUES ($1, $2, $3, $4) RETURNING *`, [fullname, email, department, role]
-    );
+async function insertUser(fullname, email, department, role) {
+  const result = await pool.query(
+    `INSERT INTO users 
+        (user_fullname, user_email, user_department, user_role) VALUES ($1, $2, $3, $4) RETURNING *`,
+    [fullname, email, department, role]
+  );
 
-    return result.rows[0];
+  return result.rows[0];
 }
 
+async function getUser({
+  page = 1,
+  pageSize = 5,
+  sort = "user_id",
+  order = "ASC",
+} = {}) {
+  const offset = (page - 1) * pageSize;
 
-async function getUser({page = 1, pageSize = 5, sort = "user_id", order = "ASC" } = {}){
+  const { rows } = await pool.query(
+    `
+    SELECT
+      u.user_id,
+      u.user_fullname,
+      u.user_department,
+      u.user_email,
+      u.user_role,
+      COALESCE(
+        STRING_AGG(a.asset_name, ', '),
+        'No assets'
+      ) AS assets
+    FROM users u
+    LEFT JOIN asset_assignments aa
+      ON u.user_id = aa.user_id
+    LEFT JOIN assets a
+      ON aa.asset_id = a.asset_id
+    GROUP BY
+      u.user_id,
+      u.user_fullname,
+      u.user_department,
+      u.user_email,
+      u.user_role
+    ORDER BY ${sort} ${order}
+    LIMIT $1 OFFSET $2
+    `,
+    [pageSize, offset]
+  );
 
-    const offset = (page - 1)  * pageSize;
+  const { rows: countRows } = await pool.query(
+    "SELECT COUNT (*) AS total FROM users"
+  );
 
+  const total = parseInt(countRows[0].total, 10);
 
-    const {rows} = await pool.query(
-        `SELECT * FROM users ORDER BY ${sort } ${order} LIMIT $1 OFFSET $2`,
-        [pageSize, offset]
-    )
+  const data = rows.map((user) => ({
+    id: user.user_id,
+    fullname: user.user_fullname,
+    department: user.user_department,
+    email: user.user_email,
+    role: user.user_role,
+    asset: user.assets,
+  }));
 
-    const {rows: countRows} = await pool.query("SELECT COUNT (*) AS total FROM users")
-
-    const total = parseInt(countRows[0].total, 10)
-
-    const data = rows.map(user => ({
-        id: user.user_id,
-        fullname: user.user_fullname,
-        department: user.user_department,
-        email: user.user_email,
-        role: user.user_role
-    }))
-
-    return{total, data, page, pageSize}
+  return { total, data, page, pageSize };
 }
 
-async function searchUser(keyword){
-    const result = await pool.query(
-        `SELECT * FROM users WHERE user_fullname ILIKE '%' || $1 || '%' OR user_email ILIKE '%' || $1 || '%' LIMIT 50`, [keyword]
-    )
+async function searchUser(keyword) {
+  const result = await pool.query(
+    `SELECT * FROM users WHERE user_fullname ILIKE '%' || $1 || '%' OR user_email ILIKE '%' || $1 || '%' LIMIT 50`,
+    [keyword]
+  );
 
-    return result.rows.map(user => ({
-         id: user.user_id,
-        fullname: user.user_fullname,
-        department: user.user_department,
-        email: user.user_email,
-        role: user.user_role
-    }))
+  return result.rows.map((user) => ({
+    id: user.user_id,
+    fullname: user.user_fullname,
+    department: user.user_department,
+    email: user.user_email,
+    role: user.user_role,
+  }));
 }
 
-async function updateUser(id, fullname, email, department, role){
-    const result = await pool.query(
-        `UPDATE users
+async function updateUser(id, fullname, email, department, role) {
+  const result = await pool.query(
+    `UPDATE users
         SET user_fullname = $1,
         user_email = $2, 
         user_department = $3,
@@ -59,15 +90,18 @@ async function updateUser(id, fullname, email, department, role){
         WHERE user_id = $5
         RETURNING *
         `,
-        [fullname, email, department, role, id]
-    )
+    [fullname, email, department, role, id]
+  );
 
-    return result.rows[0]
+  return result.rows[0];
 }
 
-async function deleteUser(id){
-    const result = await pool.query(`DELETE FROM users WHERE user_id = $1 RETURNING *`, [id])
-    return result.rowCount > 0;
+async function deleteUser(id) {
+  const result = await pool.query(
+    `DELETE FROM users WHERE user_id = $1 RETURNING *`,
+    [id]
+  );
+  return result.rowCount > 0;
 }
 
-module.exports = {insertUser, getUser, updateUser, deleteUser, searchUser}
+module.exports = { insertUser, getUser, updateUser, deleteUser, searchUser };
