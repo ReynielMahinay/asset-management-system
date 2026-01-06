@@ -7,7 +7,7 @@ function Login() {
     <div className="flex flex-col gap-7 justify-center items-center w-full h-screen">
       <div className="space-y-5">
         <div className="flex flex-row justify-center items-center gap-2 text-midnight ">
-          <div className="bg-[#155dfc] text-white p-1.5 rounded-lg">
+          <div className="bg-black text-white p-1.5 rounded-lg">
             <FiPackage size={25} />
           </div>
           <h1 className="font-poppins font-bold text-3xl ">Assetfy</h1>

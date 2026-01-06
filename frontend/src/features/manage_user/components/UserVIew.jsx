@@ -3,8 +3,11 @@ import { Divider } from "antd";
 
 function UserVIew({ data }) {
   console.log("Data for userView: ", data);
+
+  const assetArray =
+    data.asset && data.asset !== "No assets" ? data.asset.split(",") : [];
   return (
-    <div>
+    <div className="font-poppins">
       <div className="flex flex-col">
         <div className="flex flex-row justify-between">
           <div>
@@ -20,6 +23,18 @@ function UserVIew({ data }) {
         </div>
 
         <Divider />
+        <div>
+          <h1 className="text-lg font-semibold">Assigned Assets:</h1>
+          {assetArray.length > 0 ? (
+            <ul>
+              {assetArray.map((item) => (
+                <li key={item}> {item}</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No Asset</p>
+          )}
+        </div>
       </div>
     </div>
   );

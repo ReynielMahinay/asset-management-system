@@ -52,7 +52,7 @@ function ManageUser() {
     order,
     keyword,
   });
-
+  console.log("Manage user data: ", data);
   //Delete hook
   const deleteUserMutation = useDeleteUser();
 

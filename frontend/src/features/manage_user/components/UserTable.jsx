@@ -42,6 +42,7 @@ export default function UserTable({
         email: user.user_email || user.email,
         department: user.user_department || user.department,
         role: user.user_role || user.role,
+        asset: user.asset,
       })),
     [data]
   );
