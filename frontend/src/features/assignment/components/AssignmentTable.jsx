@@ -32,6 +32,7 @@ export default function AssignmentTable({
     order: "asc",
     keyword: keyword,
     unassigned: true,
+    type: filterType,
   });
 
   const mappedData = useMemo(() => {
@@ -46,11 +47,7 @@ export default function AssignmentTable({
     }));
   }, [data]);
 
-  const normalizeFiler = filterType?.toLowerCase();
-  const filterData = normalizeFiler
-    ? mappedData.filter((item) => item.type?.toLowerCase() === normalizeFiler)
-    : mappedData;
-
+  const filterData = mappedData;
   const columns = [
     {
       title: "Name",
@@ -137,8 +134,8 @@ export default function AssignmentTable({
           pagination={{
             current: page,
             pageSize: rowsPerPage,
-            total: filterData.length,
-            showTotal: (total) => `Total asset: ${total}`,
+            total: data.total,
+            showTotal: (total) => `Total assets: ${total}`,
           }}
           onChange={handleTableChange}
           loading={isFetching}

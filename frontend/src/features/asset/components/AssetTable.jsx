@@ -71,9 +71,6 @@ function AssetTable({
   const handleView = (user) => {
     setSelectedAsset(user);
     setOpenModalAssetInfo(true);
-    navigate(`/asset/${asset.id}`, {
-      state: { assetName: asset.name },
-    });
   };
 
   const handleTableChange = (pagination) => {
