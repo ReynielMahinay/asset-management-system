@@ -7,11 +7,21 @@ import ManageUser from "../features/manage_user/ManageUser";
 import Login from "../features/login/Login";
 import AssetLayout from "../features/asset/AssetLayout";
 import AssetInfoPage from "../features/asset/AssetInfoPage";
+import ProtectedRoute from "../components/ProtectedRoute";
+import PublicRoute from "../components/PublicRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/sign_in",
-    element: <Login />,
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
+  },
+  {
+    path: "/unauthorized",
+    element: <div className="text-center mt-20">🚫 Unauthorized Access</div>,
   },
   {
     path: "/",
@@ -23,12 +33,20 @@ export const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
         handle: { breadcrumb: "Dashboard" },
       },
       {
         path: "asset",
-        element: <AssetLayout />,
+        element: (
+          <ProtectedRoute>
+            <AssetLayout />
+          </ProtectedRoute>
+        ),
         handle: { breadcrumb: "Asset" },
         children: [
           {
@@ -42,14 +60,13 @@ export const router = createBrowserRouter([
               breadcrumb: (data) => data?.assetName || "Loading...",
             },
             loader: async ({ params }) => {
-              // Replace with your actual API endpoint
               try {
                 const response = await fetch(`/api/assets/${params.assetId}`);
                 const asset = await response.json();
                 return { assetName: asset.name };
               } catch (error) {
                 console.error("Failed to load asset:", error);
-                return { assetName: params.assetId }; // Fallback to ID
+                return { assetName: params.assetId };
               }
             },
           },
@@ -60,10 +77,13 @@ export const router = createBrowserRouter([
           },
         ],
       },
-
       {
         path: "manage-user",
-        element: <ManageUser />,
+        element: (
+          <ProtectedRoute adminOnly={true}>
+            <ManageUser />
+          </ProtectedRoute>
+        ),
         handle: { breadcrumb: "Manage User" },
       },
     ],

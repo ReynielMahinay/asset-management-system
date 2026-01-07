@@ -8,6 +8,7 @@ export async function loginUser(username, password) {
     });
 
     const data = await res.json();
+    console.log("login user data", data);
     return { ok: res.ok, data };
   } catch (err) {
     console.error(err);
@@ -16,11 +17,15 @@ export async function loginUser(username, password) {
 }
 
 //if the user is match in the backend fecth profile that use the token
-export async function fetchProfile(jwtToken) {
+export async function fetchProfile() {
+  const token = localStorage.getItem("token");
+
+  if (!token) return null;
   try {
+    const token = localStorage.getItem("token");
     const res = await fetch("http://localhost:5000/api/login/me", {
       headers: {
-        Authorization: `Bearer ${jwtToken}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 

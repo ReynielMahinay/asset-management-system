@@ -10,4 +10,11 @@ async function getAccountByUsername(username) {
   return result.rows[0];
 }
 
-module.exports = { getAccountByUsername };
+async function getAccountById(userId) {
+  const result = await pool.query("SELECT * FROM accounts WHERE id = $1", [
+    userId,
+  ]);
+
+  return result.rows[0];
+}
+module.exports = { getAccountByUsername, getAccountById };

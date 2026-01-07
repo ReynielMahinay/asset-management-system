@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { getAccountByUsername } = require("../../db/queires/accountQueries");
+const {
+  getAccountByUsername,
+  getAccountById,
+} = require("../../db/queires/accountQueries");
 
 async function login(req, res) {
   //getting the user and pass the was in the body request from frontend that was submitted by user
@@ -41,6 +44,23 @@ async function login(req, res) {
   }
 }
 
+async function userProfile(req, res) {
+  try {
+    const user = await getAccountById(req.userId);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Server error" });
+  }
+}
+
 module.exports = {
   login,
+  userProfile,
 };
