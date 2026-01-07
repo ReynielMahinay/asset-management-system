@@ -4,9 +4,30 @@ import { MdOutlineMail } from "react-icons/md";
 import { FiLock } from "react-icons/fi";
 import { FiEye } from "react-icons/fi";
 import { FiEyeOff } from "react-icons/fi";
+import { loginUser, fetchProfile } from "../../api/accounts";
 
 function LoginForm() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  // ✅ Step 2: Handle login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const { ok, data } = await loginUser(username, password);
+
+    if (!ok) {
+      alert(data?.message || "Login failed");
+      return;
+    }
+
+    setToken(data.token);
+    alert("Login successful!");
+
+    const profile = await fetchProfile(data.token);
+    console.log("Protected /me response:", profile);
+  };
 
   return (
     <div className="flex flex-col gap-7 rounded-xl bg-white border border-gray-200  w-[410px] p-8 shadow-lg ">
@@ -19,7 +40,7 @@ function LoginForm() {
       </div>
 
       <div className="w-full">
-        <form action="" className="flex flex-col gap-4 ">
+        <form onSubmit={handleLogin} className="flex flex-col gap-4 ">
           {/* Email addresss input field */}
           <div className="flex flex-col space-y-1 w-full">
             <label
@@ -35,8 +56,10 @@ function LoginForm() {
               />
               <input
                 id="email"
-                type="email"
+                type="text"
                 placeholder="you@example.com"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="rounded-md border bg-gray-50 text-sm border-gray-300 text-gray-900 placeholder-gray-400  focus:ring-blue-600 focus:outline-none focus:ring-1 pl-9 h-10 w-full"
               />
             </div>
@@ -56,6 +79,8 @@ function LoginForm() {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="•••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="rounded-md border border-gray-300 bg-gray-50 w-full pl-9 h-10 text-sm text-gray-900 placeholder-gray-400
                 focus:ring-blue-600 focus:outline-none focus:ring-1 "
               />
@@ -84,7 +109,8 @@ function LoginForm() {
               forgot password?
             </a>
           </div>
-          <Button title="Sign in" variant="modal_primary" className="h-50" />
+          <button type="submit">Login</button>
+          {/* <Button title="Sign in" variant="modal_primary" className="h-50" /> */}
         </form>
 
         {/* Diveder for signup/singin options */}

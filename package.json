@@ -26,6 +26,8 @@
   },
   "dependencies": {
     "antd": "^6.1.0",
-    "antd-style": "^3.7.1"
+    "antd-style": "^3.7.1",
+    "bcrypt": "^6.0.0",
+    "jsonwebtoken": "^9.0.3"
   }
 }
