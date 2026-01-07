@@ -5,8 +5,13 @@ import { FiLock } from "react-icons/fi";
 import { FiEye } from "react-icons/fi";
 import { FiEyeOff } from "react-icons/fi";
 import { loginUser, fetchProfile } from "../../api/accounts";
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState(null);
@@ -15,18 +20,16 @@ function LoginForm() {
   // ✅ Step 2: Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { ok, data } = await loginUser(username, password);
+    const result = await login(username, password);
 
-    if (!ok) {
-      alert(data?.message || "Login failed");
+    if (!result.success) {
+      alert(result.message);
       return;
     }
 
-    setToken(data.token);
-    alert("Login successful!");
-
-    const profile = await fetchProfile(data.token);
-    console.log("Protected /me response:", profile);
+    setTimeout(() => {
+      navigate("/dashboard", { replace: true });
+    }, 50); // small delay
   };
 
   return (
@@ -109,8 +112,12 @@ function LoginForm() {
               forgot password?
             </a>
           </div>
-          <button type="submit">Login</button>
-          {/* <Button title="Sign in" variant="modal_primary" className="h-50" /> */}
+          <Button
+            title="Sign in"
+            variant="modal_primary"
+            className="h-50"
+            type="submit"
+          />
         </form>
 
         {/* Diveder for signup/singin options */}

@@ -10,16 +10,24 @@ import { FaRegUser } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { IoMdSettings } from "react-icons/io";
-
+import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { RiAlignItemLeftFill } from "react-icons/ri";
 
 import { NavLink } from "react-router-dom";
 
 function Sidebard() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSideBar = () => {
     setIsCollapsed(!isCollapsed);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/sign_in", { replace: true });
   };
 
   const menuItem = [
@@ -138,6 +146,7 @@ function Sidebard() {
             )}
           </div>
         </div>
+        <button onClick={handleLogout}>logout</button>
       </div>
     </div>
   );

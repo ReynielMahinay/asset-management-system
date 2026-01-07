@@ -12,7 +12,8 @@ function auth(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { id, role }
+    req.userId = decoded.id;
+    req.userRole = decoded.role; // { id, role }
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid token" });
@@ -20,9 +21,9 @@ function auth(req, res, next) {
 }
 
 function isAdmin(req, res, next) {
-  if (req.user.role !== "admin")
+  if (req.userRole !== "admin")
     return res.status(403).json({ msg: "Admin only" });
   next();
 }
 
-module.exports = { auth };
+module.exports = { auth, isAdmin };
