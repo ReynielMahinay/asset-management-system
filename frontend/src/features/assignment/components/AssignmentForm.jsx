@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { Divider } from "antd";
+import { Descriptions, Divider } from "antd";
 import Button from "../../../components/common/Button";
 import SelectAssignment from "./SelectAssignment";
 import DatePickerComponent from "../../../components/form/DatePickerComponent";
 import TextAreaComponent from "../../../components/form/TextAreaComponent";
 import SelectedAssetsCard from "../../../components/common/SelectedAssetsCard";
+import { useAppNotification } from "../../../components/common/Notificaiton";
 
 function AssignmentForm({ assets, selectedAsset, onSubmit, allUsers }) {
   const [selectedUserId, setSelectedUserId] = useState(null); // for SelectAssignment
   const [selectedDate, setSelectedDate] = useState(null); // for DatePickerComponent
   const [assignmentNotes, setAssignmentNotes] = useState(""); // for Textarea notes
+
+  const notify = useAppNotification();
 
   const handleRemoveAsset = (id) => {
     selectedAsset((prev) => prev.filter((asset) => asset.id !== id));
@@ -24,6 +27,9 @@ function AssignmentForm({ assets, selectedAsset, onSubmit, allUsers }) {
           setSelectedDate(null),
             setAssignmentNotes(""),
             setSelectedUserId(null);
+          notify({
+            title: "Asset(s) Assigned successfuly",
+          });
         }}
         className="space-y-5"
       >
