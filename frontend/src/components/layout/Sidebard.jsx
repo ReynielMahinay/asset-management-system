@@ -25,11 +25,6 @@ function Sidebard() {
     setIsCollapsed(!isCollapsed);
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate("/sign_in", { replace: true });
-  };
-
   const menuItem = [
     {
       id: "dashboard",
@@ -146,7 +141,6 @@ function Sidebard() {
             )}
           </div>
         </div>
-        <button onClick={handleLogout}>logout</button>
       </div>
     </div>
   );
