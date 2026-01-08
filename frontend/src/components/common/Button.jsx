@@ -12,6 +12,8 @@ function Button({ title, icon, variant, onClick, type = "button" }) {
       danger_primary:
         "hover:!bg-[#d6e9fc] hover:!text-red-500 !bg-[#1a1a2e] !text-[#d6e9fc]",
       login_options: "!bg-[#f3f4f6] !text-black",
+      logout_options:
+        "hover:!bg-[#1a1a2e] hover:!text-white !bg-midnight !text-white ",
     };
     return variants[variant] || variants.primary;
   };
@@ -32,7 +34,11 @@ function Button({ title, icon, variant, onClick, type = "button" }) {
         !shadow-sm
         !capitalize
         ${variant === "primary" ? " " : ""}
-         ${variant === "login_options" ? "w-full" : ""}
+         ${
+           variant === "login_options" || variant === "logout_options"
+             ? "w-full"
+             : ""
+         }
         ${getVariantClasses()}
       `}
     >

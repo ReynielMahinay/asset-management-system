@@ -8,7 +8,7 @@ import AreaChartAssets from "../../components/charts/AreaChartAssets";
 
 function Dashboard() {
   const { data, isLoading, error } = useAssets({
-    unassigned: true,
+    unassigned: false,
   });
   const recentlyAdded = data?.recentlyAddedCount || 0;
   const assetTotal = data?.total || 0;

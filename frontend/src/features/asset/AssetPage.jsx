@@ -166,6 +166,7 @@ function AssetPage() {
         open={openModalAssetInfo}
         close={setOpenModalAssetInfo}
         ViewComponent={AssetView}
+        title="Asset info"
       />
     </div>
   );
