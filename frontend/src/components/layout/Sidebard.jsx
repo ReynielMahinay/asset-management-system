@@ -41,8 +41,8 @@ function Sidebard() {
       label: "Asset",
     },
     {
-      id: "manage_user",
-      path: "/manage-user",
+      id: "manage_employee",
+      path: "/manage-employee",
       icon: FaRegUser,
       active_icon: FaUser,
       label: "Manage user",

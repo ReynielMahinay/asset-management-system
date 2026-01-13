@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import Sidebard from "./components/layout/Sidebard";
-import NavBar from "./components/layout/NavBar";
-import Footer from "./components/layout/Footer";
-import Dashboard from "./features/dashboard/Dashboard";
-import AssetPage from "./features/asset/AssetPage";
-import ManageUser from "./features/manage_user/ManageUser";
-import Assignment from "./features/assignment/Assignment";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TbRuler } from "react-icons/tb";
-import Breadcrumbs from "./components/common/Breadcrumbs";
-import { Outlet } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./Router/AppRouter";
 
