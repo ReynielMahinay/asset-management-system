@@ -7,12 +7,14 @@ import { useAssets, useDeleteAsset } from "../../hooks/useAssets";
 import SearchInput from "../../components/form/SearchInput";
 import AssetForm from "./components/AssetForm";
 import AssetTable from "./components/AssetTable";
+import SelectFilter from "../../components/common/SelectFilter";
 import { useNavigate } from "react-router-dom";
 import { BsPersonAdd } from "react-icons/bs";
 import { useAppNotification } from "../../components/common/Notificaiton";
 import { message, Modal } from "antd";
 import ModalView from "../../components/modals/ModalView";
 import AssetView from "./components/AssetView";
+import { statusOptions } from "../../data/options";
 
 function AssetPage() {
   // <-------------------states for modals---------------------->
@@ -26,6 +28,7 @@ function AssetPage() {
   const [searchKeyword, setSearchKeyword] = useState(""); //this state is what use for API call to search
   const [keyword, setKeyword] = useState(""); // while this state is what user search is. need this since for manual triggering
   const [page, setPage] = useState(1); //for setting the page state
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // <-------------------Return function hooks ---------------------->
   const deleteAssetMutation = useDeleteAsset(); //delete hook for asset
@@ -33,6 +36,7 @@ function AssetPage() {
   const notify = useAppNotification(); //notifcation context
   const navigate = useNavigate();
 
+  console.log(statusFilter);
   const { data: assetData, isLoading } = useAssets({
     page,
     pageSize: 5,
@@ -123,6 +127,14 @@ function AssetPage() {
               variant="primary"
               onClick={handleSearchInput}
             />
+            <div className="w-[250px]">
+              <SelectFilter
+                placeholder="Filter by Status"
+                options={statusOptions}
+                onChange={setStatusFilter}
+                value={statusFilter}
+              />
+            </div>
           </div>
           <div className="flex flex-row gap-2 w-[50%] justify-end">
             <Button

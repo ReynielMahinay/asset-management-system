@@ -7,8 +7,13 @@ async function getAsset({
   sort = "asset_id",
   order = "ASC",
   unassigned = false,
+  assignmnet,
 } = {}) {
   const offset = (page - 1) * pageSize;
+
+  const whereConditions = [];
+  const value = [];
+  let paramIndex = 1;
 
   // Only unassigned assets if requested
   const whereClause = unassigned ? "WHERE asset_status <> 'assigned'" : "";
@@ -104,6 +109,61 @@ async function searchAsset(keyword) {
   }));
 }
 
+// In assetQueries.js
+async function getUnassignedAssets({
+  page = 1,
+  pageSize = 5,
+  sort = "asset_id",
+  order = "ASC",
+} = {}) {
+  const offset = (page - 1) * pageSize;
+
+  const allowedSort = [
+    "asset_id",
+    "asset_name",
+    "asset_type",
+    "asset_brand",
+    "asset_status",
+    "created_at",
+    "updated_at",
+  ];
+  if (!allowedSort.includes(sort)) sort = "asset_id";
+  order = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
+  // Query unassigned assets
+  const { rows } = await pool.query(
+    `SELECT a.*, u.user_fullname AS assigned_to_name
+     FROM assets a
+     LEFT JOIN users u ON a.assigned_to = u.user_id
+     WHERE a.asset_status <> 'assigned'
+     ORDER BY ${sort} ${order}
+     LIMIT $1 OFFSET $2`,
+    [pageSize, offset]
+  );
+
+  // Count total unassigned assets
+  const { rows: countRows } = await pool.query(
+    `SELECT COUNT(*) AS total FROM assets WHERE asset_status <> 'assigned'`
+  );
+  const total = parseInt(countRows[0].total, 10);
+
+  // Map rows for frontend
+  const data = rows.map((asset) => ({
+    id: asset.asset_id,
+    name: asset.asset_name,
+    type: asset.asset_type,
+    brand: asset.asset_brand,
+    tag: asset.asset_tag,
+    status: asset.asset_status,
+    assignedTo: asset.assigned_to,
+    assignedToName: asset.assigned_to_name || "N/A",
+    timeCreated: formatDate(asset.created_at),
+    timeUpdated: formatDate(asset.updated_at),
+  }));
+
+  return { total, data };
+}
+
 async function insertAsset(name, type, brand, tag, status, assigned_to = null) {
   const result = await pool.query(
     `INSERT INTO assets 
@@ -152,6 +212,7 @@ async function updateAsset(
 module.exports = {
   insertAsset,
   getAsset,
+  getUnassignedAssets,
   deleteAsset,
   updateAsset,
   searchAsset,
