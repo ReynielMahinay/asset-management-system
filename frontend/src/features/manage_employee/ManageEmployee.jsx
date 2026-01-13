@@ -4,14 +4,14 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import SearchInput from "../../components/form/SearchInput";
 import ModalComponent from "../../components/modals/ModalComponent";
-import UserForm from "./components/UserForm";
+import UserForm from "./components/EmployeeForm";
 import { useDeleteUser, useUsers } from "../../hooks/useUsers";
-import UserTable from "./components/UserTable";
+import UserTable from "./components/EmployeeTable";
 import { Modal } from "antd";
 import { useAppNotification } from "../../components/common/Notificaiton";
 import ModalView from "../../components/modals/ModalView";
-import UserVIew from "./components/UserVIew";
-function ManageUser() {
+import UserVIew from "./components/EmployeeVIew";
+function ManageEmployee() {
   // <-------------------states for modals---------------------->
   const [open, setOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
@@ -185,4 +185,4 @@ function ManageUser() {
   );
 }
 
-export default ManageUser;
+export default ManageEmployee;

@@ -3,7 +3,7 @@ import Layout from "../components/layout/Layout";
 import Dashboard from "../features/dashboard/Dashboard";
 import AssetPage from "../features/asset/AssetPage";
 import Assignment from "../features/assignment/Assignment";
-import ManageUser from "../features/manage_user/ManageUser";
+import ManageEmployee from "../features/manage_employee/ManageEmployee";
 import Login from "../features/login/Login";
 import AssetLayout from "../features/asset/AssetLayout";
 import AssetInfoPage from "../features/asset/AssetInfoPage";
@@ -78,13 +78,13 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "manage-user",
+        path: "manage-employee",
         element: (
           <ProtectedRoute adminOnly={true}>
-            <ManageUser />
+            <ManageEmployee />
           </ProtectedRoute>
         ),
-        handle: { breadcrumb: "Manage User" },
+        handle: { breadcrumb: "Manage Employee" },
       },
     ],
   },
