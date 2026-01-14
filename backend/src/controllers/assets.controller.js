@@ -36,7 +36,7 @@ async function assetGet(req, res) {
     let assets;
 
     if (keyword) {
-      const rows = await dbAsset.searchAsset(keyword);
+      const rows = await dbAsset.searchAsset(keyword, false);
 
       const start = (page - 1) * pageSize;
       const paginationRows = rows.slice(start, start + pageSize);
@@ -66,15 +66,16 @@ async function assetGet(req, res) {
 async function unassignedAssetGet(req, res) {
   try {
     const {
-      page = 1,
-      pageSize = 5,
+      page: rawPage = 1,
+      pageSize: rawPageSize = 5,
       sort = "asset_id",
-      order = "ASC",
+      order: rawOrder = "ASC",
+      keyword = "",
     } = req.query;
 
-    page = Number(page);
-    pageSize = Number(pageSize);
-    order = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
+    const page = Number(rawPage) || 1;
+    const pageSize = Number(rawPageSize) || 5;
+    const order = rawOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
     console.log("Fetching unassigned assets:", { page, pageSize, sort, order });
 
@@ -83,16 +84,13 @@ async function unassignedAssetGet(req, res) {
       pageSize,
       sort,
       order,
+      keyword,
     });
 
     res.json({ total, data, page, pageSize });
   } catch (error) {
-    console.error(
-      "Error in getUnassignedAssets:",
-      { page, pageSize, sort, order },
-      error
-    );
-    res.status(500).json({ error: "Database error" });
+    console.error("Error in getUnassignedAssets:", error);
+    res.status(500).json({ error: error.message });
   }
 }
 

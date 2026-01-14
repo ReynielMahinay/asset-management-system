@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Table, ConfigProvider } from "antd";
-import { useAssets } from "../../../hooks/useAssets";
+import { useAssets, useUnassignedAssets } from "../../../hooks/useAssets";
 import { useIsFetching } from "@tanstack/react-query";
 
 const columnMap = {
@@ -20,19 +20,13 @@ export default function AssignmentTable({
   keyword = "",
 }) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const {
-    data = { total: 0, data: [] },
-    isLoading,
-    isError,
-    isFetching,
-  } = useAssets({
-    page: page,
+
+  const { data = { data: [], total: 0 }, isFetching } = useUnassignedAssets({
+    page,
     pageSize: rowsPerPage,
     sort: "asset_id",
-    order: "asc",
-    keyword: keyword,
-    unassigned: true,
-    type: filterType,
+    order: "ASC",
+    keyword,
   });
 
   const mappedData = useMemo(() => {

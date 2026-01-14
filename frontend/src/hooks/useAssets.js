@@ -29,14 +29,17 @@ export function useUnassignedAssets({
   pageSize = 5,
   sort = "asset_id",
   order = "ASC",
+  keyword = "",
 } = {}) {
   page = page ?? 1;
   pageSize = pageSize ?? 5;
   sort = sort ?? "asset_id";
   order = order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
+  keyword = keyword ?? "";
   return useQuery({
-    queryKey: ["unassignedAssets", page, pageSize, sort, order],
-    queryFn: () => fetchUnassigedAssets({ page, pageSize, sort, order }),
+    queryKey: ["unassignedAssets", page, pageSize, sort, order, keyword],
+    queryFn: () =>
+      fetchUnassigedAssets({ page, pageSize, sort, order, keyword }),
     keepPreviousData: true,
   });
 }

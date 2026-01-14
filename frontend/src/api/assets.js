@@ -37,12 +37,14 @@ export async function fetchUnassigedAssets({
   pageSize = 5,
   sort = "asset_id",
   order = "ASC",
+  keyword = "",
 }) {
   const params = new URLSearchParams({
     page: String(page),
     pageSize: String(pageSize),
     sort,
     order,
+    keyword,
   });
   const res = await fetch(
     `http://localhost:5000/api/assets/unassigned?${params.toString()}`
