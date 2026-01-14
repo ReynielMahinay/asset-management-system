@@ -36,7 +36,7 @@ async function assetGet(req, res) {
     let assets;
 
     if (keyword) {
-      const rows = await dbAsset.searchAsset(keyword);
+      const rows = await dbAsset.searchAsset(keyword, false);
 
       const start = (page - 1) * pageSize;
       const paginationRows = rows.slice(start, start + pageSize);
@@ -60,6 +60,37 @@ async function assetGet(req, res) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
+  }
+}
+
+async function unassignedAssetGet(req, res) {
+  try {
+    const {
+      page: rawPage = 1,
+      pageSize: rawPageSize = 5,
+      sort = "asset_id",
+      order: rawOrder = "ASC",
+      keyword = "",
+    } = req.query;
+
+    const page = Number(rawPage) || 1;
+    const pageSize = Number(rawPageSize) || 5;
+    const order = rawOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
+    console.log("Fetching unassigned assets:", { page, pageSize, sort, order });
+
+    const { total, data } = await dbAsset.getUnassignedAssets({
+      page,
+      pageSize,
+      sort,
+      order,
+      keyword,
+    });
+
+    res.json({ total, data, page, pageSize });
+  } catch (error) {
+    console.error("Error in getUnassignedAssets:", error);
+    res.status(500).json({ error: error.message });
   }
 }
 
@@ -115,4 +146,5 @@ module.exports = {
   assetGet,
   assetDelete,
   assetUpdate,
+  unassignedAssetGet,
 };

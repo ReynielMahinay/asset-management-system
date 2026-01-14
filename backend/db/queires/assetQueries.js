@@ -1,17 +1,14 @@
 const pool = require("../pool");
 const formatDate = require("../../src/utils/dateFormatter");
+const { param } = require("../../src/app");
 
 async function getAsset({
   page = 1,
   pageSize = 5,
   sort = "asset_id",
   order = "ASC",
-  unassigned = false,
 } = {}) {
   const offset = (page - 1) * pageSize;
-
-  // Only unassigned assets if requested
-  const whereClause = unassigned ? "WHERE asset_status <> 'assigned'" : "";
 
   const allowedSort = [
     "asset_id",
@@ -30,7 +27,6 @@ async function getAsset({
     `SELECT a.*, u.user_fullname AS assigned_to_name
      FROM assets a
      LEFT JOIN users u ON a.assigned_to = u.user_id
-     ${whereClause}
      ORDER BY ${sort} ${order}
      LIMIT $1 OFFSET $2`,
     [pageSize, offset]
@@ -38,7 +34,7 @@ async function getAsset({
 
   // Count total assets
   const { rows: countRows } = await pool.query(
-    `SELECT COUNT(*) AS total FROM assets ${whereClause}`
+    `SELECT COUNT(*) AS total FROM assets`
   );
   const total = parseInt(countRows[0].total, 10);
 
@@ -84,12 +80,20 @@ async function getAsset({
     notAssignedCount: Number(not_assigned_count),
   };
 }
-async function searchAsset(keyword) {
-  const result = await pool.query(
-    `SELECT * FROM assets WHERE asset_name ILIKE  '%' || $1 || '%' 
-    OR asset_tag ILIKE '%' || $1 || '%' LIMIT 50`,
-    [keyword]
-  );
+
+async function searchAsset(keyword, filterUnassigned = false) {
+  let query = `SELECT * FROM assets WHERE asset_name ILIKE  '%' || $1 || '%' 
+    OR asset_tag ILIKE '%' || $1 || '%'`;
+
+  const params = [keyword];
+
+  if (filterUnassigned) {
+    query += `AND asset_status = 'unassigned'`;
+  }
+
+  query += `LIMIT 50`;
+
+  const result = await pool.query(query, params);
 
   return result.rows.map((asset) => ({
     id: asset.asset_id,
@@ -102,6 +106,75 @@ async function searchAsset(keyword) {
     created_at: asset.created_at,
     updated_at: asset.updated_at,
   }));
+}
+
+async function getUnassignedAssets({
+  page = 1,
+  pageSize = 5,
+  sort = "asset_id",
+  order = "ASC",
+  keyword = "",
+} = {}) {
+  page = Number(page) || 1;
+  pageSize = Number(pageSize) || 5;
+  const offset = (page - 1) * pageSize;
+
+  const allowedSort = [
+    "asset_id",
+    "asset_name",
+    "asset_type",
+    "asset_brand",
+    "asset_status",
+    "created_at",
+    "updated_at",
+  ];
+
+  if (!allowedSort.includes(sort)) sort = "asset_id";
+  order = order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
+  const params = [];
+  const whereClause = ["asset_status = 'unassigned'"];
+
+  if (keyword) {
+    params.push(`%${keyword}%`);
+    whereClause.push(`(
+      asset_name ILIKE $${params.length} OR asset_tag ILIKE $${params.length})`);
+  }
+
+  const whereSQL = `WHERE ` + whereClause.join(`AND`);
+
+  const countParams = keyword ? [params[0]] : [];
+  const { rows: countRows } = await pool.query(
+    `SELECT COUNT(*) AS total FROM assets ${whereSQL}`,
+    countParams
+  );
+
+  const total = Number(countRows?.[0]?.total ?? 0);
+
+  params.push(pageSize, offset);
+
+  const { rows } = await pool.query(
+    `
+    SELECT * FROM assets
+    ${whereSQL}
+    ORDER BY ${sort} ${order}
+    LIMIT $${params.length - 1} OFFSET $${params.length}
+    `,
+    params
+  );
+
+  const data = rows.map((asset) => ({
+    id: asset.asset_id,
+    name: asset.asset_name,
+    type: asset.asset_type,
+    brand: asset.asset_brand,
+    tag: asset.asset_tag,
+    status: asset.asset_status,
+    timeCreated: asset.created_at ? formatDate(asset.created_at) : null,
+    timeUpdated: asset.updated_at ? formatDate(asset.updated_at) : null,
+  }));
+
+  return { total, data };
 }
 
 async function insertAsset(name, type, brand, tag, status, assigned_to = null) {
@@ -152,6 +225,7 @@ async function updateAsset(
 module.exports = {
   insertAsset,
   getAsset,
+  getUnassignedAssets,
   deleteAsset,
   updateAsset,
   searchAsset,

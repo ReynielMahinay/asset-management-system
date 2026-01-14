@@ -4,6 +4,7 @@ import {
   deleteAsset,
   updateAsset,
   createAsset,
+  fetchUnassigedAssets,
 } from "../api/assets";
 
 //<------------------Using fecth asset custom hook --------------------->
@@ -19,6 +20,26 @@ export function useAssets({
     queryKey: ["assets", page, pageSize, sort, order, keyword, unassigned],
     queryFn: () =>
       fetchAssets({ page, pageSize, sort, order, keyword, unassigned }),
+    keepPreviousData: true,
+  });
+}
+
+export function useUnassignedAssets({
+  page = 1,
+  pageSize = 5,
+  sort = "asset_id",
+  order = "ASC",
+  keyword = "",
+} = {}) {
+  page = page ?? 1;
+  pageSize = pageSize ?? 5;
+  sort = sort ?? "asset_id";
+  order = order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
+  keyword = keyword ?? "";
+  return useQuery({
+    queryKey: ["unassignedAssets", page, pageSize, sort, order, keyword],
+    queryFn: () =>
+      fetchUnassigedAssets({ page, pageSize, sort, order, keyword }),
     keepPreviousData: true,
   });
 }
