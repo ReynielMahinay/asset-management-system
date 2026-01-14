@@ -7,7 +7,7 @@ export async function fetchAssets({
   sort = "asset_id",
   order = "asc",
   keyword = "",
-  unassigned = false,
+  assign_status = null,
 } = {}) {
   const params = new URLSearchParams({
     page: String(page),
@@ -17,7 +17,7 @@ export async function fetchAssets({
   });
 
   if (keyword) params.append("keyword", keyword); // check if there is keyword on from frontend then append it on the url fetch
-  if (unassigned) params.append("unassigned", "true"); // if unassigned is true just fetch the unssigned asset
+  if (assign_status) params.append("assign_status", assign_status); // if unassigned is true just fetch the unssigned asset
 
   const res = await fetch(
     `http://localhost:5000/api/assets?${params.toString()}`

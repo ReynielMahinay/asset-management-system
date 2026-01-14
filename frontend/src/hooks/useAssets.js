@@ -14,12 +14,12 @@ export function useAssets({
   sort = "asset_id",
   order = "asc",
   keyword = "",
-  unassigned = false,
+  assign_status = null,
 } = {}) {
   return useQuery({
-    queryKey: ["assets", page, pageSize, sort, order, keyword, unassigned],
+    queryKey: ["assets", page, pageSize, sort, order, keyword, assign_status],
     queryFn: () =>
-      fetchAssets({ page, pageSize, sort, order, keyword, unassigned }),
+      fetchAssets({ page, pageSize, sort, order, keyword, assign_status }),
     keepPreviousData: true,
   });
 }

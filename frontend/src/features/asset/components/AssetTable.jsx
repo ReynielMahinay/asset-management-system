@@ -27,6 +27,7 @@ function AssetTable({
   page,
   setOpenModalAssetInfo,
   setSelectedAsset,
+  statusFilter,
 }) {
   // <-------------------states for table---------------------->
   const [order, setOrder] = useState("asc"); //state for ordering the column based on the orderBy
@@ -50,6 +51,7 @@ function AssetTable({
     sort: columnMap[orderBy] || "asset_id",
     order,
     keyword,
+    assign_status: statusFilter,
   });
 
   const mappedData = useMemo(

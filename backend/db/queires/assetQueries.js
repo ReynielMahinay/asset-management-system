@@ -7,6 +7,7 @@ async function getAsset({
   pageSize = 5,
   sort = "asset_id",
   order = "ASC",
+  assign_status = null,
 } = {}) {
   const offset = (page - 1) * pageSize;
 
@@ -22,11 +23,22 @@ async function getAsset({
   if (!allowedSort.includes(sort)) sort = "asset_id";
   order = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
+  let whereClause = "";
+
+  const value = [pageSize, offset];
+
+  if (assign_status === "assigned") {
+    whereClause = "WHERE asset_status = 'assigned'";
+  } else if (assign_status === "unassigned") {
+    whereClause = "WHERE asset_status = 'unassigned'";
+  }
+
   // Query assets with LEFT JOIN to get assigned user's fullname
   const { rows } = await pool.query(
     `SELECT a.*, u.user_fullname AS assigned_to_name
      FROM assets a
      LEFT JOIN users u ON a.assigned_to = u.user_id
+     ${whereClause}
      ORDER BY ${sort} ${order}
      LIMIT $1 OFFSET $2`,
     [pageSize, offset]
@@ -34,7 +46,7 @@ async function getAsset({
 
   // Count total assets
   const { rows: countRows } = await pool.query(
-    `SELECT COUNT(*) AS total FROM assets`
+    `SELECT COUNT(*) AS total FROM assets a ${whereClause}`
   );
   const total = parseInt(countRows[0].total, 10);
 
@@ -132,10 +144,12 @@ async function getUnassignedAssets({
   if (!allowedSort.includes(sort)) sort = "asset_id";
   order = order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
-  const params = [];
-  const whereClause = ["asset_status = 'unassigned'"];
+  const params = []; // for dynamic query
+  const whereClause = ["asset_status = 'unassigned'"]; // based query
 
   if (keyword) {
+    // if keyword exist on the request of the user params[%${keyword}%]
+    // whereClause["asset_status = 'unassigned'" "asset_name ILIKE $${params.length} OR asset_tag ILIKE $${params.length}"]
     params.push(`%${keyword}%`);
     whereClause.push(`(
       asset_name ILIKE $${params.length} OR asset_tag ILIKE $${params.length})`);
