@@ -29,8 +29,7 @@ async function assetGet(req, res) {
       sort = "asset_id",
       order = "asc",
       keyword = "",
-      unassigned = "false",
-      type = null,
+      assign_status = null,
     } = req.query;
 
     let assets;
@@ -53,7 +52,7 @@ async function assetGet(req, res) {
         pageSize: Number(pageSize),
         sort,
         order: order.toUpperCase(),
-        unassigned: unassigned === "true",
+        assign_status: assign_status,
       });
     }
     res.json(assets);

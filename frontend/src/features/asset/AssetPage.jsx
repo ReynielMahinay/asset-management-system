@@ -28,7 +28,7 @@ function AssetPage() {
   const [searchKeyword, setSearchKeyword] = useState(""); //this state is what use for API call to search
   const [keyword, setKeyword] = useState(""); // while this state is what user search is. need this since for manual triggering
   const [page, setPage] = useState(1); //for setting the page state
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState(null);
 
   // <-------------------Return function hooks ---------------------->
   const deleteAssetMutation = useDeleteAsset(); //delete hook for asset
@@ -37,11 +37,6 @@ function AssetPage() {
   const navigate = useNavigate();
 
   console.log(statusFilter);
-  const { data: assetData, isLoading } = useAssets({
-    page,
-    pageSize: 5,
-    keyword: searchKeyword,
-  });
 
   //trigger for search
   const handleSearch = (keyword) => {
@@ -154,6 +149,7 @@ function AssetPage() {
       </div>
       <div className="">
         <AssetTable
+          statusFilter={statusFilter}
           setPage={setPage} //for setting page if search and pagination
           page={page} //initial value of the page
           onEdit={(asset) => handleModalOpen("edit", asset)} //editing function of the asset on action column

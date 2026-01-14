@@ -45,7 +45,7 @@ function Sidebard() {
       path: "/manage-employee",
       icon: FaRegUser,
       active_icon: FaUser,
-      label: "Manage user",
+      label: "Manage employee",
     },
   ];
 
