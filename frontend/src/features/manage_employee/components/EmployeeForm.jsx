@@ -106,8 +106,8 @@ UserForm.modalConfig = (mode) => ({
   title: mode === "add" ? "Add user" : "Edit user",
   description:
     mode === "add"
-      ? "Create new user to the invetory. All fields marked with * are required"
-      : "Update user details below.",
+      ? "Create new employee to the invetory. All fields marked with * are required"
+      : "Update employee details below.",
 });
 
 export default UserForm;

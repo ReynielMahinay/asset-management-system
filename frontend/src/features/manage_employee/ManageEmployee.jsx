@@ -130,13 +130,13 @@ function ManageEmployee() {
           </div>
           <div className="flex flex-row gap-2">
             <Button
-              title="Add User"
+              title="Add employee"
               icon={<IoMdAddCircleOutline size={18} variant="primary" />}
               onClick={() => handleModalOpen("add")}
             />
             <Button
               icon={<MdDeleteOutline size={18} />}
-              title="Delete User"
+              title="Delete employee"
               variant="primary"
               onClick={handleDeleteMultiple}
             />

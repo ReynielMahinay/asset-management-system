@@ -64,6 +64,11 @@ export const roleOptions = [
   { id: 2, value: "Pre-sales", label: "Pre-sales" },
 ];
 
+export const userRoleOptions = [
+  { id: 1, value: "admin", label: "Admin" },
+  { id: 2, value: "manager", label: "Manager" },
+];
+
 export const departmentOptions = [
   { id: 1, value: "it", label: "IT" },
   { id: 2, value: "finance", label: "Finance" },
