@@ -4,16 +4,16 @@ import SelectComponent from "../../../components/form/SelectComponent";
 import Button from "../../../components/common/Button";
 import { userRoleOptions } from "../../../data/options";
 import { Divider } from "antd";
-function UserForm() {
+function UserForm({ mode = "add" }) {
   return (
-    <form onSubmit={""}>
+    <form onSubmit={""} className="flex flex-col gap-4">
       <InputFieldComponent label="Name" />
       <InputFieldComponent label="Email" />
       <SelectComponent label="Role" options={userRoleOptions} />
 
       <Divider />
 
-      <div>
+      <div className="flex flex-row justify-end items-center gap-2">
         <Button title="canel" />
 
         <Button title="submit" />
@@ -22,7 +22,7 @@ function UserForm() {
   );
 }
 
-UserForm.modalCofig = (mode) => ({
+UserForm.modalConfig = (mode) => ({
   title: mode === "add" ? "Add user" : "Edit user",
   description:
     mode === "add"

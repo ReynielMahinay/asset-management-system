@@ -7,11 +7,13 @@ import Button from "../../components/common/Button";
 
 function Users() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("add");
 
-  const handleModalOpen = () => {
+  const handleModalOpen = (mode) => {
     setModalOpen(true);
+    setModalMode(mode);
   };
-
+  console.log(modalMode);
   const handleModalClose = () => setModalOpen(false);
   return (
     <div>
@@ -27,7 +29,7 @@ function Users() {
             title="Add user"
             icon={<TbUserPlus size={18} />}
             variant="primary"
-            onClick={handleModalOpen}
+            onClick={() => handleModalOpen("add")}
           />
         </div>
         <UsersTable />
@@ -36,6 +38,7 @@ function Users() {
         open={modalOpen}
         FormComponent={UseForm}
         handleClose={handleModalClose}
+        mode={modalMode}
       />
     </div>
   );
