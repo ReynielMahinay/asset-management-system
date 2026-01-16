@@ -2,6 +2,8 @@ import React from "react";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Button from "../common/Button";
+import { Avatar, Space } from "antd";
+import { FaUserCircle } from "react-icons/fa";
 
 function UserProfileView({ data }) {
   const navigate = useNavigate();
@@ -11,15 +13,22 @@ function UserProfileView({ data }) {
     navigate("/sign_in", { replace: true });
   };
   return (
-    <div className="flex flex-col gap-5 font-poppins">
-      <div className="flex flex-row justify-between items-center">
+    <div className="flex flex-col justify-center items-center gap-5 font-poppins">
+      <Avatar
+        size={250}
+        src={data?.avatarUrl} // real profile picture
+        icon={!data?.avatarUrl && <FaUserCircle />} // fallback icon
+      />
+
+      <div className="flex flex-col justify-between items-center">
         <span>
-          <p className="text-2xl font-semibold">User</p>
-          <p className="capitalize">{data?.username || "Guest"}</p>
+          <p className="capitalize text-4xl font-semibold">
+            {data?.username || "Guest"}
+          </p>
         </span>
-        <span>
-          <p className="text-2xl font-semibold">Role</p>
-          <p className="capitalize">{data?.role || "role"}</p>
+        <span className="flex flex-row space-x-1">
+          <p className="capitalize">Role: </p>
+          <p className="capitalize font-light ">{data?.role || "role"}</p>
         </span>
       </div>
       <Button title="Logout" onClick={handleLogout} variant="logout_options" />

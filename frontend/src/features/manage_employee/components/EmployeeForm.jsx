@@ -7,7 +7,7 @@ import { roleOptions } from "../../../data/options";
 import { useCreateUser, useUpdateUser } from "../../../hooks/useUsers";
 import { useAppNotification } from "../../../components/common/Notificaiton";
 
-function UserForm({ handleClose, mode = "add", modalData }) {
+function EmployeeForm({ handleClose, mode = "add", modalData }) {
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();
   const notify = useAppNotification();
@@ -102,12 +102,12 @@ function UserForm({ handleClose, mode = "add", modalData }) {
   );
 }
 
-UserForm.modalConfig = (mode) => ({
-  title: mode === "add" ? "Add user" : "Edit user",
+EmployeeForm.modalConfig = (mode) => ({
+  title: mode === "add" ? "Add employee" : "Edit employee",
   description:
     mode === "add"
-      ? "Create new user to the invetory. All fields marked with * are required"
-      : "Update user details below.",
+      ? "Create new employee to the invetory. All fields marked with * are required"
+      : "Update employee details below.",
 });
 
-export default UserForm;
+export default EmployeeForm;

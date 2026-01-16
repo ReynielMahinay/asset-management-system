@@ -5,6 +5,7 @@ import AssetPage from "../features/asset/AssetPage";
 import Assignment from "../features/assignment/Assignment";
 import ManageEmployee from "../features/manage_employee/ManageEmployee";
 import Login from "../features/login/Login";
+import Users from "../features/Users/Users";
 import AssetLayout from "../features/asset/AssetLayout";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PublicRoute from "../components/PublicRoute";
@@ -62,11 +63,20 @@ export const router = createBrowserRouter([
       {
         path: "manage-employee",
         element: (
-          <ProtectedRoute adminOnly={true}>
+          <ProtectedRoute>
             <ManageEmployee />
           </ProtectedRoute>
         ),
-        handle: { breadcrumb: "Manage Employee" },
+        handle: { breadcrumb: "Employees" },
+      },
+      {
+        path: "manage-users",
+        element: (
+          <ProtectedRoute adminOnly={true}>
+            <Users />
+          </ProtectedRoute>
+        ),
+        handle: { breadcrumb: "Users" },
       },
     ],
   },

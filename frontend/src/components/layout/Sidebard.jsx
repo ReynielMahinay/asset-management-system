@@ -10,6 +10,7 @@ import { FaRegUser } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { IoMdSettings } from "react-icons/io";
+import { LuUsersRound } from "react-icons/lu";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { RiAlignItemLeftFill } from "react-icons/ri";
@@ -45,7 +46,14 @@ function Sidebard() {
       path: "/manage-employee",
       icon: FaRegUser,
       active_icon: FaUser,
-      label: "Manage employee",
+      label: "Employees",
+    },
+    {
+      id: "manage_users",
+      path: "/manage-users",
+      icon: FaRegUser,
+      active_icon: FaUser,
+      label: "Users",
     },
   ];
 
@@ -130,15 +138,24 @@ function Sidebard() {
           })}
         </div>
 
-        <div className="font-dm-sans whitespace-nowrap">
-          <div className="" />
-          <div className="flex flex-row gap-2 p-4">
-            <IoMdSettings size={25} />
-            {!isCollapsed && (
-              <p className="font-semibold transition-opacity duration-300 text-small">
-                Settings
-              </p>
-            )}
+        <div className="font-dm-sans whitespace-nowrap p-2">
+          <div
+            className={`flex items-center gap-2 hover:cursor-pointer hover:bg-zinc-100 rounded-xl
+      transition-all duration-300
+      ${isCollapsed ? "justify-center py-2 px-2" : "justify-start py-2 px-4"}
+    `}
+          >
+            {/* Icon always visible */}
+            <IoMdSettings size={18} />
+
+            {/* Text fades in/out */}
+            <p
+              className={`font-semibold text-sm transition-all duration-300 overflow-hidden 
+        ${isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"}
+      `}
+            >
+              Settings
+            </p>
           </div>
         </div>
       </div>
