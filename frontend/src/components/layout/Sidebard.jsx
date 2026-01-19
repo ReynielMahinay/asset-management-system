@@ -58,10 +58,10 @@ function Sidebard() {
   ];
 
   return (
-    <div
-      className={`bg-white text-midnight min-h-screen flex flex-col transition-all duration-300 eass-in-out overflow-hidden  border-r  border-gray-300 overflow-y-auto ${
-        isCollapsed ? "w-16 gap-1" : "min-w-64 gap-1 "
-      }`}
+    <aside
+      className={`bg-white text-midnight min-h-screen flex flex-col  overflow-hidden  border-r  border-gray-300 
+        transition-[width] duration-300 ease-in-out
+        ${isCollapsed ? "w-16 " : "w-80"}`}
     >
       <div
         className={`flex justify-between items-center font-poppins font-bold text-2xl gap-2 px-3 h-20 ${
@@ -105,7 +105,7 @@ function Sidebard() {
       <div className="flex flex-col justify-between h-full">
         <div
           className={`flex flex-col  gap-1 py-5 px-2 ${
-            isCollapsed ? "justify-center items-center" : "  "
+            isCollapsed ? " justify-center items-center" : ""
           }`}
         >
           {menuItem.map((item) => {
@@ -114,7 +114,7 @@ function Sidebard() {
                 to={item.path}
                 key={item.id}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 cursor-pointer py-3 px-4 ${
+                  `flex items-center gap-2 cursor-pointer py-3 px-4 transition-all duration-300 ${
                     isActive ? "bg-midnight mx-2 rounded-xl text-white" : "mx-2"
                   }`
                 }
@@ -125,6 +125,7 @@ function Sidebard() {
                   return (
                     <>
                       <Icon size={18} className="flex-shrink-0" />
+
                       {!isCollapsed && (
                         <span className="transition-opacity duration-300 font-dm-sans text-sm font-semibold whitespace-nowrap">
                           {item.label}
@@ -142,7 +143,7 @@ function Sidebard() {
           <div
             className={`flex items-center gap-2 hover:cursor-pointer hover:bg-zinc-100 rounded-xl
       transition-all duration-300
-      ${isCollapsed ? "justify-center py-2 px-2" : "justify-start py-2 px-4"}
+      ${isCollapsed ? "justify-center py-4 px-2" : "justify-start py-4 px-4"}
     `}
           >
             {/* Icon always visible */}
@@ -159,7 +160,7 @@ function Sidebard() {
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
 
