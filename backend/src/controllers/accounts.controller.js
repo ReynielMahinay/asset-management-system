@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const {
   getAccountByUsername,
   getAccountById,
+  getAccounts,
 } = require("../../db/queires/accountQueries");
 
 async function login(req, res) {
@@ -30,7 +31,7 @@ async function login(req, res) {
         role: account.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "24h" }
     );
 
     //return this json on the frontend to use
@@ -60,7 +61,24 @@ async function userProfile(req, res) {
   }
 }
 
+async function getUserAccounts(req, res) {
+  try {
+    const { page = 1, pageSize = 5 } = req.query;
+
+    const users = await getAccounts(Number(page), Number(pageSize));
+
+    if (!users || users.length === 0)
+      return res.status(404).json({ msg: "No data" });
+
+    res.json({ data: users, page: Number(page), pageSize: Number(pageSize) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Server error" });
+  }
+}
+
 module.exports = {
   login,
   userProfile,
+  getUserAccounts,
 };

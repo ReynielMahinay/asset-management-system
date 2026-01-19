@@ -17,4 +17,16 @@ async function getAccountById(userId) {
 
   return result.rows[0];
 }
-module.exports = { getAccountByUsername, getAccountById };
+
+async function getAccounts(page = 1, pageSize = 5) {
+  const offset = (page - 1) * pageSize;
+
+  const { rows } = await pool.query(
+    "SELECT id, username, role FROM accounts ORDER BY id LIMIT $1 OFFSET $2",
+    [pageSize, offset]
+  );
+
+  return { rows, page, pageSize };
+}
+
+module.exports = { getAccountByUsername, getAccountById, getAccounts };
