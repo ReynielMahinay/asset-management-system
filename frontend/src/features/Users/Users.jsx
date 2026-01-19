@@ -4,10 +4,18 @@ import { TbUserPlus } from "react-icons/tb";
 import ModalComponent from "../../components/modals/ModalComponent";
 import UseForm from "../Users/components/UserForm";
 import Button from "../../components/common/Button";
+import { useAccounts } from "../../hooks/useAccounts";
 
 function Users() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState("add");
+  const [page, setPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const { data } = useAccounts({
+    page: page,
+    pageSize: rowsPerPage,
+  });
 
   const handleModalOpen = (mode) => {
     setModalOpen(true);
@@ -32,7 +40,11 @@ function Users() {
             onClick={() => handleModalOpen("add")}
           />
         </div>
-        <UsersTable />
+        <UsersTable
+          data={data?.data?.rows}
+          page={page}
+          pageSize={rowsPerPage}
+        />
       </div>
       <ModalComponent
         open={modalOpen}

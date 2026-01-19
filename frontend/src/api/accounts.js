@@ -36,3 +36,20 @@ export async function fetchProfile() {
     console.error(err);
   }
 }
+
+export async function fetchAccounts({ page = 1, pageSize = 5 }) {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+  });
+  const res = await fetch(
+    `http://localhost:5000/api/login/accounts?${params.toString()}`
+  );
+
+  if (!res.ok) throw new Error("Failed to fetch accoutns");
+
+  const json = await res.json();
+
+  console.log("API response accounts:", json);
+  return json;
+}
