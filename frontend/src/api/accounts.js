@@ -43,7 +43,7 @@ export async function fetchAccounts({ page = 1, pageSize = 5 }) {
     pageSize: String(pageSize),
   });
   const res = await fetch(
-    `http://localhost:5000/api/login/accounts?${params.toString()}`
+    `http://localhost:5000/api/login/accounts?${params.toString()}`,
   );
 
   if (!res.ok) throw new Error("Failed to fetch accoutns");
@@ -52,4 +52,16 @@ export async function fetchAccounts({ page = 1, pageSize = 5 }) {
 
   console.log("API response accounts:", json);
   return json;
+}
+
+export async function createAccount(formData) {
+  const res = await fetch(`http://localhost:5000/api/login/newAccount`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  });
+
+  if (!res.ok) throw new Error("Failed to create account");
+
+  return res.json();
 }

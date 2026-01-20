@@ -40,11 +40,7 @@ function Users() {
             onClick={() => handleModalOpen("add")}
           />
         </div>
-        <UsersTable
-          data={data?.data?.rows}
-          page={page}
-          pageSize={rowsPerPage}
-        />
+        <UsersTable data={data?.data} page={page} pageSize={rowsPerPage} />
       </div>
       <ModalComponent
         open={modalOpen}
