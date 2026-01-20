@@ -4,6 +4,7 @@ const {
   getAccountByUsername,
   getAccountById,
   getAccounts,
+  createAccount,
 } = require("../../db/queires/accountQueries");
 
 async function login(req, res) {
@@ -31,7 +32,7 @@ async function login(req, res) {
         role: account.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "24h" },
     );
 
     //return this json on the frontend to use
@@ -70,10 +71,33 @@ async function getUserAccounts(req, res) {
     if (!users || users.length === 0)
       return res.status(404).json({ msg: "No data" });
 
-    res.json({ data: users, page: Number(page), pageSize: Number(pageSize) });
+    res.json({
+      page: Number(page),
+      pageSize: Number(pageSize),
+      data: users.rows, // only rows array
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Server error" });
+  }
+}
+
+async function accountCreatePost(req, res) {
+  try {
+    const { username, password, role, email } = req.body;
+
+    const allowedRoles = ["admin", "manager"];
+    if (role && !allowedRoles.includes(role)) {
+      return res.status(400).json({ error: "Invalid role" });
+    }
+
+    const newAccount = await createAccount(username, password, role, email);
+
+    console.log("Insert new account", newAccount);
+    res.json(newAccount);
+  } catch (error) {
+    console.error("Error inserting account", error);
+    res.status(500).json({ error: "Database error" });
   }
 }
 
@@ -81,4 +105,5 @@ module.exports = {
   login,
   userProfile,
   getUserAccounts,
+  accountCreatePost,
 };

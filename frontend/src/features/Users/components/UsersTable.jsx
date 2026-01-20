@@ -1,5 +1,7 @@
 import React, { useMemo } from "react";
 import { Table, ConfigProvider } from "antd";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
+import { RiSuitcaseLine } from "react-icons/ri";
 
 function UsersTable({ data, page, pageSize }) {
   const mappedData = useMemo(() => {
@@ -28,15 +30,17 @@ function UsersTable({ data, page, pageSize }) {
       title: "Role",
       dataIndex: "role",
       render: (role) => {
-        if (role === "technical") {
+        if (role === "admin") {
           return (
-            <span className="text-blue-500 bg-blue-100 py-1 px-2 text-xs capitalize rounded-full">
+            <span className=" inline-flex text-blue-500 bg-blue-100 py-1 px-2 text-xs capitalize rounded-full gap-2 ">
+              <MdOutlineAdminPanelSettings size={18} />
               {role}
             </span>
           );
-        } else if (role === "Pre-sales") {
+        } else if (role === "manager") {
           return (
-            <span className="text-yellow-500 bg-yellow-100 px-2 py-1 text-xs capitalize rounded-full">
+            <span className="inline-flex gap-2 text-yellow-500 bg-yellow-100 px-2 py-1 text-xs capitalize rounded-full">
+              <RiSuitcaseLine size={18} />
               {role}
             </span>
           );
