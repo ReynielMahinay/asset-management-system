@@ -1,12 +1,6 @@
 import { Select, ConfigProvider } from "antd";
 
 function SelectComponent({ value, options, label, onChange, bg_color }) {
-  // const inputId = label.replace(/\s+/g, "-").toLowerCase();
-  const onSearch = (value) => {
-    console.log("search:", value);
-  };
-
-  console.log("Options:", options);
   return (
     <div className="text-[0.7rem] font-poppins font-semibold text-midnight">
       <p>

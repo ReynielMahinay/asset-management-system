@@ -15,6 +15,6 @@ router.post("/", login);
 router.get("/me", auth, userProfile);
 
 router.get("/accounts", getUserAccounts);
-router.get("/newAccount", accountCreatePost);
+router.post("/newAccount", accountCreatePost);
 
 module.exports = router;
