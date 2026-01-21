@@ -9,6 +9,10 @@ export async function loginUser(username, password) {
 
     const data = await res.json();
     console.log("login user data", data);
+
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+    }
     return { ok: res.ok, data };
   } catch (err) {
     console.error(err);

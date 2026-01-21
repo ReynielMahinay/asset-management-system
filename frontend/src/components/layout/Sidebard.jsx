@@ -18,7 +18,7 @@ import { RiAlignItemLeftFill } from "react-icons/ri";
 import { NavLink } from "react-router-dom";
 
 function Sidebard() {
-  const { logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -54,6 +54,7 @@ function Sidebard() {
       icon: FaRegUser,
       active_icon: FaUser,
       label: "Users",
+      adminOnly: true,
     },
   ];
 
@@ -108,35 +109,43 @@ function Sidebard() {
             isCollapsed ? " justify-center items-center" : ""
           }`}
         >
-          {menuItem.map((item) => {
-            return (
-              <NavLink
-                to={item.path}
-                key={item.id}
-                className={({ isActive }) =>
-                  `flex items-center gap-2 cursor-pointer py-3 px-4 transition-all duration-300 ${
-                    isActive ? "bg-midnight mx-2 rounded-xl text-white" : "mx-2"
-                  }`
-                }
-              >
-                {({ isActive }) => {
-                  const Icon = isActive ? item.active_icon : item.icon;
+          {menuItem
+            .filter((item) => {
+              //if item is adminOnly and user is not admin hide it
+              if (item.adminOnly && user?.role !== "admin") return false;
+              return true;
+            })
+            .map((item) => {
+              return (
+                <NavLink
+                  to={item.path}
+                  key={item.id}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 cursor-pointer py-3 px-4 transition-all duration-300 ${
+                      isActive
+                        ? "bg-midnight mx-2 rounded-xl text-white"
+                        : "mx-2"
+                    }`
+                  }
+                >
+                  {({ isActive }) => {
+                    const Icon = isActive ? item.active_icon : item.icon;
 
-                  return (
-                    <>
-                      <Icon size={18} className="flex-shrink-0" />
+                    return (
+                      <>
+                        <Icon size={18} className="flex-shrink-0" />
 
-                      {!isCollapsed && (
-                        <span className="transition-opacity duration-300 font-dm-sans text-sm font-semibold whitespace-nowrap">
-                          {item.label}
-                        </span>
-                      )}
-                    </>
-                  );
-                }}
-              </NavLink>
-            );
-          })}
+                        {!isCollapsed && (
+                          <span className="transition-opacity duration-300 font-dm-sans text-sm font-semibold whitespace-nowrap">
+                            {item.label}
+                          </span>
+                        )}
+                      </>
+                    );
+                  }}
+                </NavLink>
+              );
+            })}
         </div>
 
         <div className="font-dm-sans whitespace-nowrap p-2">
