@@ -4,9 +4,14 @@ import SelectComponent from "../../../components/form/SelectComponent";
 import Button from "../../../components/common/Button";
 import { userRoleOptions } from "../../../data/options";
 import { Divider, Input } from "antd";
-function UserForm({ mode = "add" }) {
+import { useCreateAccount } from "../../../hooks/useAccounts";
+import { useAppNotification } from "../../../components/common/Notificaiton";
+
+function UserForm({ handleClose, mode = "add" }) {
+  const createMutation = useCreateAccount();
+  const notify = useAppNotification();
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     password: "",
     role: "",
     email: "",
@@ -16,12 +21,29 @@ function UserForm({ mode = "add" }) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (mode === "add") {
+        console.log(formData);
+        await createMutation.mutateAsync(formData);
+        notify({
+          title: "User created",
+          description: "The user was created successfully",
+        });
+      }
+      handleClose();
+    } catch (error) {
+      console.error("Error submitting:", error);
+    }
+  };
+
   return (
-    <form onSubmit={""} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <InputFieldComponent
         label="Name"
-        value={formData.name}
-        onChange={(e) => handleChanges("name", e.target.value)}
+        value={formData.username}
+        onChange={(e) => handleChanges("username", e.target.value)}
       />
       <InputFieldComponent
         label="Password"
@@ -37,6 +59,7 @@ function UserForm({ mode = "add" }) {
         label="Role"
         options={userRoleOptions}
         value={formData.role}
+        onChange={(val) => handleChanges("role", val)}
       />
 
       <Divider />
@@ -44,7 +67,7 @@ function UserForm({ mode = "add" }) {
       <div className="flex flex-row justify-end items-center gap-2">
         <Button title="canel" />
 
-        <Button title="submit" />
+        <Button title="submit" type="submit" />
       </div>
     </form>
   );
