@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(
-    () => localStorage.getItem("token") || null
+    () => localStorage.getItem("token") || null,
   );
   const [loading, setLoading] = useState(true); // wait for profile fetch
 
@@ -36,10 +36,9 @@ export function AuthProvider({ children }) {
     setToken(data.token);
     localStorage.setItem("token", data.token);
 
-    const profile = await fetchProfile(data.token);
-    setUser(profile);
+    setUser(data.user);
 
-    return { success: true, user: profile.user };
+    return { success: true, user: data.user };
   };
 
   const logout = () => {
