@@ -10,8 +10,8 @@ const {
 
 async function login(req, res) {
   //getting the user and pass the was in the body request from frontend that was submitted by user
-  const { username, password } = req.body;
-
+  const { username, password, rememberMe } = req.body;
+  console.log("LOGIN BODY:", req.body);
   try {
     //checking if the username submitted by user is on the database
     const account = await getAccountByUsername(username);
@@ -26,7 +26,9 @@ async function login(req, res) {
     //wrong password return error
     if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
 
-    updateLastLogin(account.id);
+    // Wait for last_login update to complete
+    // so frontend fetches the latest login time immediately
+    await updateLastLogin(account.id);
 
     //if not create a token for that user that will expire within 1hr
     const token = jwt.sign(
@@ -38,6 +40,24 @@ async function login(req, res) {
       { expiresIn: "24h" },
     );
 
+    if (rememberMe) {
+      console.log("SETTING REFRESH TOKEN COOKIE");
+      const refreshToken = jwt.sign(
+        {
+          id: account.id,
+        },
+        process.env.JWT_REFRESH_SECRET,
+        { expiresIn: "7d" },
+      );
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+    }
+
     //return this json on the frontend to use
     res.json({
       token,
@@ -47,6 +67,28 @@ async function login(req, res) {
     console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
+}
+
+async function refreshToken(req, res) {
+  const token = req.cookies.refreshToken;
+
+  if (!token) {
+    return res.status(401).json({ msg: "No refresh token" });
+  }
+
+  jwt.verify(token, process.env.JWT_REFESH_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ msg: "Invalid refresh token" });
+    }
+
+    const newAccessToken = jwt.sign(
+      { id: decoded.id },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" },
+    );
+
+    res.json({ token: newAccessToken });
+  });
 }
 
 async function userProfile(req, res) {
@@ -109,4 +151,5 @@ module.exports = {
   userProfile,
   getUserAccounts,
   accountCreatePost,
+  refreshToken,
 };

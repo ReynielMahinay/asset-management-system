@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { loginUser, fetchProfile } from "../api/accounts";
+import { loginUser, fetchProfile, fetchAccounts } from "../api/accounts";
 
 export const AuthContext = createContext();
 
@@ -28,8 +28,8 @@ export function AuthProvider({ children }) {
     loadUser();
   }, [token]);
 
-  const login = async (username, password) => {
-    const { ok, data } = await loginUser(username, password);
+  const login = async (username, password, rememberMe) => {
+    const { ok, data } = await loginUser(username, password, rememberMe);
     if (!ok)
       return { success: false, message: data?.message || "Login failed" };
 
@@ -37,6 +37,10 @@ export function AuthProvider({ children }) {
     localStorage.setItem("token", data.token);
 
     setUser(data.user);
+
+    if (data.user.role === "admin") {
+      await fetchAccounts({ page: 1, pageSize: 5 });
+    }
 
     return { success: true, user: data.user };
   };

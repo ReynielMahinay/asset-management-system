@@ -14,13 +14,14 @@ function LoginForm() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [token, setToken] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
 
   // ✅ Step 2: Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
-    const result = await login(username, password);
+    const result = await login(username, password, rememberMe);
 
     if (!result.success) {
       alert(result.message);
@@ -50,7 +51,7 @@ function LoginForm() {
               htmlFor="email"
               className="block font-poppins text-[0.7rem] text-gray-700 font-medium"
             >
-              Email Address
+              Username / Email
             </label>
             <div className="relative">
               <MdOutlineMail
@@ -99,7 +100,11 @@ function LoginForm() {
 
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row justify-center items-center gap-1">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
               <p className="font-dm-sans normal-case text-[0.7rem]">
                 Remember me
               </p>
@@ -119,33 +124,6 @@ function LoginForm() {
             type="submit"
           />
         </form>
-
-        {/* Diveder for signup/singin options */}
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-3 bg-white text-gray-600 font-poppins text-[0.7rem]">
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-5 items-center justify-center">
-          <div className="flex flex-row w-full gap-2">
-            <Button title="Google" variant="login_options" />
-            <Button title="Github" variant="login_options" />
-          </div>
-
-          <p className="font-poppins text-[0.65rem] text-center text-gray-600">
-            Don't have an account?
-            <span> </span>
-            <a href="" className="text-blue-600 font-bold">
-              Sign up here
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );
