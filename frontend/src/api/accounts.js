@@ -42,12 +42,18 @@ export async function fetchProfile() {
 }
 
 export async function fetchAccounts({ page = 1, pageSize = 5 }) {
+  const token = localStorage.getItem("token");
   const params = new URLSearchParams({
     page: String(page),
     pageSize: String(pageSize),
   });
   const res = await fetch(
     `http://localhost:5000/api/login/accounts?${params.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
 
   if (!res.ok) throw new Error("Failed to fetch accoutns");
@@ -59,9 +65,14 @@ export async function fetchAccounts({ page = 1, pageSize = 5 }) {
 }
 
 export async function createAccount(formData) {
+  const token = localStorage.getItem("token");
+
   const res = await fetch(`http://localhost:5000/api/login/newAccount`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(formData),
   });
 

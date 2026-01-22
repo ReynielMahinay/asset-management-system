@@ -5,6 +5,7 @@ const {
   getAccountById,
   getAccounts,
   createAccount,
+  updateLastLogin,
 } = require("../../db/queires/accountQueries");
 
 async function login(req, res) {
@@ -24,6 +25,8 @@ async function login(req, res) {
 
     //wrong password return error
     if (!isMatch) return res.status(400).json({ msg: "Incorrect password" });
+
+    updateLastLogin(account.id);
 
     //if not create a token for that user that will expire within 1hr
     const token = jwt.sign(

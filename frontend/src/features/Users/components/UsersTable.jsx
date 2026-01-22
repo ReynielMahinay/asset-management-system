@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Table, ConfigProvider } from "antd";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { RiSuitcaseLine } from "react-icons/ri";
-
+import formatDate from "../../../utils/dataFormatter";
 function UsersTable({ data, page, pageSize }) {
   const mappedData = useMemo(() => {
     const rows = data ?? [];
@@ -11,7 +11,7 @@ function UsersTable({ data, page, pageSize }) {
       name: account.username,
       email: account.email,
       role: account.role,
-      last_login: account.last_login,
+      last_login: formatDate(account.last_login),
     }));
   }, [data]);
 

@@ -23,7 +23,7 @@ async function getAccounts(page = 1, pageSize = 5) {
   const offset = (page - 1) * pageSize;
 
   const { rows } = await pool.query(
-    "SELECT id, username, role, email FROM accounts ORDER BY id LIMIT $1 OFFSET $2",
+    "SELECT id, username, role, email, last_login FROM accounts ORDER BY id LIMIT $1 OFFSET $2",
     [pageSize, offset],
   );
 
@@ -40,9 +40,15 @@ async function createAccount(username, password, role, email) {
   return result.rows[0];
 }
 
+async function updateLastLogin(userId) {
+  await pool.query("UPDATE accounts SET last_login = NOW() WHERE id = $1", [
+    userId,
+  ]);
+}
 module.exports = {
   getAccountByUsername,
   getAccountById,
   getAccounts,
   createAccount,
+  updateLastLogin,
 };
