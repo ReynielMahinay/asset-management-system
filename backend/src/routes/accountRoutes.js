@@ -5,6 +5,7 @@ const {
   userProfile,
   getUserAccounts,
   accountCreatePost,
+  refreshToken,
 } = require("../controllers/accounts.controller");
 const { auth, isAdmin } = require("../middleware/auth");
 
@@ -17,5 +18,6 @@ router.get("/me", auth, userProfile);
 //Since this is for Admin only account need to protect this API route and check the token of the user is assign as admin
 router.get("/accounts", auth, isAdmin, getUserAccounts);
 router.post("/newAccount", accountCreatePost);
+router.post("/refresh", refreshToken);
 
 module.exports = router;

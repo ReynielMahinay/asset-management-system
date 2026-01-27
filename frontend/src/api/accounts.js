@@ -1,10 +1,11 @@
 //using this route sending the username and password to checking on the backend if existing
-export async function loginUser(username, password) {
+export async function loginUser(identifier, password, rememberMe) {
   try {
     const res = await fetch("http://localhost:5000/api/login", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ identifier, password, rememberMe }),
     });
 
     const data = await res.json();
@@ -25,16 +26,32 @@ export async function fetchProfile() {
   const token = localStorage.getItem("token");
 
   if (!token) return null;
+
   try {
-    const token = localStorage.getItem("token");
     const res = await fetch("http://localhost:5000/api/login/me", {
+      credentials: "include",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
+    //if access token expired
+    if (res.status === 401) {
+      token = await refreshToken();
+      if (!token) return null;
+
+      const retryRes = await fetch("http://localhost:5000/api/login/me", {
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return await retryRes.json();
+    }
+
     const data = await res.json();
-    console.log("Protected /me response:", data);
+
     return data;
   } catch (err) {
     console.error(err);
@@ -79,4 +96,22 @@ export async function createAccount(formData) {
   if (!res.ok) throw new Error("Failed to create account");
 
   return res.json();
+}
+
+export async function refreshToken() {
+  try {
+    const res = await fetch(`http://localhost:5000/api/login/refresh`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    localStorage.setItem("token", data.token);
+    return data.token;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }

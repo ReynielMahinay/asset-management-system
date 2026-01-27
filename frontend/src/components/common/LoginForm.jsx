@@ -12,24 +12,25 @@ function LoginForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [token, setToken] = useState(null);
+  const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // ✅ Step 2: Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
-    const result = await login(username, password);
+    const result = await login(identifier, password, rememberMe);
 
-    if (!result.success) {
-      alert(result.message);
-      return;
+    if (result.success) {
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 50); // small delay
+    } else {
+      setError(true);
     }
-
-    setTimeout(() => {
-      navigate("/dashboard", { replace: true });
-    }, 50); // small delay
   };
 
   return (
@@ -40,6 +41,9 @@ function LoginForm() {
         <p className="text-[0.7rem] text-gray-600 ">
           Sign in to your account to continue
         </p>
+        {error && (
+          <p className="text-xs text-red-500">Invalid username or password</p>
+        )}
       </div>
 
       <div className="w-full">
@@ -50,7 +54,7 @@ function LoginForm() {
               htmlFor="email"
               className="block font-poppins text-[0.7rem] text-gray-700 font-medium"
             >
-              Email Address
+              Username / Email
             </label>
             <div className="relative">
               <MdOutlineMail
@@ -61,8 +65,9 @@ function LoginForm() {
                 id="email"
                 type="text"
                 placeholder="you@example.com"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                required
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
                 className="rounded-md border bg-gray-50 text-sm border-gray-300 text-gray-900 placeholder-gray-400  focus:ring-blue-600 focus:outline-none focus:ring-1 pl-9 h-10 w-full"
               />
             </div>
@@ -80,6 +85,7 @@ function LoginForm() {
               <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 id="password"
+                required
                 type={showPassword ? "text" : "password"}
                 placeholder="•••••••"
                 value={password}
@@ -99,7 +105,11 @@ function LoginForm() {
 
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row justify-center items-center gap-1">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
               <p className="font-dm-sans normal-case text-[0.7rem]">
                 Remember me
               </p>
@@ -119,33 +129,6 @@ function LoginForm() {
             type="submit"
           />
         </form>
-
-        {/* Diveder for signup/singin options */}
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-3 bg-white text-gray-600 font-poppins text-[0.7rem]">
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-5 items-center justify-center">
-          <div className="flex flex-row w-full gap-2">
-            <Button title="Google" variant="login_options" />
-            <Button title="Github" variant="login_options" />
-          </div>
-
-          <p className="font-poppins text-[0.65rem] text-center text-gray-600">
-            Don't have an account?
-            <span> </span>
-            <a href="" className="text-blue-600 font-bold">
-              Sign up here
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -2,10 +2,10 @@ const pool = require("../pool");
 const bcrypt = require("bcrypt");
 
 // getting/Selecting the data row with the username is. it was inputed by the user
-async function getAccountByUsername(username) {
+async function getAccountByUsername(identifier) {
   const result = await pool.query(
-    "SELECT * FROM accounts WHERE username = $1",
-    [username],
+    "SELECT * FROM accounts WHERE username = $1 or  email = $1",
+    [identifier],
   );
 
   return result.rows[0];
