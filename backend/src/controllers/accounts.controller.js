@@ -10,14 +10,14 @@ const {
 
 async function login(req, res) {
   //getting the user and pass the was in the body request from frontend that was submitted by user
-  const { username, password, rememberMe } = req.body;
+  const { identifier, password, rememberMe } = req.body;
   console.log("LOGIN BODY:", req.body);
   try {
     //checking if the username submitted by user is on the database
-    const account = await getAccountByUsername(username);
+    const account = await getAccountByUsername(identifier);
 
-    //if not return this status
     if (!account) return res.status(400).json({ msg: "Account not found!" });
+    //if not return this status
 
     //If existing user it will check the password from the request body to the hash password from the data base by
     //By hashing the inputed password to and compare both if the same
