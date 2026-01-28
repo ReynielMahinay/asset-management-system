@@ -98,22 +98,6 @@ export async function createAccount(formData) {
   return res.json();
 }
 
-export async function createAccounttest(formData) {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch(`http://localhost:5000/api/login/newAccount`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(formData),
-  });
-
-  if (!res.ok) throw new Error("Failed to create account");
-
-  return res.json();
-}
 export async function refreshToken() {
   try {
     const res = await fetch(`http://localhost:5000/api/login/refresh`, {
