@@ -1,84 +1,95 @@
 const pool = require("../pool");
 const formatDate = require("../../src/utils/dateFormatter");
-const { supabaseAdmin } = require("../supabaseAdmin");
+const { param } = require("../../src/app");
 
 async function getAsset({
   page = 1,
   pageSize = 5,
-  sort = "id",
-  order = "asc",
+  sort = "asset_id",
+  order = "ASC",
   assign_status = null,
 } = {}) {
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const offset = (page - 1) * pageSize;
 
-  let query = supabaseAdmin.from("assets").select(
-    `
-      *,
-      assigned_user:users!assigned_to (
-        fullname
-      )
-      `,
-    { count: "exact" },
-  );
+  const allowedSort = [
+    "asset_id",
+    "asset_name",
+    "asset_type",
+    "asset_brand",
+    "asset_status",
+    "created_at",
+    "updated_at",
+  ];
+  if (!allowedSort.includes(sort)) sort = "asset_id";
+  order = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
 
-  // filter
-  if (assign_status) {
-    query = query.eq("status", assign_status);
+  let whereClause = "";
+
+  const value = [pageSize, offset];
+
+  if (assign_status === "assigned") {
+    whereClause = "WHERE asset_status = 'assigned'";
+  } else if (assign_status === "unassigned") {
+    whereClause = "WHERE asset_status = 'unassigned'";
   }
 
-  // sort
-  query = query.order(sort, {
-    ascending: order.toLowerCase() !== "desc",
-  });
+  // Query assets with LEFT JOIN to get assigned user's fullname
+  const { rows } = await pool.query(
+    `SELECT a.*, u.user_fullname AS assigned_to_name
+     FROM assets a
+     LEFT JOIN users u ON a.assigned_to = u.user_id
+     ${whereClause}
+     ORDER BY ${sort} ${order}
+     LIMIT $1 OFFSET $2`,
+    [pageSize, offset],
+  );
 
-  // pagination
-  query = query.range(from, to);
+  // Count total assets
+  const { rows: countRows } = await pool.query(
+    `SELECT COUNT(*) AS total FROM assets a ${whereClause}`,
+  );
+  const total = parseInt(countRows[0].total, 10);
 
-  const { data, count, error } = await query;
-  if (error) throw error;
+  // Count recently added rows
+  const { rows: recentlyCountRows } = await pool.query(
+    "SELECT COUNT(*)::int AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '30 days'",
+  );
+  const recentlyAddedCount = parseInt(
+    recentlyCountRows[0].recently_added_count,
+    10,
+  );
 
-  // recently added
-  const { count: recentlyAddedCount } = await supabaseAdmin
-    .from("assets")
-    .select("*", { count: "exact", head: true })
-    .gte(
-      "created_at",
-      new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    );
+  // Count by status
+  const { rows: statusCount } = await pool.query(
+    `SELECT 
+       COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assigned_count, 
+       COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count 
+     FROM assets`,
+  );
+  const { assigned_count, not_assigned_count } = statusCount[0];
 
-  // better status counts
-  const { count: assignedCount } = await supabaseAdmin
-    .from("assets")
-    .select("*", { count: "exact", head: true })
-    .eq("status", "assigned");
-
-  const { count: notAssignedCount } = await supabaseAdmin
-    .from("assets")
-    .select("*", { count: "exact", head: true })
-    .neq("status", "assigned");
-
-  const mapped = data.map((a) => ({
-    id: a.id,
-    name: a.name,
-    type: a.type,
-    brand: a.brand,
-    tag: a.tag,
-    status: a.status,
-    assignedTo: a.assigned_to,
-    assignedToName: a.assigned_user?.fullname || "N/A",
-    timeCreated: formatDate(a.created_at),
-    timeUpdated: formatDate(a.updated_at),
+  // Map assets for frontend
+  const data = rows.map((asset) => ({
+    id: asset.asset_id,
+    name: asset.asset_name,
+    type: asset.asset_type,
+    brand: asset.asset_brand,
+    tag: asset.asset_tag,
+    status: asset.asset_status,
+    assignedTo: asset.assigned_to, // user ID
+    assignedToName: asset.assigned_to_name || "N/A", // user full name to use
+    timeCreated: formatDate(asset.created_at),
+    timeUpdated: formatDate(asset.updated_at),
   }));
 
   return {
-    total: count,
+    total,
     page,
     pageSize,
-    data: mapped,
+    data,
     recentlyAddedCount,
-    assignedCount,
-    notAssignedCount,
+    assignedCount: Number(assigned_count),
+    notAssignedCount: Number(not_assigned_count),
   };
 }
 
@@ -180,32 +191,15 @@ async function getUnassignedAssets({
   return { total, data };
 }
 
-async function insertAsset(
-  name,
-  type,
-  brand,
-  tag,
-  status = "unassigned",
-  assigned_to = null,
-) {
-  const { data, error } = await supabaseAdmin
-    .from("assets")
-    .insert([
-      {
-        name,
-        category,
-        brand,
-        tag,
-        status,
-        assigned_to,
-      },
-    ])
-    .select() // same as RETURNING *
-    .single(); // return one object
-
-  if (error) throw error;
-
-  return data;
+async function insertAsset(name, type, brand, tag, status, assigned_to = null) {
+  const result = await pool.query(
+    `INSERT INTO assets 
+       (asset_name, asset_type, asset_brand, asset_tag, asset_status, assigned_to)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *`,
+    [name, type, brand, tag, status, assigned_to],
+  );
+  return result.rows[0];
 }
 
 async function deleteAsset(id) {
