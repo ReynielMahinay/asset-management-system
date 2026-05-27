@@ -41,22 +41,22 @@ async function getAsset({
      ${whereClause}
      ORDER BY ${sort} ${order}
      LIMIT $1 OFFSET $2`,
-    [pageSize, offset]
+    [pageSize, offset],
   );
 
   // Count total assets
   const { rows: countRows } = await pool.query(
-    `SELECT COUNT(*) AS total FROM assets a ${whereClause}`
+    `SELECT COUNT(*) AS total FROM assets a ${whereClause}`,
   );
   const total = parseInt(countRows[0].total, 10);
 
   // Count recently added rows
   const { rows: recentlyCountRows } = await pool.query(
-    "SELECT COUNT(*)::int AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '30 days'"
+    "SELECT COUNT(*)::int AS recently_added_count FROM assets WHERE created_at >= NOW() - INTERVAL '30 days'",
   );
   const recentlyAddedCount = parseInt(
     recentlyCountRows[0].recently_added_count,
-    10
+    10,
   );
 
   // Count by status
@@ -64,7 +64,7 @@ async function getAsset({
     `SELECT 
        COUNT(*) FILTER (WHERE asset_status = 'assigned') AS assigned_count, 
        COUNT(*) FILTER (WHERE asset_status <> 'assigned') AS not_assigned_count 
-     FROM assets`
+     FROM assets`,
   );
   const { assigned_count, not_assigned_count } = statusCount[0];
 
@@ -77,7 +77,7 @@ async function getAsset({
     tag: asset.asset_tag,
     status: asset.asset_status,
     assignedTo: asset.assigned_to, // user ID
-    assignedToName: asset.assigned_to_name || "N/A", // user full name
+    assignedToName: asset.assigned_to_name || "N/A", // user full name to use
     timeCreated: formatDate(asset.created_at),
     timeUpdated: formatDate(asset.updated_at),
   }));
@@ -160,7 +160,7 @@ async function getUnassignedAssets({
   const countParams = keyword ? [params[0]] : [];
   const { rows: countRows } = await pool.query(
     `SELECT COUNT(*) AS total FROM assets ${whereSQL}`,
-    countParams
+    countParams,
   );
 
   const total = Number(countRows?.[0]?.total ?? 0);
@@ -174,7 +174,7 @@ async function getUnassignedAssets({
     ORDER BY ${sort} ${order}
     LIMIT $${params.length - 1} OFFSET $${params.length}
     `,
-    params
+    params,
   );
 
   const data = rows.map((asset) => ({
@@ -197,7 +197,7 @@ async function insertAsset(name, type, brand, tag, status, assigned_to = null) {
        (asset_name, asset_type, asset_brand, asset_tag, asset_status, assigned_to)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *`,
-    [name, type, brand, tag, status, assigned_to]
+    [name, type, brand, tag, status, assigned_to],
   );
   return result.rows[0];
 }
@@ -205,7 +205,7 @@ async function insertAsset(name, type, brand, tag, status, assigned_to = null) {
 async function deleteAsset(id) {
   const result = await pool.query(
     "DELETE FROM assets WHERE asset_id = $1 RETURNING *",
-    [id]
+    [id],
   );
   return result.rowCount > 0;
 }
@@ -217,7 +217,7 @@ async function updateAsset(
   brand,
   tag,
   status,
-  assigned_to = null
+  assigned_to = null,
 ) {
   const result = await pool.query(
     `UPDATE assets 
@@ -230,7 +230,7 @@ async function updateAsset(
          updated_at=NOW()
      WHERE asset_id=$7
      RETURNING *`,
-    [name, type, brand, tag, status, assigned_to, id]
+    [name, type, brand, tag, status, assigned_to, id],
   );
 
   return result.rows[0]; // undefined if asset not found
