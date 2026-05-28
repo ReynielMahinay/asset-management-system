@@ -11,7 +11,7 @@ function UsersTable({ data, page, pageSize }) {
       name: account.username,
       email: account.email,
       role: account.role,
-      last_login: formatDate(account.last_login),
+      last_login: formatDate(account.created_at),
     }));
   }, [data]);
 

@@ -6,7 +6,7 @@ const {
   getAccounts,
   createAccount,
   updateLastLogin,
-} = require("../../db/queires/accountQueries");
+} = require("../../db/queires/account");
 
 async function login(req, res) {
   //getting the user and pass the was in the body request from frontend that was submitted by user
@@ -113,7 +113,7 @@ async function getUserAccounts(req, res) {
 
     const users = await getAccounts(Number(page), Number(pageSize));
 
-    if (!users || users.length === 0)
+    if (!users || users.rows.length === 0)
       return res.status(404).json({ msg: "No data" });
 
     res.json({
