@@ -16,7 +16,7 @@ export async function fetchUser({
   if (keyword) params.append("keyword", keyword);
 
   const res = await fetch(
-    `http://localhost:5000/api/users?${params.toString()}`
+    `http://localhost:5000/api/users?${params.toString()}`,
   );
 
   if (!res.ok) {

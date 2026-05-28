@@ -1,4 +1,4 @@
-const dbuser = require("../../db/queires/userQueries");
+const dbuser = require("../../db/queires/user");
 
 async function userCreatePost(req, res) {
   try {
@@ -67,7 +67,7 @@ async function userUpdate(req, res) {
       fullname,
       email,
       department,
-      role
+      role,
     );
 
     if (!updated) {
