@@ -68,7 +68,7 @@ async function createAccount(username, password, role, email) {
 async function updateLastLogin(userId) {
   const { error } = await supabaseAdmin
     .from("accounts")
-    .update({ last_login: new Date().toISOString() })
+    .update({ created_at: new Date().toISOString() })
     .eq("id", userId);
 
   if (error) {
