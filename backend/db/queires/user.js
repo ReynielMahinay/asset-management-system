@@ -35,13 +35,14 @@ async function getUser({
       `
     user_id,
     user_fullname,
+    user_email,
     user_department,
     user_role,
-    asset_assignments (
+    asset_assignments ( 
         assets (
         asset_name
             )
-        )`,
+        )`, // this how th left join works on supabase no need alias just need the table name and column
     )
     .order(sort, { ascending: order.toLocaleLowerCase() === "asc" })
     .range(offset, offset + pageSize - 1); // to set the table content to index 0 and 4 from the user table
@@ -63,6 +64,7 @@ async function getUser({
   const data = rows.map((user) => ({
     id: user.user_id,
     fullname: user.user_fullname,
+    email: user.user_email,
     department: user.user_department,
     role: user.user_role,
     assets:
@@ -76,4 +78,25 @@ async function getUser({
   return { total: count, data, page, pageSize };
 }
 
-module.exports = { insertUser, getUser };
+async function searchUser(keyword) {
+  const { data: result, error } = await supabaseAdmin
+    .from("users")
+    .select("user_id, user_fullname, user_department, user_email,user_role")
+    .or(`user_fullname.ilike.%${keyword}%,user_email.ilike.%${keyword}%`)
+    .limit(50);
+
+  if (error) {
+    console.error("searchUser error", error.message);
+    return null;
+  }
+
+  return result.map((user) => ({
+    id: user.user_id,
+    fullname: user.user_fullname,
+    department: user.user_department,
+    email: user.user_email,
+    role: user.user_role,
+  }));
+}
+
+module.exports = { insertUser, getUser, searchUser };
