@@ -99,4 +99,41 @@ async function searchUser(keyword) {
   }));
 }
 
-module.exports = { insertUser, getUser, searchUser };
+async function updateUser(id, fullname, email, department, role) {
+  const { data, error } = await supabaseAdmin
+    .from("users")
+    .update({
+      user_fullname: fullname,
+      user_email: email,
+      user_department: department,
+      user_role: role,
+    })
+    .eq("user_id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("updateUser error", error.message);
+    return null;
+  }
+
+  return data;
+}
+
+async function deleteUser(id) {
+  const { data, error } = await supabaseAdmin
+    .from("users")
+    .delete()
+    .eq("user_id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.log("deleteUser error", error.message);
+    return null;
+  }
+
+  return data;
+}
+
+module.exports = { insertUser, getUser, searchUser, updateUser, deleteUser };
