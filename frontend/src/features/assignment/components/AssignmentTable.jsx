@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Table, ConfigProvider } from "antd";
-import { useAssets, useUnassignedAssets } from "../../../hooks/useAssets";
+import { useAssets } from "../../../hooks/useAssets";
 import { useIsFetching } from "@tanstack/react-query";
 
 const columnMap = {
@@ -21,12 +21,13 @@ export default function AssignmentTable({
 }) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const { data = { data: [], total: 0 }, isFetching } = useUnassignedAssets({
+  const { data = { data: [], total: 0 }, isFetching } = useAssets({
     page,
     pageSize: rowsPerPage,
     sort: "asset_id",
     order: "ASC",
     keyword,
+    assign_status: "unassigned",
   });
 
   const mappedData = useMemo(() => {
@@ -103,7 +104,7 @@ export default function AssignmentTable({
               } else {
                 // remove deselected row
                 setOnselectedAsset(
-                  onSelectedAsset.filter((a) => a.id !== record.id)
+                  onSelectedAsset.filter((a) => a.id !== record.id),
                 );
               }
             },
@@ -111,14 +112,14 @@ export default function AssignmentTable({
               if (selected) {
                 // add all newly selected rows
                 const newRows = changeRows.filter(
-                  (r) => !onSelectedAsset.find((a) => a.id === r.id)
+                  (r) => !onSelectedAsset.find((a) => a.id === r.id),
                 );
                 setOnselectedAsset([...onSelectedAsset, ...newRows]);
               } else {
                 // remove deselected rows
                 const deselectedIds = changeRows.map((r) => r.id);
                 setOnselectedAsset(
-                  onSelectedAsset.filter((a) => !deselectedIds.includes(a.id))
+                  onSelectedAsset.filter((a) => !deselectedIds.includes(a.id)),
                 );
               }
             },
