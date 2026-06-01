@@ -65,28 +65,22 @@ async function assetGet(req, res) {
 async function unassignedAssetGet(req, res) {
   try {
     const {
-      page: rawPage = 1,
-      pageSize: rawPageSize = 5,
+      page = 1,
+      pageSize = 5,
       sort = "asset_id",
-      order: rawOrder = "ASC",
+      order = "ASC",
       keyword = "",
     } = req.query;
 
-    const page = Number(rawPage) || 1;
-    const pageSize = Number(rawPageSize) || 5;
-    const order = rawOrder.toUpperCase() === "DESC" ? "DESC" : "ASC";
-
-    console.log("Fetching unassigned assets:", { page, pageSize, sort, order });
-
-    const { total, data } = await dbAsset.getUnassignedAssets({
-      page,
-      pageSize,
+    const assets = await dbAsset.getAsset({
+      page: Number(page),
+      pageSize: Number(pageSize),
       sort,
-      order,
-      keyword,
+      order: order.toUpperCase(),
+      assign_status: "unassigned",
     });
 
-    res.json({ total, data, page, pageSize });
+    res.json(assets);
   } catch (error) {
     console.error("Error in getUnassignedAssets:", error);
     res.status(500).json({ error: error.message });
