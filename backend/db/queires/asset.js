@@ -1,5 +1,5 @@
 const { supabaseAdmin } = require("../supabaseAdmin");
-
+const formatDate = require("../../src/utils/dateFormatter");
 const ALLOWED_SORT = [
   "asset_id",
   "asset_name",
@@ -58,7 +58,7 @@ async function getAsset({
 }) {
   const safeSort = ALLOWED_SORT.includes(sort) ? sort : "asset_id";
   const safeOrder = order.toUpperCase() === "DESC" ? "DESC" : "ASC";
-  const safeStatus = ALLLOWED_STATUS.includes(assign_status)
+  const safeStatus = ALLOWED_STATUS.includes(assign_status)
     ? assign_status
     : null;
   const offset = (page - 1) * pageSize;
@@ -80,20 +80,76 @@ async function getAsset({
     data: (data.rows || []).map(mapAsset),
   };
 }
-async function getDashboardStats() {
-  const { data, error } = await supabaseAdmin.rpc("get_dashboard_stats");
 
-  if (error) throw new Error(error.message);
+async function searchAsset(keyword) {
+  const { data: result, error } = await supabaseAdmin
+    .from("assets")
+    .select(
+      "asset_id, asset_name, asset_type, asset_brand, asset_tag ,asset_status, created_at, updated_at",
+    )
+    .or(`asset_name.ilike.%${keyword}%,asset_tag.ilike.%${keyword}%`)
+    .limit(50);
+
+  if (error) {
+    console.error("searchAsset error", error.message);
+    return null;
+  }
 
   return {
-    total: data.total,
-    recentlyAddedCount: data.recently_added,
-    assignedCount: data.assigned_count,
-    notAssignedCount: data.not_assigned_count,
+    data: (result || []).map(mapAsset),
   };
+}
+
+async function updateAsset(
+  id,
+  name,
+  type,
+  brand,
+  tag,
+  status,
+  assigned_to = null,
+) {
+  const { data, error } = await supabaseAdmin
+    .from("assets")
+    .update({
+      asset_name: name,
+      asset_type: type,
+      asset_brand: brand,
+      asset_tag: tag,
+      asset_status: status,
+      assigned_to: assigned_to,
+    })
+    .eq("asset_id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("updateAsset error", error.message);
+    return null;
+  }
+
+  return data;
+}
+
+async function deleteAsset(id) {
+  const { data, error } = await supabaseAdmin
+    .from("assets")
+    .delete()
+    .eq("asset_id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.log("deleteAsset error", error.message);
+    return null;
+  }
+
+  return data;
 }
 module.exports = {
   insertAsset,
   getAsset,
-  getDashboardStats,
+  searchAsset,
+  updateAsset,
+  deleteAsset,
 };
