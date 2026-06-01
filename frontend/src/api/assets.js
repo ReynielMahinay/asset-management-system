@@ -20,7 +20,7 @@ export async function fetchAssets({
   if (assign_status) params.append("assign_status", assign_status); // if unassigned is true just fetch the unssigned asset
 
   const res = await fetch(
-    `http://localhost:5000/api/assets?${params.toString()}`
+    `http://localhost:5000/api/assets?${params.toString()}`,
   );
 
   if (!res.ok) {
@@ -47,7 +47,7 @@ export async function fetchUnassigedAssets({
     keyword,
   });
   const res = await fetch(
-    `http://localhost:5000/api/assets/unassigned?${params.toString()}`
+    `http://localhost:5000/api/assets/unassigned?${params.toString()}`,
   );
   if (!res.ok) throw new Error("Failed to fetch");
   return res.json();
@@ -93,6 +93,16 @@ export async function updateAsset(id, formData) {
 
   if (!res.ok) {
     throw new Error("Failed to update asset");
+  }
+
+  return res.json();
+}
+
+export async function dashboardStats() {
+  const res = await fetch(`http://localhost:5000/api/dashboard`);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch dashboard stats");
   }
 
   return res.json();

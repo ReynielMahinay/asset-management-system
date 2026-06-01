@@ -5,9 +5,19 @@ import {
   updateAsset,
   createAsset,
   fetchUnassigedAssets,
+  dashboardStats,
 } from "../api/assets";
 
 //<------------------Using fecth asset custom hook --------------------->
+
+export function useDashboardStats() {
+  return useQuery({
+    queryKey: ["dashboardStats"],
+    queryFn: dashboardStats,
+    keepPreviousData: true,
+  });
+}
+
 export function useAssets({
   page = 1,
   pageSize = 5,
