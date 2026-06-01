@@ -35,10 +35,10 @@ async function assetGet(req, res) {
     let assets;
 
     if (keyword) {
-      const rows = await dbAsset.searchAsset(keyword, false);
+      const { data: rows } = await dbAsset.searchAsset(keyword);
 
       const start = (page - 1) * pageSize;
-      const paginationRows = rows.slice(start, start + pageSize);
+      const paginationRows = rows.slice(start, start + parseInt(pageSize));
 
       assets = {
         total: rows.length,
