@@ -57,7 +57,7 @@ async function getUser({
     .select("*", { count: "exact", head: true });
 
   if (countError) {
-    console.log("getUser count error", countError.message);
+    console.error("getUser count error", countError.message);
     return null;
   }
 

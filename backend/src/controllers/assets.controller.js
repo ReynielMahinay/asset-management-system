@@ -1,4 +1,4 @@
-const dbAsset = require("../../db/queires/assetQueries");
+const dbAsset = require("../../db/queires/asset");
 
 async function assetCreatePost(req, res) {
   try {
@@ -11,7 +11,7 @@ async function assetCreatePost(req, res) {
       brand,
       tag,
       status,
-      assigned_to
+      assigned_to,
     );
     console.log("Inserted asset:", newAsset);
     res.json(newAsset);
@@ -126,7 +126,7 @@ async function assetUpdate(req, res) {
       brand,
       tag,
       status,
-      assigned_to
+      assigned_to,
     );
 
     if (!updated) {
