@@ -5,9 +5,10 @@ import { useAssets } from "../../hooks/useAssets";
 import BarChartAssets from "../../components/charts/BarChartAssets";
 import PieChartAssets from "../../components/charts/PieChartAssets";
 import AreaChartAssets from "../../components/charts/AreaChartAssets";
+import { useDashboardStats } from "../../hooks/useAssets";
 
 function Dashboard() {
-  const { data, isLoading, error } = useAssets();
+  const { data, isLoading, error } = useDashboardStats();
   const recentlyAdded = data?.recentlyAddedCount || 0;
   const assetTotal = data?.total || 0;
   const assignedAsset = data?.assignedCount || 0;
@@ -23,12 +24,12 @@ function Dashboard() {
             item.key === "assets"
               ? assetTotal
               : item.key === "assigned"
-              ? assignedAsset
-              : item.key === "unassigned"
-              ? notAssignedAsset
-              : item.key === "recently"
-              ? recentlyAdded
-              : item.number
+                ? assignedAsset
+                : item.key === "unassigned"
+                  ? notAssignedAsset
+                  : item.key === "recently"
+                    ? recentlyAdded
+                    : item.number
           }
           Icon={item.icon}
           subtitle={item.subtitle}
