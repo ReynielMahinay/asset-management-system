@@ -11,3 +11,33 @@ export async function assingnedAsset(payload) {
 
   return res.json();
 }
+
+export async function fetchUnassignedAsset({
+  page = 1,
+  pageSize = 5,
+  sort = "asset_id",
+  order = "asc",
+  keyword = "",
+  assign_status = "unassigned",
+} = {}) {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+    sort,
+    order,
+  });
+
+  if (keyword) params.append("keyword", keyword);
+
+  const res = await fetch(
+    `http://localhost:5000/api/assets/unassigned?${params.toString()}`,
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch unassigned assets");
+  }
+
+  const json = await res.json();
+  console.log("API response - unassigned:", json);
+  return json;
+}

@@ -1,4 +1,4 @@
-const dbAssignment = require("../../db/queires/assigmentQueries");
+const dbAssignment = require("../../db/queires/assignment");
 
 async function assignedAsset(req, res) {
   try {
@@ -8,7 +8,7 @@ async function assignedAsset(req, res) {
       asset_ids,
       user_id,
       assigned_date,
-      notes
+      notes,
     );
     console.log("Asset was  assigned:", assignedAssetToUser);
     res.json(assignedAssetToUser);

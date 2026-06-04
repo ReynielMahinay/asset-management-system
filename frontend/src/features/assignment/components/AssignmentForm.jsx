@@ -6,14 +6,44 @@ import DatePickerComponent from "../../../components/form/DatePickerComponent";
 import TextAreaComponent from "../../../components/form/TextAreaComponent";
 import SelectedAssetsCard from "../../../components/common/SelectedAssetsCard";
 import { useAppNotification } from "../../../components/common/Notificaiton";
+import dayjs from "dayjs";
+import { useAssignmentAsset } from "../../../hooks/useAssignment";
 
-function AssignmentForm({ assets, selectedAsset, onSubmit, allUsers }) {
+function AssignmentForm({ assets, selectedAsset, allUsers, setPage }) {
   const [selectedUserId, setSelectedUserId] = useState(null); // for SelectAssignment
   const [selectedDate, setSelectedDate] = useState(null); // for DatePickerComponent
   const [assignmentNotes, setAssignmentNotes] = useState(""); // for Textarea notes
 
   const notify = useAppNotification();
+  const mutation = useAssignmentAsset();
 
+  const handleAssign = () => {
+    if (!selectedUserId || assets.length === 0) {
+      alert("Please select a user and at least one asset.");
+      return;
+    }
+
+    const payload = {
+      asset_ids: assets.map((asset) => asset.id),
+      user_id: selectedUserId,
+      assigned_date: dayjs(selectedDate).format("YYYY-MM-DD"),
+      notes: assignmentNotes,
+    };
+    console.log("Assign payload:", payload);
+    mutation.mutate(payload, {
+      onSuccess: (data) => {
+        console.log("Assignment successful:", data);
+        // Optionally, clear selection
+        setSelectedUserId([]);
+        setSelectedDate(null);
+        setAssignmentNotes("");
+        setPage(1);
+      },
+      onError: (error) => {
+        console.error("Assignment failed:", error.message);
+      },
+    });
+  };
   const handleRemoveAsset = (id) => {
     selectedAsset((prev) => prev.filter((asset) => asset.id !== id));
   };
@@ -23,10 +53,10 @@ function AssignmentForm({ assets, selectedAsset, onSubmit, allUsers }) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(selectedUserId, selectedDate, assignmentNotes, assets);
-          setSelectedDate(null),
+          handleAssign(selectedUserId, selectedDate, assignmentNotes, assets);
+          (setSelectedDate(null),
             setAssignmentNotes(""),
-            setSelectedUserId(null);
+            setSelectedUserId(null));
           notify({
             title: "Asset(s) Assigned successfuly",
           });
