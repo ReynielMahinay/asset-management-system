@@ -8,6 +8,7 @@ const pool = require("../pool");
  * @param {string} notes - optional notes
  * @returns inserted rows
  */
+
 // Example in your assignment query
 async function assignAssets(asset_ids, user_id, assigned_date, notes) {
   const values = [];

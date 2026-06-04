@@ -7,7 +7,8 @@
     "frontend": "cd frontend && npm run dev",
     "backend": "cd backend && npm run dev",
     "install-all": "npm install && cd frontend && npm install && cd backend && npm install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doctor": "npx react-doctor@latest"
   },
   "repository": {
     "type": "git",

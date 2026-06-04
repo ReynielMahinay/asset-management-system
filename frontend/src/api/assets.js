@@ -28,30 +28,9 @@ export async function fetchAssets({
   }
 
   const json = await res.json();
-  console.log("API Response:", json);
+  console.log("API Response - assigned:", json);
   return json; // { total, page, pageSize, data: [...] }
 }
-
-// export async function fetchUnassigedAssets({
-//   page = 1,
-//   pageSize = 5,
-//   sort = "asset_id",
-//   order = "ASC",
-//   keyword = "",
-// }) {
-//   const params = new URLSearchParams({
-//     page: String(page),
-//     pageSize: String(pageSize),
-//     sort,
-//     order,
-//     keyword,
-//   });
-//   const res = await fetch(
-//     `http://localhost:5000/api/assets/unassigned?${params.toString()}`,
-//   );
-//   if (!res.ok) throw new Error("Failed to fetch");
-//   return res.json();
-// }
 
 //<------------------Delete function API--------------------->
 export async function deleteAsset(id) {

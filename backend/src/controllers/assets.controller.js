@@ -1,4 +1,6 @@
+const { parse } = require("dotenv");
 const dbAsset = require("../../db/queires/asset");
+const { supabaseAdmin } = require("../../db/supabaseAdmin");
 
 async function assetCreatePost(req, res) {
   try {
@@ -71,14 +73,60 @@ async function unassignedAssetGet(req, res) {
       order = "ASC",
       keyword = "",
     } = req.query;
-
-    const assets = await dbAsset.getAsset({
-      page: Number(page),
-      pageSize: Number(pageSize),
-      sort,
-      order: order.toUpperCase(),
-      assign_status: "unassigned",
+    console.log("🔍 unassignedAssetGet called with:", {
+      page,
+      pageSize,
+      keyword,
     });
+
+    let assets;
+
+    if (keyword) {
+      console.log("🔍 Searching with keyword:", keyword);
+      const { data: rows } = await dbAsset.searchAsset(keyword);
+
+      console.log("📋 Search results (raw):", rows); // ← Add this
+      console.log(
+        "🔎 Checking asset_status values:",
+        rows?.map((r) => ({
+          name: r.name,
+          status: r.asset_status, // ← Check if this exists
+        })),
+      );
+
+      const unassignedRows = rows.filter(
+        (asset) => asset.status === "unassigned",
+      );
+
+      console.log("✅ Filtered unassigned rows:", unassignedRows); // ← Add this
+
+      const start = (page - 1) * pageSize;
+      const paginationRows = unassignedRows.slice(
+        start,
+        start + parseInt(pageSize),
+      );
+
+      assets = {
+        total: unassignedRows.length,
+        page: Number(page),
+        pageSize: Number(pageSize),
+        data: paginationRows,
+      };
+      console.log("📤 Returning:", assets); // ← Add this
+    } else {
+      console.log(
+        "🔓 No keyword, calling getAsset with assign_status='unassigned'",
+      );
+
+      assets = await dbAsset.getAsset({
+        page: Number(page),
+        pageSize: Number(pageSize),
+        sort,
+        order: order.toUpperCase(),
+        assign_status: "unassigned",
+      });
+      console.log("✅ getAsset returned:", assets);
+    }
 
     res.json(assets);
   } catch (error) {

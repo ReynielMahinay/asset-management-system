@@ -1,4 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  usePrefetchQuery,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import {
   fetchAssets,
   deleteAsset,

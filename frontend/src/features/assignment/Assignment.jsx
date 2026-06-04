@@ -8,8 +8,6 @@ import { IoReturnUpBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useUsers, useAllUser } from "../../hooks/useUsers";
 import Button from "../../components/common/Button";
-import { useAssignmentAsset } from "../../hooks/useAssignment";
-import dayjs from "dayjs";
 
 function Assignment() {
   const [onSelectedAsset, setOnselectedAsset] = useState([]);
@@ -21,7 +19,6 @@ function Assignment() {
 
   const { data: usersData, isLoading: isUserloading } = useUsers();
   const { data: allUsers } = useAllUser();
-  const mutation = useAssignmentAsset();
 
   const userOptions = useMemo(() => {
     return (
@@ -42,41 +39,6 @@ function Assignment() {
   const handleSearchInput = (e) => {
     const trimmedKeyword = keyword.trim();
     handleSearch(trimmedKeyword);
-  };
-
-  const handleAssign = (
-    selectedUserId,
-    selectedDate,
-    assignmentNotes,
-    selectedAssets,
-    setSelectedDate,
-    setAssignmentNotes
-  ) => {
-    if (!selectedUserId || selectedAssets.length === 0) {
-      alert("Please select a user and at least one asset.");
-      return;
-    }
-
-    const payload = {
-      asset_ids: selectedAssets.map((asset) => asset.id),
-      user_id: selectedUserId,
-      assigned_date: dayjs(selectedDate).format("YYYY-MM-DD"),
-      notes: assignmentNotes,
-    };
-    console.log("Assign payload:", payload);
-    mutation.mutate(payload, {
-      onSuccess: (data) => {
-        console.log("Assignment successful:", data);
-        // Optionally, clear selection
-        setOnselectedAsset([]);
-        setSelectedDate([]);
-        setAssignmentNotes([]);
-        setPage(1);
-      },
-      onError: (error) => {
-        console.error("Assignment failed:", error.message);
-      },
-    });
   };
 
   return (
@@ -142,8 +104,8 @@ function Assignment() {
             userOptions={userOptions}
             assets={onSelectedAsset}
             selectedAsset={setOnselectedAsset}
-            onSubmit={handleAssign}
             allUsers={allUsers}
+            setPage={setPage}
           />
         </div>
       </div>
