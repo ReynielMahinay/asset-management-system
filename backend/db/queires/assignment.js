@@ -1,4 +1,3 @@
-const { use } = require("react");
 const { supabaseAdmin } = require("../supabaseAdmin");
 
 /** 
