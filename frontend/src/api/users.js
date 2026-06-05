@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 //<------------------Fetch function API--------------------->
 export async function fetchUser({
   page = 1,
@@ -15,9 +17,7 @@ export async function fetchUser({
 
   if (keyword) params.append("keyword", keyword);
 
-  const res = await fetch(
-    `http://localhost:5000/api/users?${params.toString()}`,
-  );
+  const res = await fetch(`${API_URL}/api/users?${params.toString()}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch users");
@@ -30,7 +30,7 @@ export async function fetchUser({
 
 //<------------------Create function API--------------------->
 export async function createUser(formData) {
-  const res = await fetch(`http://localhost:5000/api/users`, {
+  const res = await fetch(`${API_URL}/api/users`, {
     method: "POST",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify(formData),
@@ -45,7 +45,7 @@ export async function createUser(formData) {
 
 //<------------------Update function API--------------------->
 export async function updateUser(id, formData) {
-  const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+  const res = await fetch(`${API_URL}/api/users/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
@@ -60,7 +60,7 @@ export async function updateUser(id, formData) {
 
 //<------------------Delete function API--------------------->
 export async function deleteUser(id) {
-  const res = await fetch(`http://localhost:5000/api/users/${id}`, {
+  const res = await fetch(`${API_URL}/api/users/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

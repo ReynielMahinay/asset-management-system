@@ -1,7 +1,10 @@
 //using this route sending the username and password to checking on the backend if existing
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function loginUser(identifier, password, rememberMe) {
   try {
-    const res = await fetch("http://localhost:5000/api/login", {
+    const res = await fetch(`${API_URL}/api/login`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -28,7 +31,7 @@ export async function fetchProfile() {
   if (!token) return null;
 
   try {
-    const res = await fetch("http://localhost:5000/api/login/me", {
+    const res = await fetch(`${API_URL}/api/login/me`, {
       credentials: "include",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -40,7 +43,7 @@ export async function fetchProfile() {
       token = await refreshToken();
       if (!token) return null;
 
-      const retryRes = await fetch("http://localhost:5000/api/login/me", {
+      const retryRes = await fetch(`${API_URL}/api/login/me`, {
         credentials: "include",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,7 +68,7 @@ export async function fetchAccounts({ page = 1, pageSize = 5 }) {
     pageSize: String(pageSize),
   });
   const res = await fetch(
-    `http://localhost:5000/api/login/accounts?${params.toString()}`,
+    `${API_URL}/api/login/accounts?${params.toString()}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -84,7 +87,7 @@ export async function fetchAccounts({ page = 1, pageSize = 5 }) {
 export async function createAccount(formData) {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`http://localhost:5000/api/login/newAccount`, {
+  const res = await fetch(`${API_URL}/api/login/newAccount`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -100,7 +103,7 @@ export async function createAccount(formData) {
 
 export async function refreshToken() {
   try {
-    const res = await fetch(`http://localhost:5000/api/login/refresh`, {
+    const res = await fetch(`${API_URL}/api/login/refresh`, {
       method: "POST",
       credentials: "include",
     });
