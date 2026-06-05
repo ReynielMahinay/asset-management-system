@@ -1,5 +1,7 @@
 // api/assets.js
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 //<------------------Fetchn function API--------------------->
 export async function fetchAssets({
   page = 1,
@@ -19,9 +21,7 @@ export async function fetchAssets({
   if (keyword) params.append("keyword", keyword); // check if there is keyword on from frontend then append it on the url fetch
   if (assign_status) params.append("assign_status", assign_status); // if unassigned is true just fetch the unssigned asset
 
-  const res = await fetch(
-    `http://localhost:5000/api/assets?${params.toString()}`,
-  );
+  const res = await fetch(`${API_URL}/api/assets?${params.toString()}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch assets");
@@ -34,7 +34,7 @@ export async function fetchAssets({
 
 //<------------------Delete function API--------------------->
 export async function deleteAsset(id) {
-  const res = await fetch(`http://localhost:5000/api/assets/${id}`, {
+  const res = await fetch(`${API_URL}/api/assets/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export async function deleteAsset(id) {
 
 //<------------------Create function API--------------------->
 export async function createAsset(formData) {
-  const res = await fetch(`http://localhost:5000/api/assets`, {
+  const res = await fetch(`${API_URL}/api/assets`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
@@ -64,7 +64,7 @@ export async function createAsset(formData) {
 
 //<------------------Update function API--------------------->
 export async function updateAsset(id, formData) {
-  const res = await fetch(`http://localhost:5000/api/assets/${id}`, {
+  const res = await fetch(`${API_URL}/api/assets/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData),
@@ -78,7 +78,7 @@ export async function updateAsset(id, formData) {
 }
 
 export async function dashboardStats() {
-  const res = await fetch(`http://localhost:5000/api/dashboard`);
+  const res = await fetch(`${API_URL}/api/dashboard`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch dashboard stats");

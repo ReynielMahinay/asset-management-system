@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function assingnedAsset(payload) {
-  const res = await fetch(`http://localhost:5000/api/assignment`, {
+  const res = await fetch(`${API_URL}/api/assignment`, {
     method: "POST",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify(payload),
@@ -30,7 +32,7 @@ export async function fetchUnassignedAsset({
   if (keyword) params.append("keyword", keyword);
 
   const res = await fetch(
-    `http://localhost:5000/api/assets/unassigned?${params.toString()}`,
+    `${API_URL}/api/assets/unassigned?${params.toString()}`,
   );
 
   if (!res.ok) {
