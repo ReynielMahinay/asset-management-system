@@ -31,27 +31,6 @@ A full-stack application for managing, tracking, and assigning company assets wi
 - **CORS**: Enabled for cross-origin requests
 - **Development**: Nodemon
 
-## 📁 Project Structure
-asset-management-system/
-├── frontend/
-│ ├── src/
-│ │ ├── components/ # Reusable UI components
-│ │ ├── features/ # Feature pages (Assets, Users, Assignments, etc.)
-│ │ ├── hooks/ # Custom React hooks
-│ │ ├── api/ # API integration
-│ │ ├── context/ # React Context providers
-│ │ └── Router/ # Routing configuration
-│ └── package.json
-├── backend/
-│ ├── src/
-│ │ ├── controllers/ # Business logic
-│ │ ├── routes/ # API endpoints
-│ │ ├── middleware/ # Authentication & custom middleware
-│ │ └── utils/ # Helper functions
-│ └── package.json
-└── package.json
-
-
 ## 🚀 Getting Started
 
 ### Prerequisites
