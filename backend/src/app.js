@@ -8,9 +8,11 @@ const assignmentRoutes = require("./routes/assignmentRoutes");
 const accountRoutes = require("./routes/accountRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
+const FRONTEND_URL = import.meta.env.VITE_VERCEL_URL;
+
 app.use(
   cors({
-    origin: "https://asset-management-system-henna.vercel.app",
+    origin: `${FRONTEND_URL}`,
     credentials: true,
   }),
 );
