@@ -7,12 +7,12 @@ const userRoutes = require("./routes/userRoutes");
 const assignmentRoutes = require("./routes/assignmentRoutes");
 const accountRoutes = require("./routes/accountRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const config = require("../config");
 
-const FRONTEND_URL = import.meta.env.VITE_VERCEL_URL;
-
+console.log("Config loaded:", config);
 app.use(
   cors({
-    origin: `${FRONTEND_URL}`,
+    origin: config.FRONTEND_URL,
     credentials: true,
   }),
 );
