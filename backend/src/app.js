@@ -7,10 +7,12 @@ const userRoutes = require("./routes/userRoutes");
 const assignmentRoutes = require("./routes/assignmentRoutes");
 const accountRoutes = require("./routes/accountRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const config = require("../config");
 
+console.log("Config loaded:", config);
 app.use(
   cors({
-    origin: "https://asset-management-system-henna.vercel.app",
+    origin: config.FRONTEND_URL,
     credentials: true,
   }),
 );
