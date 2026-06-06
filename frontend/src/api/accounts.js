@@ -26,7 +26,7 @@ export async function loginUser(identifier, password, rememberMe) {
 
 //if the user is match in the backend fecth profile that use the token
 export async function fetchProfile() {
-  const token = localStorage.getItem("token");
+  let token = localStorage.getItem("token");
 
   if (!token) return null;
 
